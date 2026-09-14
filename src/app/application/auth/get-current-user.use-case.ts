@@ -1,10 +1,10 @@
 import { UserProfile } from '@domain/auth/entities/user-profile';
-import { AuthRepository } from '@domain/auth/repositories/auth.repository';
+import { SessionRepository } from '@domain/auth/repositories/session.repository';
 
 export class GetCurrentUserUseCase {
-  constructor(private readonly authRepository: AuthRepository) {}
+  constructor(private readonly sessionRepository: SessionRepository) {}
 
-  execute(): Promise<UserProfile> {
-    return this.authRepository.getCurrentUser();
+  execute(): UserProfile | null {
+    return this.sessionRepository.get()?.user ?? null;
   }
 }

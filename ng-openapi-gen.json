@@ -1,9 +1,10 @@
 {
   "$schema": "node_modules/ng-openapi-gen/ng-openapi-gen-schema.json",
-  "input": "openapi/tofan-api.yaml",
+  "input": "openapi/tofan-api.json",
   "output": "src/app/infrastructure/api/generated",
   "indexFile": true,
   "removeStaleFiles": true,
   "skipJsonSuffix": true,
+  "enumStyle": "pascal",
   "silent": true
 }

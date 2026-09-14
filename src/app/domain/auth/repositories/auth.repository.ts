@@ -1,5 +1,4 @@
 import { AuthSession } from '../entities/auth-session';
-import { UserProfile } from '../entities/user-profile';
 import { Credentials } from '../value-objects/credentials';
 
 /**
@@ -10,5 +9,9 @@ export abstract class AuthRepository {
   /** @throws InvalidCredentialsError when the credentials are rejected. */
   abstract login(credentials: Credentials): Promise<AuthSession>;
 
-  abstract getCurrentUser(): Promise<UserProfile>;
+  /** @throws SessionExpiredError when the refresh token is no longer accepted. */
+  abstract refresh(session: AuthSession): Promise<AuthSession>;
+
+  /** Revokes the session on the server side. */
+  abstract logout(session: AuthSession): Promise<void>;
 }

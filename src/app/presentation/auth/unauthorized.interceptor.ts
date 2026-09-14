@@ -1,19 +1,15 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpStatusCode } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AppPaths } from '@presentation/routing/app-paths';
 import { catchError, throwError } from 'rxjs';
 import { AuthStore } from './auth.store';
 
-/** Signs the user out when the backend rejects the session (expired or revoked token). */
+/** Signs the user out when the session is rejected and could not be refreshed. */
 export const unauthorizedInterceptor: HttpInterceptorFn = (request, next) => {
-  const router = inject(Router);
   const authStore = inject(AuthStore);
 
   return next(request).pipe(
     catchError((error: unknown) => {
-      const isOnLoginPage = router.url.startsWith(AppPaths.login);
-      if (isUnauthorized(error) && !isOnLoginPage) {
+      if (isUnauthorized(error) && authStore.currentUser() !== null) {
         void authStore.logout();
       }
       return throwError(() => error);

@@ -16,7 +16,7 @@ export const appConfig: ApplicationConfig = {
       withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
     ),
     provideHttp(environment.apiBaseUrl),
-    provideAuth({ useMockApi: environment.useMockApi }),
+    provideAuth(),
     provideUi(),
   ],
 };

@@ -9,7 +9,9 @@ export function provideHttp(apiBaseUrl: string): EnvironmentProviders {
     provideApiConfiguration(apiBaseUrl),
     provideHttpClient(
       withFetch(),
-      withInterceptors([authTokenInterceptor, unauthorizedInterceptor]),
+      // Order matters: responses pass back through interceptors in reverse, so the token
+      // interceptor gets a chance to refresh and retry before a 401 signs the user out.
+      withInterceptors([unauthorizedInterceptor, authTokenInterceptor]),
     ),
   ]);
 }

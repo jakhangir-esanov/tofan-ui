@@ -1,3 +1,5 @@
+export const ADMIN_ROLE = 'admin';
+
 export class UserProfile {
   constructor(
     readonly id: string,
@@ -8,5 +10,9 @@ export class UserProfile {
 
   hasRole(role: string): boolean {
     return this.roles.includes(role);
+  }
+
+  isAdmin(): boolean {
+    return this.hasRole(ADMIN_ROLE);
   }
 }

@@ -12,25 +12,20 @@ export class AuthStore {
   private readonly router = inject(Router);
   private readonly loginUseCase = inject(LoginUseCase);
   private readonly logoutUseCase = inject(LogoutUseCase);
-  private readonly getCurrentUserUseCase = inject(GetCurrentUserUseCase);
 
-  private readonly user = signal<UserProfile | null>(null);
+  private readonly user = signal<UserProfile | null>(inject(GetCurrentUserUseCase).execute());
 
   readonly currentUser = this.user.asReadonly();
   readonly displayName = computed(() => this.user()?.fullName ?? '');
 
   async login(username: string, password: string): Promise<void> {
-    await this.loginUseCase.execute(username, password);
-    await this.loadCurrentUser();
-  }
-
-  async loadCurrentUser(): Promise<void> {
-    this.user.set(await this.getCurrentUserUseCase.execute());
+    const session = await this.loginUseCase.execute(username, password);
+    this.user.set(session.user);
   }
 
   async logout(): Promise<void> {
-    this.logoutUseCase.execute();
     this.user.set(null);
+    await this.logoutUseCase.execute();
     await this.router.navigateByUrl(AppPaths.login);
   }
 }

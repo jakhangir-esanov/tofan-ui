@@ -14,8 +14,8 @@
   (mobil ilova).
 - Foydalanuvchilar ro'yxati va statistika endpoint'lari **yo'q**. `User`, `Progress`, `Shop`,
   `Payment`, `Gamification`, `AI` modullari hozircha bo'sh.
-- tofan-ui: Angular 22 + Optimus UI + Sakai layout, Clean Architecture. Login hozircha soxta
-  (`useMockApi`), OpenAPI spec — namuna.
+- tofan-ui: Angular 22 + Optimus UI + Sakai layout, Clean Architecture. Haqiqiy backend'ga ulangan:
+  OpenAPI client production Swagger'idan, login/refresh/logout Keycloak tokenlari bilan.
 
 ---
 
@@ -23,17 +23,17 @@
 
 Faqat tofan-ui ishi, backend'dan hech narsa kutilmaydi.
 
-| #   | Ish                                                                                                   | Nima uchun                                                          |
-| --- | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| 0.1 | OpenAPI'ni backend Swagger'idan generatsiya qilish, `openapi/tofan-api.yaml` namunasini olib tashlash | Hozirgi spec to'qima                                                |
-| 0.2 | `Result<T>` javob konvertini (`isSuccess`, `data`, `error`) infrastructure qatlamida ochish           | Backend har javobni o'raydi; `error` domain xatolariga map qilinadi |
-| 0.3 | Haqiqiy auth: `POST auth/login`, `auth/refresh`, `auth/logout` (Keycloak tokenlari)                   | Hozir soxta login                                                   |
-| 0.4 | `admin` rolini tekshirish (`realm_access.roles`); rol yo'q bo'lsa "Ruxsat yo'q" sahifasi              | Oddiy foydalanuvchi ham login qila oladi                            |
-| 0.5 | Token yangilash: 401 → bir marta refresh → so'rovni qayta yuborish                                    | Sessiya tushib qolmasligi uchun                                     |
-| 0.6 | Umumiy UI bloklari: server-side paging'li jadval, forma dialogi, o'chirishni tasdiqlash, toast        | Har modulda qayta ishlatiladi                                       |
-| 0.7 | Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)                                           | Katalog ma'lumotlari uch tilda                                      |
-| 0.8 | Fayl yuklash (`POST /files`, 220 MB gacha video, progress bilan)                                      | Mashq videolari                                                     |
-| 0.9 | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni                    | Production'ga chiqish                                               |
+| #   | Ish                                                                                                       | Nima uchun                                                              |
+| --- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 0.1 | ~~OpenAPI'ni backend Swagger'idan generatsiya qilish, `openapi/tofan-api.yaml` namunasini olib tashlash~~ | ~~Hozirgi spec to'qima~~                                                |
+| 0.2 | ~~`Result<T>` javob konvertini (`isSuccess`, `data`, `error`) infrastructure qatlamida ochish~~           | ~~Backend har javobni o'raydi; `error` domain xatolariga map qilinadi~~ |
+| 0.3 | ~~Haqiqiy auth: `POST auth/login`, `auth/refresh`, `auth/logout` (Keycloak tokenlari)~~                   | ~~Hozir soxta login~~                                                   |
+| 0.4 | ~~`admin` rolini tekshirish (`realm_access.roles`); rol yo'q bo'lsa login rad etiladi~~                   | ~~Oddiy foydalanuvchi ham login qila oladi~~                            |
+| 0.5 | ~~Token yangilash: 401 → bir marta refresh → so'rovni qayta yuborish~~                                    | ~~Sessiya tushib qolmasligi uchun~~                                     |
+| 0.6 | Umumiy UI bloklari: server-side paging'li jadval, forma dialogi, o'chirishni tasdiqlash, toast            | Har modulda qayta ishlatiladi                                           |
+| 0.7 | Ko'p tilli maydon komponenti (`Name` / `NameUz` / `NameRu`)                                               | Katalog ma'lumotlari uch tilda                                          |
+| 0.8 | Fayl yuklash (`POST /files`, 220 MB gacha video, progress bilan)                                          | Mashq videolari                                                         |
+| 0.9 | Deploy: Docker + nginx; backend stack'iga `Cors__AllowedOrigins__0` = panel domeni                        | Production'ga chiqish                                                   |
 
 `/auth/me` endpoint'i yo'q — foydalanuvchi ismi va roli token claim'laridan olinadi.
 
@@ -97,11 +97,14 @@ ga yangilash kerak.
 
 ---
 
+## Qarorlar
+
+- 2026-09-14: panelni **faqat adminlar** ishlatadi (Keycloak `admin` realm roli). Boshqa rollar
+  hozircha rejada yo'q.
+- 2026-09-14: login **backend `auth/login`** orqali. Keycloak sahifasiga yo'naltirish (OIDC + PKCE)
+  keyinroq ko'rib chiqilishi mumkin.
+
 ## Ochiq savollar
 
-1. Panelni kimlar ishlatadi — faqat adminlarmi, yoki kontent menejer, murabbiy, support rollari ham
-   bo'ladimi? Backend'da hozir bitta `admin` roli bor.
-2. Birinchi navbatda qaysi yo'nalish kerak — katalog va kontent (1-bosqich) yoki foydalanuvchilar
+1. Birinchi navbatda qaysi yo'nalish kerak — katalog va kontent (1-bosqich) yoki foydalanuvchilar
    va statistika (backend ishi talab qilinadi)?
-3. Login usuli: backend `auth/login` orqali (mobil kabi, tezroq) yoki Keycloak sahifasiga
-   yo'naltirib (OIDC + PKCE, admin uchun xavfsizroq)?

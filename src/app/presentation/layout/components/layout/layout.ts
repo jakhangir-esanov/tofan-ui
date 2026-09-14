@@ -1,6 +1,5 @@
 import { Component, computed, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { AuthStore } from '@presentation/auth/auth.store';
 import { LayoutService } from '../../layout.service';
 import { Footer } from '../footer/footer';
 import { Sidebar } from '../sidebar/sidebar';
@@ -26,8 +25,4 @@ export class Layout {
       'layout-mobile-active': state.mobileMenuActive,
     };
   });
-
-  constructor() {
-    void inject(AuthStore).loadCurrentUser();
-  }
 }
