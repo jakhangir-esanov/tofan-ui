@@ -9,7 +9,8 @@ Admin panel for the Tofan fitness ecosystem. Angular 22, TypeScript 6 strict, Op
 which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 
 ## Commands
-- `npm start` — dev server; `/api` is proxied to the backend (no mock backend)
+- `npm start` — dev server; `/api` is proxied to the local backend (no mock backend)
+- `npm run start:staging` — dev server; `/api` is proxied to the staging API (`proxy.staging.conf.json`)
 - `npm run lint` — must pass (ESLint + `lint:comments`, which rejects any comment in any project file,
   + `lint:boundaries`, Sheriff checking the folder dependency rules in `sheriff.config.ts`)
 - `npm test` — Vitest, must pass
@@ -59,3 +60,17 @@ do not migrate to PrimeNG, never add `primeng`, `@primeuix/*`, `primeicons` (Pri
   dotfiles; `npm run lint` rejects them)
 - SOLID, small functions (≤ 25 lines), components ≤ 200 lines
 - Tests next to the file (`*.spec.ts`) for stores, mappers, guards, model rules
+
+## Agent skills
+
+### Issue tracker
+
+Issue va spec'lar repo ichida `.scratch/<feature>/` papkasida markdown fayl bo'lib yuritiladi. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Standart besh yorliq: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: ildizda `CONTEXT.md` va `docs/adr/`. See `docs/agents/domain.md`.

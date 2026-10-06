@@ -55,6 +55,22 @@ export const ERRORS_UZ = {
         "Futbolkani faqat faol, yashirilgan yoki bekor qilingan holatga o'tkazish mumkin.",
       MonthsOutOfRange: "Muddat 1 oydan 24 oygacha bo'lishi kerak.",
     },
+    Trainer: {
+      PriceNotSet:
+        "Trener narxni hali belgilamagan. Avval trener o'z profilida narxni kiritishi kerak.",
+      NotFound: 'Trener topilmadi.',
+      DisplayNameEmpty: 'Trener ismi kiritilishi shart.',
+    },
+    TrainerSubscription: {
+      OtherTrainerActive: 'Foydalanuvchida boshqa trenerga faol obuna bor — avval uni tugating.',
+      MonthsOutOfRange: "Obuna muddati 1 oydan 12 oygacha bo'lishi kerak.",
+    },
+    WorkoutPlan: {
+      TrainerProgramMissing: "Trener hali mashq dasturini e'lon qilmagan.",
+    },
+    MealPlan: {
+      TrainerProgramMissing: "Trener hali ovqatlanish dasturini e'lon qilmagan.",
+    },
     GetUsersQuery:
       'Hisoblarni Keycloak’dan o‘qib bo‘lmadi. Rol filtri tanlangan bo‘lsa, u hozircha ishlamasligi mumkin (Keycloak sozlamasi kerak).',
   },

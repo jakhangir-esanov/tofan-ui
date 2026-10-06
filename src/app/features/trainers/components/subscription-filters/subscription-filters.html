@@ -1,0 +1,52 @@
+<div class="mb-4 flex flex-wrap items-start gap-3">
+  <div class="flex min-w-56 flex-col gap-1">
+    <label for="subscriptionTrainer" class="text-muted-color text-sm">{{
+      'trainers.filters.trainer' | t
+    }}</label>
+    <app-select-field
+      inputId="subscriptionTrainer"
+      [formField]="form.trainerId"
+      [options]="trainerOptions()"
+      [placeholder]="'trainers.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex min-w-72 flex-1 flex-col gap-1">
+    <label for="subscriptionUserId" class="text-muted-color text-sm">{{
+      'trainers.filters.userId' | t
+    }}</label>
+    <input
+      pInputText
+      id="subscriptionUserId"
+      type="search"
+      [formField]="form.userId"
+      placeholder="UUID"
+    />
+    @if (userIdInvalid()) {
+      <small class="text-red-500">{{ 'trainers.filters.userIdInvalid' | t }}</small>
+    }
+  </div>
+
+  <div class="flex min-w-40 flex-col gap-1">
+    <label for="subscriptionStatus" class="text-muted-color text-sm">{{
+      'trainers.filters.status' | t
+    }}</label>
+    <app-select-field
+      inputId="subscriptionStatus"
+      [formField]="form.status"
+      [options]="statusOptions()"
+      [placeholder]="'trainers.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <p-button
+    class="self-end"
+    [label]="'common.actions.clear' | t"
+    icon="pi pi-filter-slash"
+    severity="secondary"
+    [text]="true"
+    (onClick)="reset()"
+  />
+</div>

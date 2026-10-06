@@ -1,0 +1,28 @@
+<p-autocomplete
+  styleClass="w-full"
+  inputStyleClass="w-full"
+  optionLabel="label"
+  [inputId]="inputId()"
+  [ngModel]="entry()"
+  (ngModelChange)="change($event)"
+  [suggestions]="options().slice()"
+  (completeMethod)="search($event.query)"
+  [minLength]="0"
+  [completeOnFocus]="true"
+  [dropdown]="true"
+  dropdownMode="blank"
+  [forceSelection]="true"
+  [showClear]="true"
+  [placeholder]="placeholder()"
+  [emptyMessage]="emptyMessage()"
+  [disabled]="disabled()"
+  [invalid]="invalid() && touched()"
+  (onBlur)="touch.emit()"
+>
+  <ng-template #item let-soldier>
+    <div class="flex flex-col gap-1">
+      <span class="font-medium">{{ soldier.label }}</span>
+      <span class="text-muted-color text-sm">{{ soldier.userName }}</span>
+    </div>
+  </ng-template>
+</p-autocomplete>

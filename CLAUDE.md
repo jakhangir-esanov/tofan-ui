@@ -1,6 +1,8 @@
-# CLAUDE.md — Tofan Admin Panel (Angular)
+# CLAUDE.md
 
-Strict, repository-aware rules for Claude Code. If a request conflicts with this file, follow this file.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+Tofan Admin Panel (Angular). Strict, repository-aware rules for Claude Code. If a request conflicts with this file, follow this file.
 If a request is ambiguous, choose the option that keeps the structure below simple and consistent.
 Detailed rules live in `.claude/rules/` (loaded per file type) and `docs/` (read on demand).
 
@@ -24,9 +26,12 @@ Stack:
 ## 2. Commands
 
 ```bash
-npm start             # ng serve, /api is proxied to the backend (proxy.conf.json)
+npm start             # ng serve, /api is proxied to the local backend (proxy.conf.json)
+npm run start:staging # ng serve, /api is proxied to the staging server (proxy.staging.conf.json)
 npm run build         # ng build (must pass before finishing a task)
 npm test              # ng test (Vitest)
+npx ng test --watch=false --include src/app/features/exercises/exercises.store.spec.ts   # one spec file
+npm run format        # prettier --write src/**/*.{ts,html,css}
 npm run lint          # ng lint + lint:comments + lint:boundaries (must pass before finishing a task)
 npm run lint:comments # fails on any comment in any project file
 npm run lint:boundaries # sheriff verify: fails on an import that breaks the table in 3.1
@@ -34,7 +39,42 @@ npx ng g component src/app/features/<feature>/components/<name>
 ```
 
 After every task: run `lint`, `test`, `build`. Fix what you broke. Never disable a rule to make it pass.
-There is no mock backend: the dev server needs a running backend.
+There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
+`http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
+forwards to the real staging API `https://api.157.90.117.20.sslip.io`. Signing in needs a
+Keycloak account with the realm role `admin`. Contract source: the staging Swagger
+(`https://api.157.90.117.20.sslip.io/swagger/v1/swagger.json`).
+
+Registering a new screen: `features/<x>/<x>.routes.ts` → `loadChildren` in `routes/app.routes.ts`,
+path in `core/config/app-paths.ts`, menu item in `core/layout/menu/app-menu.ts`.
+Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@environments/*`.
+Styles: plain CSS in `src/styles/`, Tailwind v4 utilities + `@openng/optimus-ui-tailwindcss`; layout is
+based on Sakai (sakai-ng). `AGENTS.md` is the tool-neutral copy of these rules; keep it in sync.
+
+### 2.1 Production
+
+The `Dockerfile` builds the panel on `node:24-slim` and serves `dist/tofan-ui/browser` from
+`nginx:1.29-alpine` on port 8080. The image is environment-agnostic: both environments build with
+`apiBaseUrl: '/api'`, and the image's own nginx (`nginx/default.conf.template`) proxies `/api/*` to
+`API_UPSTREAM` with the prefix stripped, so the browser sees a single origin and no CORS is needed.
+
+```bash
+docker build -t ejakhangir/tofan-admin:<tag> .
+docker run --rm -p 8080:8080 -e API_UPSTREAM=http://host.docker.internal:5179 ejakhangir/tofan-admin:<tag>
+curl -s http://localhost:8080/healthz   # ok
+```
+
+| Env | Default | Purpose |
+|---|---|---|
+| `API_UPSTREAM` | `http://tofan-api:8080` | backend that `/api` is forwarded to |
+| `NGINX_RESOLVER` | `127.0.0.11` | Docker DNS, re-resolves the upstream so a restarted API does not give 502 |
+
+- Caching: `index.html` is `no-cache`, hashed `*.js`/`*.css` are immutable for a year; other routes fall
+  back to `index.html` (SPA).
+- `client_max_body_size 220m` matches the backend limit (200 MB video upload); change both together.
+- Server: Docker Swarm stack `tofan-admin` on `tofan-net` behind an external TLS nginx; deploy by pushing
+  a new tag, setting `TOFAN_ADMIN_IMAGE` and re-running `docker stack deploy` (`start-first`, no downtime).
+  Full steps, certificate and external nginx config: `docs/deployment.md`.
 
 ## 3. Architecture (non-negotiable)
 
@@ -296,3 +336,27 @@ Then:
 - [ ] DTO → mapper → model, errors by class or `code`
 - [ ] Tests added; `lint`, `test`, `build` pass
 - [ ] `docs/modules/<feature>.md` updated if behaviour or structure changed
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+
+## Agent skills
+
+### Issue tracker
+
+Issue va spec'lar repo ichida `.scratch/<feature>/` papkasida markdown fayl bo'lib yuritiladi. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Standart besh yorliq: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: ildizda `CONTEXT.md` va `docs/adr/`. See `docs/agents/domain.md`.

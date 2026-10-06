@@ -1,0 +1,77 @@
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <span class="text-muted-color text-sm">{{
+    'trainers.subscriptions.total'
+      | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+  }}</span>
+  <p-button [label]="'trainers.subscriptions.add' | t" icon="pi pi-plus" (onClick)="openGrant()" />
+</div>
+
+@if (store.trainersError(); as message) {
+  <div class="mb-4 flex flex-wrap items-center gap-3" role="alert">
+    <span class="text-sm text-red-500">{{ message | message }}</span>
+    <p-button
+      [label]="'common.actions.retry' | t"
+      icon="pi pi-refresh"
+      severity="secondary"
+      [text]="true"
+      (onClick)="store.loadTrainers()"
+    />
+  </div>
+}
+
+<app-subscription-filters
+  [trainerOptions]="trainerOptions()"
+  (filterChange)="applyFilter($event)"
+/>
+
+<app-data-table
+  [columns]="columns()"
+  [items]="store.subscriptions()"
+  [totalCount]="store.totalCount()"
+  [loading]="store.loading()"
+  [error]="store.loadError()"
+  [first]="store.first()"
+  [emptyMessage]="'trainers.subscriptions.empty' | t"
+  (pageChange)="loadPage($event)"
+  (retry)="store.load()"
+>
+  <ng-template #row let-subscription>
+    <tr>
+      <td class="text-primary font-medium">{{ subscription.trainerDisplayName }}</td>
+      <td class="text-muted-color" [title]="subscription.userId">
+        {{ shortId(subscription.userId) }}
+      </td>
+      <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.startsOn) }}</td>
+      <td class="text-muted-color whitespace-nowrap">{{ dateLabel(subscription.endsOn) }}</td>
+      <td>
+        <p-tag [value]="statusLabel(subscription)" [severity]="statusSeverity(subscription)" />
+        @if (subscription.endedOn; as endedOn) {
+          <div class="text-muted-color mt-1 text-sm">{{ endedLabel(endedOn) }}</div>
+        }
+      </td>
+      <td class="text-right whitespace-nowrap">
+        @if (subscription.canEnd(now())) {
+          <p-button
+            icon="pi pi-ban"
+            severity="danger"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="'trainers.subscriptions.actions.end' | t"
+            [pTooltip]="'trainers.subscriptions.actions.end' | t"
+            (onClick)="end(subscription)"
+          />
+        }
+      </td>
+    </tr>
+  </ng-template>
+</app-data-table>
+
+<app-subscription-grant-dialog
+  [(visible)]="grantVisible"
+  [trainerOptions]="trainerOptions()"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
+  [saving]="store.saving()"
+  (grant)="grant($event)"
+  (soldierSearch)="soldierSearch.search($event)"
+/>

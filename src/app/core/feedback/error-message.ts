@@ -48,6 +48,13 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'Garment.CannotDeleteClaimed': 'errors.backend.Garment.CannotDeleteClaimed',
   'Garment.StatusNotAllowed': 'errors.backend.Garment.StatusNotAllowed',
   'Garment.MonthsOutOfRange': 'errors.backend.Garment.MonthsOutOfRange',
+  'Trainer.PriceNotSet': 'errors.backend.Trainer.PriceNotSet',
+  'Trainer.NotFound': 'errors.backend.Trainer.NotFound',
+  'Trainer.DisplayNameEmpty': 'errors.backend.Trainer.DisplayNameEmpty',
+  'TrainerSubscription.OtherTrainerActive': 'errors.backend.TrainerSubscription.OtherTrainerActive',
+  'TrainerSubscription.MonthsOutOfRange': 'errors.backend.TrainerSubscription.MonthsOutOfRange',
+  'WorkoutPlan.TrainerProgramMissing': 'errors.backend.WorkoutPlan.TrainerProgramMissing',
+  'MealPlan.TrainerProgramMissing': 'errors.backend.MealPlan.TrainerProgramMissing',
 };
 
 export function toErrorMessage(error: unknown): ErrorMessage {

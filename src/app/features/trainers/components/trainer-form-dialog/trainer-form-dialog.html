@@ -1,0 +1,32 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="'trainers.form.header' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="trainerUserId" class="font-medium">{{ 'trainers.form.userId' | t }}</label>
+      <app-text-field
+        inputId="trainerUserId"
+        autocomplete="off"
+        placeholder="UUID"
+        [formField]="form.userId"
+      />
+      <app-field-error [field]="form.userId()" />
+      <small class="text-muted-color">{{ 'trainers.form.userIdHint' | t }}</small>
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="trainerDisplayName" class="font-medium">{{
+        'trainers.form.displayName' | t
+      }}</label>
+      <app-text-field
+        inputId="trainerDisplayName"
+        autocomplete="off"
+        [formField]="form.displayName"
+      />
+      <app-field-error [field]="form.displayName()" />
+    </div>
+  </div>
+</app-form-dialog>

@@ -56,6 +56,23 @@ export const ERRORS_EN: Dictionary['errors'] = {
       StatusNotAllowed: 'A shirt can only be set to active, hidden or revoked.',
       MonthsOutOfRange: 'The period must be between 1 and 24 months.',
     },
+    Trainer: {
+      PriceNotSet:
+        'The trainer has not set a price yet. The trainer must enter it in their profile first.',
+      NotFound: 'Trainer not found.',
+      DisplayNameEmpty: 'The trainer name is required.',
+    },
+    TrainerSubscription: {
+      OtherTrainerActive:
+        'The user already has an active subscription to another trainer — end it first.',
+      MonthsOutOfRange: 'The subscription length must be between 1 and 12 months.',
+    },
+    WorkoutPlan: {
+      TrainerProgramMissing: 'The trainer has not published a workout program yet.',
+    },
+    MealPlan: {
+      TrainerProgramMissing: 'The trainer has not published a meal program yet.',
+    },
     GetUsersQuery:
       'Could not read accounts from Keycloak. If a role filter is selected, it may not work yet (Keycloak needs configuring).',
   },

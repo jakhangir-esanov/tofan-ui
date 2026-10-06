@@ -47,6 +47,22 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
     ],
   },
   {
+    label: 'layout.menu.trainers',
+    items: [
+      {
+        label: 'layout.menu.trainersList',
+        icon: 'pi pi-fw pi-trophy',
+        routerLink: [AppPaths.trainers],
+        routerLinkActiveOptions: {
+          paths: 'subset',
+          queryParams: 'ignored',
+          matrixParams: 'ignored',
+          fragment: 'ignored',
+        },
+      },
+    ],
+  },
+  {
     label: 'layout.menu.notifications',
     items: [
       {

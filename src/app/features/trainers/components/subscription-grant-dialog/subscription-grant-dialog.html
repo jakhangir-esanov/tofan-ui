@@ -1,0 +1,56 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="'trainers.grant.header' | t"
+  [saveLabel]="'trainers.grant.save' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="grantTrainer" class="font-medium">{{ 'trainers.grant.trainer' | t }}</label>
+      @if (trainer(); as lockedTrainer) {
+        <input
+          pInputText
+          id="grantTrainer"
+          class="w-full"
+          [value]="lockedTrainer.displayName"
+          [disabled]="true"
+        />
+      } @else {
+        <app-select-field
+          inputId="grantTrainer"
+          [formField]="form.trainerId"
+          [options]="trainerOptions()"
+          [fluid]="true"
+        />
+        <app-field-error [field]="form.trainerId()" />
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="grantUserId" class="font-medium">{{ 'trainers.grant.userId' | t }}</label>
+      <app-soldier-field
+        inputId="grantUserId"
+        [formField]="form.userId"
+        [options]="soldiers()"
+        [placeholder]="'trainers.grant.soldierPlaceholder' | t"
+        [emptyMessage]="soldiersEmpty() | t"
+        (searchChange)="soldierSearch.emit($event)"
+      />
+      <app-field-error [field]="form.userId()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="grantMonths" class="font-medium">{{ 'trainers.grant.months' | t }}</label>
+      <app-number-field
+        inputId="grantMonths"
+        [formField]="form.months"
+        [showButtons]="true"
+        [suffix]="'trainers.grant.suffix' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.months()" />
+      <small class="text-muted-color">{{ 'trainers.grant.hint' | t }}</small>
+    </div>
+  </div>
+</app-form-dialog>

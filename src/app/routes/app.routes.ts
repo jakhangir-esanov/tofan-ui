@@ -44,6 +44,11 @@ export const routes: Routes = [
           import('@features/garments/garments.routes').then((m) => m.GARMENT_ROUTES),
       },
       {
+        path: 'trainers',
+        loadChildren: () =>
+          import('@features/trainers/trainers.routes').then((m) => m.TRAINER_ROUTES),
+      },
+      {
         path: 'user-sessions',
         loadChildren: () =>
           import('@features/user-sessions/user-sessions.routes').then((m) => m.USER_SESSION_ROUTES),

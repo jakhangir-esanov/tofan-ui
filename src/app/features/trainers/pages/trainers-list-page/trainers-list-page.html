@@ -1,0 +1,94 @@
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <span class="text-muted-color text-sm">{{
+    'trainers.list.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
+  }}</span>
+  <p-button [label]="'trainers.list.add' | t" icon="pi pi-plus" (onClick)="add()" />
+</div>
+
+<app-data-table
+  [columns]="columns()"
+  [items]="store.trainers()"
+  [totalCount]="store.totalCount()"
+  [loading]="store.loading()"
+  [error]="store.loadError()"
+  [first]="store.first()"
+  [emptyMessage]="'trainers.list.empty' | t"
+  (pageChange)="loadPage($event)"
+  (retry)="store.load()"
+>
+  <ng-template #row let-trainer>
+    <tr>
+      <td>
+        <div class="flex items-center gap-3">
+          <p-avatar
+            shape="circle"
+            [image]="trainer.photoUrl ?? undefined"
+            [label]="trainer.photoUrl === null ? trainer.initials() : undefined"
+          />
+          <div class="min-w-0">
+            <div class="text-primary font-medium">{{ trainer.displayName }}</div>
+            @if (trainer.bio; as bio) {
+              <div class="text-muted-color max-w-md text-sm break-words">{{ bio }}</div>
+            }
+          </div>
+        </div>
+      </td>
+      <td class="text-muted-color" [title]="trainer.userId">{{ shortId(trainer.userId) }}</td>
+      <td>
+        <span [class.text-muted-color]="!trainer.hasPrice()">{{ priceLabel(trainer) }}</span>
+      </td>
+      <td>
+        <p-tag [value]="statusLabel(trainer)" [severity]="statusSeverity(trainer)" />
+      </td>
+      <td class="text-muted-color whitespace-nowrap">{{ dateLabel(trainer.createdOn) }}</td>
+      <td class="text-right whitespace-nowrap">
+        <p-button
+          icon="pi pi-user-plus"
+          severity="secondary"
+          [text]="true"
+          [rounded]="true"
+          [ariaLabel]="'trainers.list.actions.grant' | t"
+          [pTooltip]="'trainers.list.actions.grant' | t"
+          (onClick)="openGrant(trainer)"
+        />
+        @if (trainer.isPublished) {
+          <p-button
+            icon="pi pi-eye-slash"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="'trainers.list.actions.unpublish' | t"
+            [pTooltip]="'trainers.list.actions.unpublish' | t"
+            (onClick)="store.unpublish(trainer)"
+          />
+        } @else {
+          <p-button
+            icon="pi pi-eye"
+            severity="secondary"
+            [text]="true"
+            [rounded]="true"
+            [ariaLabel]="'trainers.list.actions.publish' | t"
+            [pTooltip]="'trainers.list.actions.publish' | t"
+            (onClick)="store.publish(trainer)"
+          />
+        }
+      </td>
+    </tr>
+  </ng-template>
+</app-data-table>
+
+<app-trainer-form-dialog
+  [(visible)]="formVisible"
+  [saving]="store.saving()"
+  (save)="create($event)"
+/>
+
+<app-subscription-grant-dialog
+  [(visible)]="grantVisible"
+  [trainer]="granting()"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
+  [saving]="store.saving()"
+  (grant)="grant($event)"
+  (soldierSearch)="soldierSearch.search($event)"
+/>

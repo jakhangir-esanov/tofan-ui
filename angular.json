@@ -73,6 +73,10 @@
             },
             "development": {
               "buildTarget": "tofan-ui:build:development"
+            },
+            "staging": {
+              "buildTarget": "tofan-ui:build:development",
+              "proxyConfig": "proxy.staging.conf.json"
             }
           },
           "defaultConfiguration": "development"

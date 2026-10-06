@@ -14,13 +14,14 @@ standart `http://localhost:5179`). Kirish uchun backend'da `admin` realm roli bo
 
 Rivojlanish rejasi va modullar: [docs/roadmap.md](docs/roadmap.md).
 
-| Buyruq           | Vazifasi                                                                 |
-| ---------------- | ------------------------------------------------------------------------ |
-| `npm start`      | Dev server                                                               |
-| `npm run build`  | Production build (`dist/tofan-ui/browser`)                               |
-| `npm test`       | Unit testlar (Vitest)                                                    |
-| `npm run lint`   | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
-| `npm run format` | Prettier                                                                 |
+| Buyruq                  | Vazifasi                                                                 |
+| ----------------------- | ------------------------------------------------------------------------ |
+| `npm start`             | Dev server                                                               |
+| `npm run start:staging` | Dev server, `/api` stend backend'iga uzatiladi                           |
+| `npm run build`         | Production build (`dist/tofan-ui/browser`)                               |
+| `npm test`              | Unit testlar (Vitest)                                                    |
+| `npm run lint`          | ESLint + izohsizlik tekshiruvi + Sheriff (papkalar orasidagi bog'liqlik) |
+| `npm run format`        | Prettier                                                                 |
 
 ## Arxitektura
 
@@ -181,7 +182,7 @@ ishlatiladi. Hajm va kengaytma cheklovlari backend qoidalari bilan bir xil
 
 Dev serverda `/api` `proxy.conf.json` orqali backend'ga uzatiladi (`http://localhost:5179`,
 prefiks olib tashlanadi). Shu sabab brauzerda CORS muammosi yo'q. Stendga ulanish uchun
-`proxy.conf.json` dagi `target` ni stend manziliga o'zgartiring.
+`npm run start:staging` ishlating (`proxy.staging.conf.json`, `https://api.157.90.117.20.sslip.io`).
 
 ## Deploy
 

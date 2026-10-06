@@ -1,0 +1,8 @@
+{
+  "/api": {
+    "target": "https://api.157.90.117.20.sslip.io",
+    "secure": true,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  }
+}
