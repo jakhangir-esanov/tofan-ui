@@ -5,7 +5,7 @@ RUN npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 
-FROM nginx:1.29-alpine
+FROM nginx:1.31-alpine
 ENV API_UPSTREAM=http://tofan-api:8080 \
     NGINX_RESOLVER=127.0.0.11
 COPY nginx/default.conf.template /etc/nginx/templates/default.conf.template
