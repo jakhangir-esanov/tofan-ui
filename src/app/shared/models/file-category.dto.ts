@@ -8,6 +8,7 @@ export enum FileCategoryDto {
   FoodImage = 4,
   ProductImage = 5,
   Document = 6,
+  GarmentImage = 7,
 }
 
 export const fileCategories = enumMap<FileCategory, FileCategoryDto>(FileCategoryDto);

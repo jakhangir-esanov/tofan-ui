@@ -82,14 +82,14 @@ code instead of `PredicateValidator` (`Profile.InvalidTimeZone`, `GoalProfile.Tr
 `Food.ServingSizeGramsMismatch`, ...). Keycloak login/refresh failures no longer put Keycloak's raw text
 in `detail`.
 
-| Backend `ErrorType`           | Status                                                 |
-| ----------------------------- | ------------------------------------------------------ |
-| Validation                    | 400 (`title` = `General.Validation`, `errors` present) |
-| Problem                       | 400                                                    |
-| NotFound                      | 404                                                    |
-| Conflict                      | 409                                                    |
-| Failure                       | 500 (`title` = `Server failure`)                       |
-| Unhandled exception           | 500 (`title` is the exception message)                 |
+| Backend `ErrorType` | Status                                                 |
+| ------------------- | ------------------------------------------------------ |
+| Validation          | 400 (`title` = `General.Validation`, `errors` present) |
+| Problem             | 400                                                    |
+| NotFound            | 404                                                    |
+| Conflict            | 409                                                    |
+| Failure             | 500 (`title` = `Server failure`)                       |
+| Unhandled exception | 500 (`title` is the exception message)                 |
 
 Unique-constraint races answer 409 with `title` `Conflict.DuplicateKey`.
 
@@ -134,7 +134,7 @@ User-facing text comes from `core/feedback/error-message.ts`: first a per-code m
 | soldiers         | Profile.NotFound                                                                                                                                                                                                                                                                                          | not an error: "onboarding not finished" state                                                                 |
 | media            | StoredFile.InUse, StoredFile.NotFound                                                                                                                                                                                                                                                                     | per-code message                                                                                              |
 | exercises, foods | Exercise.NotFound, Food.NotFound                                                                                                                                                                                                                                                                          | generic `NotFoundError` message                                                                               |
-| garments         | Garment.NotFound, Garment.ManufacturedInFuture, Garment.NotClaimed, Garment.StatusNotAllowed, Garment.CannotDeleteClaimed (backend); Garment.MonthsOutOfRange (panel rule, `models/garment-extension.ts`) | per-code message                                                                                              |
+| garments         | Garment.NotFound, Garment.ManufacturedInFuture, Garment.NotClaimed, Garment.StatusNotAllowed, Garment.CannotDeleteClaimed (backend); Garment.MonthsOutOfRange (panel rule, `models/garment-extension.ts`); Drop.NotFound, Drop.VariantNotFound, Drop.SoldOut (backend `messages`)                         | per-code message                                                                                              |
 | file upload      | StoredFile.Empty, StoredFile.UnsupportedContent, StoredFile.TooLarge                                                                                                                                                                                                                                      | thrown before the request by `shared/utils/file-upload-rules.ts` as `BusinessRuleError`; its message is shown |
 
 ## Identity administration

@@ -8,6 +8,7 @@ export const MEDIA_EN: Dictionary['media'] = {
     foodImage: 'Food image',
     productImage: 'Product image',
     document: 'Document',
+    garmentImage: 'Shirt image',
   },
   page: {
     title: 'Media files',

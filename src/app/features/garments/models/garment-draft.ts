@@ -5,8 +5,8 @@ import { GarmentSize } from './garment-catalog';
 export const GARMENT_TEXT_MAX_LENGTH = 200;
 
 export interface GarmentDraft {
-  readonly model: string;
-  readonly color: string;
+  readonly dropId: string;
+  readonly variantId: string;
   readonly size: GarmentSize;
   readonly material: string;
   readonly manufacturedAt: Date;
@@ -19,8 +19,6 @@ export function latestManufacturingDay(now: Date): Date {
 export function createGarmentDraft(draft: GarmentDraft, now: Date): GarmentDraft {
   const prepared: GarmentDraft = {
     ...draft,
-    model: draft.model.trim(),
-    color: draft.color.trim().toUpperCase(),
     material: draft.material.trim(),
     manufacturedAt: startOfDay(draft.manufacturedAt),
   };
@@ -39,19 +37,23 @@ export function createGarmentDraft(draft: GarmentDraft, now: Date): GarmentDraft
 }
 
 function missingFields(draft: GarmentDraft): ValidationIssue[] {
-  return draft.model.length === 0 ? [{ code: 'Model.Empty', message: 'Model is required.' }] : [];
+  const issues: ValidationIssue[] = [];
+  if (draft.dropId.length === 0) {
+    issues.push({ code: 'Drop.Empty', message: 'Drop is required.' });
+  }
+  if (draft.variantId.length === 0) {
+    issues.push({ code: 'Variant.Empty', message: 'Variant is required.' });
+  }
+  return issues;
 }
 
 function tooLongFields(draft: GarmentDraft): ValidationIssue[] {
-  const limits: readonly [string, string][] = [
-    ['Model', draft.model],
-    ['Color', draft.color],
-    ['Material', draft.material],
-  ];
-  return limits
-    .filter(([, value]) => value.length > GARMENT_TEXT_MAX_LENGTH)
-    .map(([field]) => ({
-      code: `${field}.TooLong`,
-      message: `${field} must be at most ${GARMENT_TEXT_MAX_LENGTH} characters.`,
-    }));
+  return draft.material.length > GARMENT_TEXT_MAX_LENGTH
+    ? [
+        {
+          code: 'Material.TooLong',
+          message: `Material must be at most ${GARMENT_TEXT_MAX_LENGTH} characters.`,
+        },
+      ]
+    : [];
 }

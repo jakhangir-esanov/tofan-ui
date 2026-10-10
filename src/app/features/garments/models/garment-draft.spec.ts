@@ -9,8 +9,8 @@ import {
 const now = new Date(Date.UTC(2026, 8, 23, 10, 45));
 
 const draft: GarmentDraft = {
-  model: 'Peaktofan Classic',
-  color: '#1A2B3C',
+  dropId: 'd1',
+  variantId: 'v1',
   size: 'L',
   material: '95% paxta, 5% elastan',
   manufacturedAt: new Date(2026, 7, 14),
@@ -27,15 +27,8 @@ function issueCodes(invalid: GarmentDraft): string[] {
 }
 
 describe('createGarmentDraft', () => {
-  it('should trim the text and upper-case the colour code when the user typed it loosely', () => {
-    const prepared = createGarmentDraft(
-      { ...draft, color: ' #a1b2c3 ', material: '  ', model: ' Classic ' },
-      now,
-    );
-
-    expect(prepared.model).toBe('Classic');
-    expect(prepared.color).toBe('#A1B2C3');
-    expect(prepared.material).toBe('');
+  it('should trim the material when the user typed spaces around it', () => {
+    expect(createGarmentDraft({ ...draft, material: '  ' }, now).material).toBe('');
   });
 
   it('should accept today when the garment was made today', () => {
@@ -44,13 +37,16 @@ describe('createGarmentDraft', () => {
     ).not.toThrow();
   });
 
-  it('should name the missing model when the model is blank', () => {
-    expect(issueCodes({ ...draft, model: ' ' })).toEqual(['Model.Empty']);
+  it('should name the missing drop and variant when neither is chosen', () => {
+    expect(issueCodes({ ...draft, dropId: '', variantId: '' })).toEqual([
+      'Drop.Empty',
+      'Variant.Empty',
+    ]);
   });
 
-  it('should reject the text when it is longer than the backend allows', () => {
-    expect(issueCodes({ ...draft, model: 'x'.repeat(GARMENT_TEXT_MAX_LENGTH + 1) })).toEqual([
-      'Model.TooLong',
+  it('should reject the material when it is longer than the backend allows', () => {
+    expect(issueCodes({ ...draft, material: 'x'.repeat(GARMENT_TEXT_MAX_LENGTH + 1) })).toEqual([
+      'Material.TooLong',
     ]);
   });
 

@@ -1,27 +1,12 @@
 <div class="card">
-  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
-    <div>
-      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
-        {{ 'garments.list.title' | t }}
-      </h1>
-      <span class="text-muted-color text-sm">{{
-        'garments.list.total' | t: { count: store.loadError() === null ? store.totalCount() : '—' }
-      }}</span>
-    </div>
-    <div class="flex flex-wrap gap-2">
-      <p-button
-        [label]="'garments.list.export' | t"
-        icon="pi pi-file-excel"
-        severity="secondary"
-        [outlined]="true"
-        [loading]="store.exporting()"
-        (onClick)="store.exportLinks()"
-      />
-      <p-button [label]="'garments.list.add' | t" icon="pi pi-plus" (onClick)="add()" />
-    </div>
-  </div>
+  <app-garments-toolbar
+    [count]="totalLabel()"
+    [exporting]="store.exporting()"
+    (exportLinks)="store.exportLinks()"
+    (add)="add()"
+  />
 
-  <app-garment-filters (filterChange)="applyFilter($event)" />
+  <app-garment-filters [drops]="store.drops()" (filterChange)="applyFilter($event)" />
 
   <app-data-table
     [columns]="columns()"
@@ -48,7 +33,12 @@
           <div class="text-muted-color text-sm">{{ garment.token }}</div>
         </td>
         <td>
-          <div>{{ garment.model }}</div>
+          <div>
+            {{ garment.dropName }}
+            <span class="text-muted-color">{{
+              'garments.list.edition' | t: { edition: garment.editionNumber }
+            }}</span>
+          </div>
           <div class="text-muted-color flex items-center gap-1.5 text-sm">
             <span
               class="border-surface-300 size-3 shrink-0 rounded-full border"
@@ -133,6 +123,7 @@
   [(visible)]="formVisible"
   [saving]="store.saving()"
   [created]="created()"
+  [drops]="store.drops()"
   (save)="create($event)"
 />
 

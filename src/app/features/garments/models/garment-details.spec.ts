@@ -6,7 +6,10 @@ function garment(ownerId: string | null, material: string): Garment {
     'f3a1',
     'n1gq9Xh2',
     '01K7X8M4Q9F2A6BC3DEFGHJKMN',
-    'Peaktofan Classic',
+    'd1',
+    'Drop 1',
+    349,
+    'Oversize',
     '#1A3C6E',
     'L',
     material,
@@ -29,7 +32,9 @@ describe('garmentDetails', () => {
     expect(details.map((detail) => detail.label)).toEqual([
       'garments.fields.serialNumber',
       'garments.fields.token',
-      'garments.fields.model',
+      'garments.fields.drop',
+      'garments.fields.edition',
+      'garments.fields.variant',
       'garments.fields.color',
       'garments.fields.size',
       'garments.fields.material',
@@ -40,6 +45,7 @@ describe('garmentDetails', () => {
       'garments.fields.id',
     ]);
     expect(valueOf(details, 'garments.fields.ownerId')).toBe('u1');
+    expect(valueOf(details, 'garments.fields.edition')).toBe('349');
     expect(valueOf(details, 'garments.fields.expiresAt')).toEqual(new Date('2026-11-21T10:12:00Z'));
   });
 

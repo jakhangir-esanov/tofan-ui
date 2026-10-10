@@ -13,6 +13,19 @@
   </div>
 
   <div class="flex flex-col gap-1">
+    <label for="filterDrop" class="text-muted-color text-sm">{{
+      'garments.filters.drop' | t
+    }}</label>
+    <app-select-field
+      inputId="filterDrop"
+      [formField]="form.dropId"
+      [options]="dropOptions()"
+      [placeholder]="'garments.filters.all' | t"
+      [showClear]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
     <label for="filterStatus" class="text-muted-color text-sm">{{
       'garments.filters.status' | t
     }}</label>

@@ -1,11 +1,13 @@
 import { Injectable, computed, inject, signal } from '@angular/core';
 import { CreatedGarment } from './models/created-garment';
+import { Drop } from './models/drop';
 import { Garment } from './models/garment';
 import { GarmentDraft, createGarmentDraft } from './models/garment-draft';
 import { ensureExtensionMonths } from './models/garment-extension';
 import { GarmentFilter } from './models/garment-filter';
 import { GARMENT_STATUS_ACTIONS } from './models/garment-labels';
 import { AssignableGarmentStatus } from './models/garment-status';
+import { DropsService } from './services/drops.service';
 import { GarmentsService } from './services/garments.service';
 import { DEFAULT_PAGE_SIZE, Page, PageRequest, emptyPage, firstPage } from '@shared/models/page';
 import { ErrorMessage, toErrorMessage } from '@core/feedback/error-message';
@@ -17,6 +19,7 @@ import { NotificationService } from '@core/feedback/notification.service';
 @Injectable()
 export class GarmentsStore {
   private readonly garmentsService = inject(GarmentsService);
+  private readonly dropsService = inject(DropsService);
   private readonly notifications = inject(NotificationService);
   private readonly downloads = inject(FileDownloadService);
   private readonly localeStore = inject(LocaleStore);
@@ -33,6 +36,7 @@ export class GarmentsStore {
   readonly exporting = signal(false);
   readonly filter = this.currentFilter.asReadonly();
   readonly first = computed(() => this.currentRequest().first);
+  readonly drops = signal<readonly Drop[]>([]);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
@@ -48,6 +52,14 @@ export class GarmentsStore {
     }
   }
 
+  async loadDrops(): Promise<void> {
+    try {
+      this.drops.set(await this.dropsService.list());
+    } catch (error) {
+      this.notifications.error(error);
+    }
+  }
+
   async applyFilter(filter: GarmentFilter): Promise<void> {
     this.currentFilter.set(filter);
     await this.load(firstPage(this.currentRequest().rows || DEFAULT_PAGE_SIZE));
@@ -57,8 +69,11 @@ export class GarmentsStore {
     this.saving.set(true);
     try {
       const created = await this.garmentsService.create(createGarmentDraft(draft, now));
-      this.notifications.success('garments.toast.created', { serial: created.serialNumber });
-      await this.load();
+      this.notifications.success('garments.toast.created', {
+        serial: created.serialNumber,
+        edition: created.editionNumber,
+      });
+      await Promise.all([this.load(), this.loadDrops()]);
       return created;
     } catch (error) {
       this.notifications.error(error);
@@ -105,7 +120,7 @@ export class GarmentsStore {
     try {
       await this.garmentsService.delete(garment.id);
       this.notifications.success('garments.toast.deleted', { serial: garment.serialNumber });
-      await this.load();
+      await Promise.all([this.load(), this.loadDrops()]);
       return true;
     } catch (error) {
       this.notifications.error(error);

@@ -12,8 +12,11 @@ const response: GarmentResponse = {
   id: '1',
   token: 'n1gq9Xh2',
   serialNumber: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
-  model: 'Peaktofan Classic',
-  color: 'Qora',
+  dropId: 'd1',
+  dropName: 'Drop 1',
+  editionNumber: 349,
+  variantName: 'Oversize',
+  color: '#1A3C6E',
   size: 'L',
   material: '95% paxta, 5% elastan',
   manufacturedAt: '2026-08-14T00:00:00Z',
@@ -24,8 +27,8 @@ const response: GarmentResponse = {
 };
 
 const draft: GarmentDraft = {
-  model: 'Peaktofan Classic',
-  color: '#1A2B3C',
+  dropId: 'd1',
+  variantId: 'v1',
   size: 'L',
   material: '',
   manufacturedAt: new Date(2026, 7, 14),
@@ -48,6 +51,9 @@ describe('garment mapper', () => {
     expect(garment.isClaimed()).toBe(true);
     expect(garment.manufacturedAt).toEqual(new Date(2026, 7, 14));
     expect(garment.expiresAt).toEqual(new Date('2026-11-21T10:12:00Z'));
+    expect(garment.dropName).toBe('Drop 1');
+    expect(garment.editionNumber).toBe(349);
+    expect(garment.variantName).toBe('Oversize');
   });
 
   it('should leave the owner dates empty when nobody activated the garment', () => {
@@ -69,13 +75,15 @@ describe('garment mapper', () => {
 
     expect(request.manufacturedAt).toBe('2026-08-14T00:00:00.000Z');
     expect(request).not.toHaveProperty('serialNumber');
-    expect(request.color).toBe('#1A2B3C');
+    expect(request.dropId).toBe('d1');
+    expect(request.variantId).toBe('v1');
   });
 
   it('should take the serial number from the response when a garment is created', () => {
     const created = toCreatedGarment({
       id: '1',
       serialNumber: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+      editionNumber: 349,
       token: 'n1gq9Xh2',
       linkUrl: 'https://nfc.example/t/n1gq9Xh2',
     });
@@ -83,6 +91,7 @@ describe('garment mapper', () => {
     expect(created).toEqual({
       id: '1',
       serialNumber: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+      editionNumber: 349,
       token: 'n1gq9Xh2',
       linkUrl: 'https://nfc.example/t/n1gq9Xh2',
     });

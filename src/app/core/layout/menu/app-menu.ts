@@ -28,6 +28,11 @@ export const APP_MENU: readonly LayoutMenuItem[] = [
     label: 'layout.menu.products',
     items: [
       { label: 'layout.menu.garments', icon: 'pi pi-fw pi-tag', routerLink: [AppPaths.garments] },
+      {
+        label: 'layout.menu.garmentDrops',
+        icon: 'pi pi-fw pi-th-large',
+        routerLink: [AppPaths.garmentDrops],
+      },
     ],
   },
   {

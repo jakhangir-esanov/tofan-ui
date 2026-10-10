@@ -1,0 +1,31 @@
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+      {{ 'garments.list.title' | t }}
+    </h1>
+    <span class="text-muted-color text-sm">{{
+      'garments.list.total' | t: { count: count() ?? '—' }
+    }}</span>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <p-button
+      [label]="'garments.list.export' | t"
+      icon="pi pi-file-excel"
+      severity="secondary"
+      [outlined]="true"
+      [loading]="exporting()"
+      (onClick)="exportLinks.emit()"
+    />
+    <a
+      pButton
+      [routerLink]="dropsPath"
+      severity="secondary"
+      [outlined]="true"
+      class="whitespace-nowrap"
+    >
+      <i class="pi pi-th-large" pButtonIcon></i>
+      <span pButtonLabel>{{ 'garments.list.drops' | t }}</span>
+    </a>
+    <p-button [label]="'garments.list.add' | t" icon="pi pi-plus" (onClick)="add.emit()" />
+  </div>
+</div>

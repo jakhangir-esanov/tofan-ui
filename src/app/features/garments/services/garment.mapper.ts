@@ -18,7 +18,10 @@ export function toGarment(response: GarmentResponse): Garment {
     response.id,
     response.token,
     response.serialNumber,
-    response.model,
+    response.dropId,
+    response.dropName,
+    response.editionNumber,
+    response.variantName,
     response.color,
     response.size,
     response.material,
@@ -32,8 +35,8 @@ export function toGarment(response: GarmentResponse): Garment {
 
 export function toCreateGarmentRequest(draft: GarmentDraft): CreateGarmentRequest {
   return {
-    model: draft.model,
-    color: draft.color,
+    dropId: draft.dropId,
+    variantId: draft.variantId,
     size: draft.size,
     material: draft.material,
     manufacturedAt: toUtcCalendarDate(draft.manufacturedAt),
@@ -44,6 +47,7 @@ export function toCreatedGarment(response: CreateGarmentResponse): CreatedGarmen
   return {
     id: response.id,
     serialNumber: response.serialNumber,
+    editionNumber: response.editionNumber,
     token: response.token,
     linkUrl: response.linkUrl,
   };

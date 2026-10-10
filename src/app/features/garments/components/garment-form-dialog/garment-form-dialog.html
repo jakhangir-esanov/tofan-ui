@@ -12,16 +12,27 @@
       <app-garment-created-panel [garment]="garment" />
     }
 
+    @if (openDrops().length === 0) {
+      <p class="text-muted-color m-0">{{ 'garments.form.noOpenDrops' | t }}</p>
+    }
+
     <div class="grid grid-cols-1 gap-x-6 gap-y-5 md:grid-cols-2">
       <div class="flex flex-col gap-2">
-        <label for="model" class="font-medium">{{ 'garments.form.model' | t }}</label>
-        <app-text-field
-          inputId="model"
-          autocomplete="off"
-          [formField]="form.model"
-          [placeholder]="'garments.form.modelPlaceholder' | t"
+        <label for="dropId" class="font-medium">{{ 'garments.form.drop' | t }}</label>
+        <app-select-field
+          inputId="dropId"
+          [formField]="form.dropId"
+          [options]="dropOptions()"
+          [placeholder]="'garments.form.dropPlaceholder' | t"
+          [fluid]="true"
         />
-        <app-field-error [field]="form.model()" />
+        <app-field-error [field]="form.dropId()" />
+        @if (selectedDrop(); as drop) {
+          <small class="text-muted-color">{{
+            'garments.form.nextEdition'
+              | t: { next: drop.issuedCount + 1, total: drop.totalQuantity }
+          }}</small>
+        }
       </div>
 
       <div class="flex flex-col gap-2">
@@ -32,10 +43,25 @@
         <app-field-error [field]="form.manufacturedAt()" />
       </div>
 
+      <div class="flex flex-col gap-2 md:col-span-2">
+        <span id="variantLabel" class="font-medium">{{ 'garments.form.variant' | t }}</span>
+        <app-garment-variant-picker
+          ariaLabelledBy="variantLabel"
+          [formField]="form.variantId"
+          [variants]="selectedDrop()?.variants ?? []"
+        />
+        <app-field-error [field]="form.variantId()" />
+      </div>
+
       <div class="flex flex-col gap-2">
-        <label for="color" class="font-medium">{{ 'garments.form.color' | t }}</label>
-        <app-color-field inputId="color" [formField]="form.color" />
-        <app-field-error [field]="form.color()" />
+        <span id="sizeLabel" class="font-medium">{{ 'garments.form.size' | t }}</span>
+        <app-choice-field
+          ariaLabelledBy="sizeLabel"
+          [formField]="form.size"
+          [options]="sizeOptions"
+          [fluid]="true"
+        />
+        <app-field-error [field]="form.size()" />
       </div>
 
       <div class="flex flex-col gap-2">
@@ -49,17 +75,6 @@
           [placeholder]="'garments.form.materialPlaceholder' | t"
         />
         <app-field-error [field]="form.material()" />
-      </div>
-
-      <div class="flex flex-col gap-2 md:col-span-2">
-        <span id="sizeLabel" class="font-medium">{{ 'garments.form.size' | t }}</span>
-        <app-choice-field
-          ariaLabelledBy="sizeLabel"
-          [formField]="form.size"
-          [options]="sizeOptions"
-          [fluid]="true"
-        />
-        <app-field-error [field]="form.size()" />
       </div>
     </div>
   </div>

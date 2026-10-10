@@ -1,34 +1,63 @@
 # Garments feature
 
 ## Purpose
-The admin manages NFC shirts: creates shirts one after another (model, colour, size, material,
-manufacturing date) and gets the server-made serial number and the link to write to each chip, lists and filters shirts,
-hides, revokes or restores a shirt, extends the validity of an activated shirt, and exports the chip
-links of the filtered shirts to Excel for the print shop.
+
+The admin manages NFC shirts. First a drop (a numbered release such as "Drop 1" with 500 shirts) and
+its colour and style variants, each with one image. Then shirts one after another (drop, variant,
+size, material, manufacturing date): the server gives each one the next number in its drop, a serial
+number and the link to write to the chip. The admin lists and filters shirts, hides, revokes or
+restores a shirt, extends the validity of an activated shirt, and exports the chip links of the
+filtered shirts (for example one drop) to Excel for the print shop.
 
 ## Backend
-- Base route: `/admin/garments` (backend Garment module, handover: `tofan/docs/garment-ui-v1.md`)
-- Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerId`),
-  `POST /admin/garments`, `POST /admin/garments/{id}/status`, `POST /admin/garments/{id}/extend`, `DELETE /admin/garments/{id}`,
-  `GET /admin/garments/export-links` (same filters, no paging). The backend has no shirt photo,
-  so the panel has none either (no upload field, no media category).
+
+- Base routes: `/admin/garments`, `/admin/drops` (backend Garment module, handover:
+  `tofan/docs/garment-ui-v1.1.md`)
+- Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerId`,
+  `DropId`), `POST /admin/garments`, `POST /admin/garments/{id}/status`,
+  `POST /admin/garments/{id}/extend`, `DELETE /admin/garments/{id}`, `GET /admin/garments/export-links`
+  (same filters, no paging), `GET /admin/drops` (every drop with its variants, no paging),
+  `POST /admin/drops`, `POST /admin/drops/{id}/variants`, and `POST /files` with category
+  `garmentImage` (7) for a variant image.
+- A shirt has no photo of its own; the image belongs to the variant and is shown from
+  `GET /files/{id}/content` (`DropsService` builds the URL).
 - Access (backend policy): `Policies.Admin` on every endpoint
 - Error codes handled: `Garment.NotFound`, `Garment.ManufacturedInFuture`,
-  `Garment.NotClaimed`, `Garment.StatusNotAllowed`, `Garment.CannotDeleteClaimed` (per-code messages in `core/feedback/error-message.ts`)
+  `Garment.NotClaimed`, `Garment.StatusNotAllowed`, `Garment.CannotDeleteClaimed` (per-code messages in
+  `core/feedback/error-message.ts`); `Drop.NotFound`, `Drop.VariantNotFound`, `Drop.SoldOut` are shown
+  from the backend's own localized `messages`.
 
 ## Screens
-| Route | Page | Access |
-|---|---|---|
-| `/garments` | `pages/garments-page` | `authGuard` (admin role) |
+
+| Route             | Page                              | Access                   |
+| ----------------- | --------------------------------- | ------------------------ |
+| `/garments`       | `pages/garments-page`             | `authGuard` (admin role) |
+| `/garments/drops` | `pages/drops-page` (`DropsStore`) | `authGuard` (admin role) |
+
+## Drops and variants
+
+- `pages/drops-page` lists the drops as cards: name, how many of the total are created (progress
+  bar), a "full" tag, and the variants with their images. `components/drop-form-dialog` creates a drop
+  (name, total); `components/drop-variant-form-dialog` adds a variant (style name, `#RRGGBB` colour,
+  image through `shared/components/file-upload`). Neither can be edited later: the backend has no
+  update endpoint, so a sold shirt's passport never changes.
+- The NFC site paints its drawn shirt with the variant colour, so the colour stays a `#RRGGBB` code
+  (`shared/components/color-field`, upper-cased by `createDropVariantDraft`).
+- Shirts made before drops existed belong to "Drop 0", whose variants have no image (the card and the
+  picker show the colour instead).
 
 ## Fields and serial number
-- Model and material are free text (max. 200). Size is picked from `models/garment-catalog.ts`
+
+- The create dialog picks a drop (only drops with a free number and at least one variant,
+  `Drop.canTakeGarments()`), then one of its variants from image tiles
+  (`components/garment-variant-picker`, a `FormValueControl`). It shows the next number
+  (`issuedCount + 1 / totalQuantity`). If the chosen variant is not in the chosen drop, submit clears
+  the variant so its required error shows.
+- Material is free text (max. 200). Size is picked from `models/garment-catalog.ts`
   (`XS S M L XL 2XL 3XL`).
-- Colour is a `#RRGGBB` code, picked with `shared/components/color-field` (a `p-colorpicker` next to
-  a text input where the code can be typed or pasted). The form checks the pattern
-  (`shared/utils/hex-color.ts`), `createGarmentDraft` upper-cases it. Older shirts may hold a word
-  (`Qora`, `black`); the list shows the stored text as it is, with a swatch next to it (an unknown
-  CSS colour leaves the swatch empty).
+- The number in the drop (`editionNumber`) is given by the server and returned by
+  `POST /admin/garments`; the created card and the toast show it. The garments page reloads the drops
+  after a create or delete so the counters stay right.
 - The serial number is made by the server: a ULID (26 characters, Crockford base32), returned by
   `POST /admin/garments`. The panel never builds or checks a serial number; older shirts may still
   carry a `PT-…` serial. The created card shows it large with a copy button, for the shirt label.
@@ -38,6 +67,7 @@ links of the filtered shirts to Excel for the print shop.
   the card is `components/garment-created-panel`.
 
 ## Structure notes
+
 - Clicking a row (or the serial number button, which is keyboard reachable) opens
   `components/garment-view-dialog`: every field of the row with a copy button each, the status tag,
   "copy all" as `Label: value` lines, and links to the soldier and account cards when the shirt has an
@@ -66,8 +96,9 @@ links of the filtered shirts to Excel for the print shop.
 - Forms are Signal Forms. Optimus UI `p-select`, `p-datepicker` and `p-inputnumber` declare `min`,
   `max` and `pattern` inputs with types that clash with `FormUiControl`, so `[formField]` goes through
   `shared/components/select-field`, `date-field`, `number-field`, `choice-field` (a
-  `p-selectbutton`, used for size), `color-field` and `text-field` (model and material, so an
-  empty required field is not red before it is touched).
+  `p-selectbutton`, used for size), `color-field` and `text-field` (drop and variant names and
+  material, so an empty required field is not red before it is touched). `[formField]` also rejects a
+  `[min]` binding next to it, so the drop total's minimum lives only in the schema.
 - Overlays (`p-datepicker`, `p-select`) are appended to `body` app-wide (`overlayAppendTo` in
   `core/config/ui.providers.ts`); inside a dialog they were clipped by the dialog content before.
 
@@ -76,18 +107,21 @@ links of the filtered shirts to Excel for the print shop.
   `{min}`, `{max}` from the validation error itself. The screen shows no explanatory hint texts.
 
 ## Traps
+
 - The endpoints were not called against a running server when this screen was written (see the
   handover). Check each one in Swagger before relying on it.
 - `SortField` must be the snake_case name of a response field; anything else silently sorts by `id`.
 - A shirt dated today can be rejected with `Garment.ManufacturedInFuture` between 00:00 and 05:00
   Tashkent time: the backend compares UTC midnight of the day with UTC now. The panel no longer
   offers that day (see above); the real fix is a business-timezone check on the backend.
-- The NFC site used to pick the shirt picture by the colour codes `black` / `blue`. New shirts carry a
-  `#RRGGBB` code, so the NFC site has to handle that (or show no colour-based picture).
+- Two admins creating shirts in the same drop at the same moment can get the same number; the backend
+  refuses the second one with a 409, and the admin presses save again.
+- Deleting the last created shirt of a drop gives its number back; a number from the middle is not
+  reused, so that drop ends with one shirt fewer.
 - Hidden and revoked shirts show `Invalid` on the NFC site, also to their owner.
 - Delete is a hard delete and only for shirts nobody activated (`Garment.canDelete()`, backend
   `Garment.CannotDeleteClaimed` otherwise): a mistaken or unsold shirt. A claimed shirt is revoked
   instead, so its owner keeps the passport. The trash button is in the row and in the view dialog, both
   behind `confirmDelete`. If the link was already written to a chip, that chip now scans as not found.
-- There is no regenerate-link, no batch create and no transfer on the backend; do not add them here
-  without a backend endpoint.
+- There is no regenerate-link, no batch create, no transfer and no drop or variant editing on the
+  backend; do not add them here without a backend endpoint.

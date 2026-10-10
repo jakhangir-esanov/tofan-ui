@@ -6,6 +6,7 @@ export const MEDIA_UZ = {
     foodImage: 'Ovqat rasmi',
     productImage: 'Mahsulot rasmi',
     document: 'Hujjat',
+    garmentImage: 'Futbolka rasmi',
   },
   page: {
     title: 'Media fayllar',

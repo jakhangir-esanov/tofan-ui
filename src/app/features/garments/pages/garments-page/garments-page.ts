@@ -28,6 +28,7 @@ import { GarmentExtendDialog } from '../../components/garment-extend-dialog/garm
 import { GarmentFilters } from '../../components/garment-filters/garment-filters';
 import { GarmentFormDialog } from '../../components/garment-form-dialog/garment-form-dialog';
 import { GarmentViewDialog } from '../../components/garment-view-dialog/garment-view-dialog';
+import { GarmentsToolbar } from '../../components/garments-toolbar/garments-toolbar';
 
 const SHORT_ID_LENGTH = 8;
 const DETAILS_SEPARATOR = ' · ';
@@ -40,6 +41,7 @@ const DETAILS_SEPARATOR = ' · ';
     GarmentFormDialog,
     GarmentExtendDialog,
     GarmentViewDialog,
+    GarmentsToolbar,
     Button,
     Tag,
     Tooltip,
@@ -58,7 +60,7 @@ export class GarmentsPage {
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
     { field: 'serialNumber', header: this.column('serialNumber'), sortable: true },
-    { field: 'model', header: this.column('model'), sortable: true },
+    { field: 'dropName', header: this.column('drop'), sortable: true },
     {
       field: 'manufacturedAt',
       header: this.column('manufacturedAt'),
@@ -71,6 +73,9 @@ export class GarmentsPage {
     { field: 'actions', header: '', width: '12rem' },
   ]);
 
+  protected readonly totalLabel = computed(() =>
+    this.store.loadError() === null ? this.store.totalCount() : null,
+  );
   protected readonly formVisible = signal(false);
   protected readonly created = signal<CreatedGarment | null>(null);
   protected readonly extended = signal<Garment | null>(null);
@@ -78,6 +83,10 @@ export class GarmentsPage {
   protected readonly viewed = signal<Garment | null>(null);
   protected readonly viewVisible = signal(false);
   protected readonly now = new Date();
+
+  constructor() {
+    void this.store.loadDrops();
+  }
 
   protected statusLabel(garment: Garment): string {
     return this.translator.translate(GARMENT_STATUS_LABELS[garment.status]);
@@ -92,7 +101,7 @@ export class GarmentsPage {
   }
 
   protected detailsOf(garment: Garment): string {
-    return [garment.color, garment.size, garment.material]
+    return [garment.variantName, garment.size, garment.material]
       .filter((detail) => detail.length > 0)
       .join(DETAILS_SEPARATOR);
   }

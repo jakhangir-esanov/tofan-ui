@@ -5,23 +5,26 @@ import { BusinessRuleError } from '@shared/models/errors/business-rule.error';
 import { ConflictError } from '@shared/models/errors/conflict.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { GarmentsStore } from './garments.store';
+import { Drop } from './models/drop';
 import { Garment } from './models/garment';
 import { GarmentDraft } from './models/garment-draft';
+import { DropsService } from './services/drops.service';
 import { GarmentsService } from './services/garments.service';
 
 const today = new Date(Date.UTC(2026, 8, 23, 6, 0));
 
 const draft: GarmentDraft = {
-  model: ' Peaktofan Classic ',
-  color: '#1a2b3c',
+  dropId: 'd1',
+  variantId: 'v1',
   size: 'L',
-  material: '',
+  material: ' paxta ',
   manufacturedAt: new Date(2026, 7, 14),
 };
 
 const created = {
   id: '1',
   serialNumber: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+  editionNumber: 349,
   token: 'n1gq9Xh2',
   linkUrl: 'https://nfc.example/t/n1gq9Xh2',
 };
@@ -30,8 +33,11 @@ const garment = new Garment(
   '1',
   'n1gq9Xh2',
   '01K7X8M4Q9F2A6BC3DEFGHJKMN',
-  'Peaktofan Classic',
-  'Qora',
+  'd1',
+  'Drop 1',
+  349,
+  'Oversize',
+  '#1A3C6E',
   'L',
   '',
   new Date(2026, 7, 14),
@@ -46,6 +52,7 @@ describe('GarmentsStore', () => {
     GarmentsService,
     'list' | 'create' | 'changeStatus' | 'extend' | 'delete' | 'exportLinks'
   >;
+  let drops: Pick<DropsService, 'list'>;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
   let downloads: Pick<FileDownloadService, 'save'>;
 
@@ -54,6 +61,7 @@ describe('GarmentsStore', () => {
       providers: [
         GarmentsStore,
         { provide: GarmentsService, useValue: service },
+        { provide: DropsService, useValue: drops },
         { provide: NotificationService, useValue: notifications },
         { provide: FileDownloadService, useValue: downloads },
       ],
@@ -69,6 +77,9 @@ describe('GarmentsStore', () => {
       extend: vi.fn().mockResolvedValue(new Date('2027-02-21T10:12:00Z')),
       delete: vi.fn().mockResolvedValue(undefined),
       exportLinks: vi.fn().mockResolvedValue({ content: new Blob(), fileName: 'links.xlsx' }),
+    };
+    drops = {
+      list: vi.fn().mockResolvedValue([new Drop('d1', 'Drop 1', 500, 348, new Date())]),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
     downloads = { save: vi.fn() };
@@ -111,9 +122,10 @@ describe('GarmentsStore', () => {
     await expect(store.create(draft, today)).resolves.toEqual(created);
 
     expect(service.create).toHaveBeenCalledWith(
-      expect.objectContaining({ model: 'Peaktofan Classic', color: '#1A2B3C' }),
+      expect.objectContaining({ dropId: 'd1', variantId: 'v1', material: 'paxta' }),
     );
     expect(service.list).toHaveBeenCalled();
+    expect(drops.list).toHaveBeenCalled();
     expect(store.saving()).toBe(false);
   });
 
@@ -124,6 +136,7 @@ describe('GarmentsStore', () => {
 
     expect(notifications.success).toHaveBeenCalledWith('garments.toast.created', {
       serial: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
+      edition: 349,
     });
   });
 
@@ -135,6 +148,24 @@ describe('GarmentsStore', () => {
     ).resolves.toBeNull();
 
     expect(service.create).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalled();
+  });
+
+  it('should expose the drops when they are loaded for the form and the filter', async () => {
+    const store = createStore();
+
+    await store.loadDrops();
+
+    expect(store.drops().map((drop) => drop.name)).toEqual(['Drop 1']);
+  });
+
+  it('should report the failure and keep no drops when the drops cannot be loaded', async () => {
+    vi.mocked(drops.list).mockRejectedValue(new ServiceUnavailableError());
+    const store = createStore();
+
+    await store.loadDrops();
+
+    expect(store.drops()).toEqual([]);
     expect(notifications.error).toHaveBeenCalled();
   });
 

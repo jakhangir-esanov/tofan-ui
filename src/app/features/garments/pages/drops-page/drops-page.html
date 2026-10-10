@@ -1,0 +1,112 @@
+<div class="card">
+  <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <a
+        [routerLink]="garmentsPath"
+        class="text-muted-color mb-2 inline-flex items-center gap-2 text-sm"
+      >
+        <i class="pi pi-arrow-left" aria-hidden="true"></i> {{ 'garments.drops.back' | t }}
+      </a>
+      <h1 class="text-surface-900 dark:text-surface-0 m-0 text-xl font-semibold">
+        {{ 'garments.drops.title' | t }}
+      </h1>
+      <span class="text-muted-color text-sm">{{ 'garments.drops.subtitle' | t }}</span>
+    </div>
+    <p-button [label]="'garments.drops.add' | t" icon="pi pi-plus" (onClick)="addDrop()" />
+  </div>
+
+  @if (store.loadError(); as error) {
+    <p-message severity="error">
+      <div class="flex flex-wrap items-center gap-3">
+        <span>{{ error | message }}</span>
+        <p-button
+          [label]="'common.actions.retry' | t"
+          icon="pi pi-refresh"
+          severity="secondary"
+          [outlined]="true"
+          size="small"
+          (onClick)="store.load()"
+        />
+      </div>
+    </p-message>
+  } @else if (!store.loading() && store.drops().length === 0) {
+    <p class="text-muted-color m-0">{{ 'garments.drops.empty' | t }}</p>
+  }
+
+  <div class="flex flex-col gap-4">
+    @for (drop of store.drops(); track drop.id) {
+      <section class="border-surface-200 dark:border-surface-700 rounded-xl border p-4">
+        <div class="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-2">
+            <h2 class="m-0 text-lg font-semibold">{{ drop.name }}</h2>
+            @if (drop.isSoldOut()) {
+              <p-tag [value]="'garments.drops.soldOut' | t" severity="secondary" />
+            }
+            <span class="text-muted-color text-sm">{{ dateLabel(drop.createdOnUtc) }}</span>
+          </div>
+          <p-button
+            [label]="'garments.drops.addVariant' | t"
+            icon="pi pi-palette"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            (onClick)="addVariant(drop)"
+          />
+        </div>
+
+        <div class="mb-4 flex items-center gap-3">
+          <p-progressbar class="flex-1" [value]="drop.progressPercent()" [showValue]="false" />
+          <span class="text-sm whitespace-nowrap">{{
+            'garments.drops.issued' | t: { issued: drop.issuedCount, total: drop.totalQuantity }
+          }}</span>
+        </div>
+
+        @if (drop.variants.length === 0) {
+          <p class="text-muted-color m-0 text-sm">{{ 'garments.drops.noVariants' | t }}</p>
+        } @else {
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8">
+            @for (variant of drop.variants; track variant.id) {
+              <figure
+                class="border-surface-200 dark:border-surface-700 m-0 overflow-hidden rounded-lg border"
+              >
+                @if (variant.imageUrl; as imageUrl) {
+                  <img
+                    [src]="imageUrl"
+                    [alt]="variant.name"
+                    class="aspect-square w-full object-cover"
+                  />
+                } @else {
+                  <span
+                    class="block aspect-square w-full"
+                    [style.background-color]="variant.color"
+                  ></span>
+                }
+                <figcaption class="flex items-center gap-1.5 px-2 py-1.5 text-sm">
+                  <span
+                    class="border-surface-300 size-3 shrink-0 rounded-full border"
+                    [style.background-color]="variant.color"
+                    aria-hidden="true"
+                  ></span>
+                  <span class="truncate">{{ variant.name }}</span>
+                </figcaption>
+              </figure>
+            }
+          </div>
+        }
+      </section>
+    }
+  </div>
+</div>
+
+<app-drop-form-dialog
+  [(visible)]="dropFormVisible"
+  [saving]="store.saving()"
+  (save)="createDrop($event)"
+/>
+
+<app-drop-variant-form-dialog
+  [(visible)]="variantFormVisible"
+  [drop]="variantDrop()"
+  [saving]="store.saving()"
+  (save)="createVariant($event)"
+/>

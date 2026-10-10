@@ -10,7 +10,10 @@ const garment = new Garment(
   'f3a1',
   'n1gq9Xh2',
   SERIAL,
-  'Peaktofan Classic',
+  'd1',
+  'Drop 1',
+  349,
+  'Oversize',
   '#1A3C6E',
   'L',
   '',
@@ -22,7 +25,10 @@ const claimed = new Garment(
   'c9b2',
   'k2hp4Yt7',
   '01K7X8M4Q9F2A6BC3DEFGHJKMP',
-  'Peaktofan Classic',
+  'd1',
+  'Drop 1',
+  349,
+  'Oversize',
   '#1A3C6E',
   'M',
   '',
@@ -75,7 +81,7 @@ describe('GarmentViewDialog', () => {
   it('should offer a copy button only for the fields that have a value', async () => {
     await render();
 
-    expect(copyButtons()).toHaveLength(7);
+    expect(copyButtons()).toHaveLength(9);
   });
 
   it('should copy the serial number when its copy button is clicked', async () => {

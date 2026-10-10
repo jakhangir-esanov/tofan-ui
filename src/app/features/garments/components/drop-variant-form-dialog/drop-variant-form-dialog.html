@@ -1,0 +1,42 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="header()"
+  [saveLabel]="'garments.drops.variantForm.save' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-5">
+    <div class="flex flex-col gap-2">
+      <label for="variantName" class="font-medium">{{
+        'garments.drops.variantForm.name' | t
+      }}</label>
+      <app-text-field
+        inputId="variantName"
+        autocomplete="off"
+        [formField]="form.name"
+        [placeholder]="'garments.drops.variantForm.namePlaceholder' | t"
+      />
+      <app-field-error [field]="form.name()" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="variantColor" class="font-medium">{{ 'garments.form.color' | t }}</label>
+      <app-color-field inputId="variantColor" [formField]="form.color" />
+      <app-field-error [field]="form.color()" />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <app-file-upload
+        category="garmentImage"
+        [label]="'garments.drops.variantForm.image' | t"
+        [(fileId)]="imageFileId"
+        [(fileName)]="imageFileName"
+      />
+      @if (submitted() && imageFileId() === null) {
+        <small class="text-red-500" role="alert">{{
+          'garments.drops.variantForm.errors.image' | t
+        }}</small>
+      }
+    </div>
+  </div>
+</app-form-dialog>

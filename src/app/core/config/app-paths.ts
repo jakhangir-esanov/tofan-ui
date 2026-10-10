@@ -6,6 +6,7 @@ export const AppPaths = {
   soldiers: '/soldiers',
   accounts: '/accounts',
   garments: '/garments',
+  garmentDrops: '/garments/drops',
   trainers: '/trainers',
   trainerSubscriptions: '/trainers/subscriptions',
   userSessions: '/user-sessions',
