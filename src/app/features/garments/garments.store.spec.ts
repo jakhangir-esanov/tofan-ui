@@ -19,6 +19,7 @@ const draft: GarmentDraft = {
   size: 'L',
   material: ' paxta ',
   manufacturedAt: new Date(2026, 7, 14),
+  quantity: 1,
 };
 
 const created = {
@@ -72,7 +73,7 @@ describe('GarmentsStore', () => {
   beforeEach(() => {
     service = {
       list: vi.fn().mockResolvedValue({ items: [garment], totalCount: 1 }),
-      create: vi.fn().mockResolvedValue(created),
+      create: vi.fn().mockResolvedValue([created]),
       changeStatus: vi.fn().mockResolvedValue(undefined),
       extend: vi.fn().mockResolvedValue(new Date('2027-02-21T10:12:00Z')),
       delete: vi.fn().mockResolvedValue(undefined),
@@ -119,7 +120,7 @@ describe('GarmentsStore', () => {
   it('should send the prepared draft and return the link when a garment is created', async () => {
     const store = createStore();
 
-    await expect(store.create(draft, today)).resolves.toEqual(created);
+    await expect(store.create(draft, today)).resolves.toEqual([created]);
 
     expect(service.create).toHaveBeenCalledWith(
       expect.objectContaining({ dropId: 'd1', variantId: 'v1', material: 'paxta' }),
@@ -138,6 +139,33 @@ describe('GarmentsStore', () => {
       serial: '01K7X8M4Q9F2A6BC3DEFGHJKMN',
       edition: 349,
     });
+  });
+
+  it('should announce the number range when a batch is created', async () => {
+    vi.mocked(service.create).mockResolvedValue([
+      { ...created, editionNumber: 249 },
+      { ...created, editionNumber: 250 },
+      { ...created, editionNumber: 251 },
+    ]);
+    const store = createStore();
+
+    await store.create({ ...draft, quantity: 3 }, today);
+
+    expect(notifications.success).toHaveBeenCalledWith('garments.toast.createdMany', {
+      count: 3,
+      first: 249,
+      last: 251,
+    });
+  });
+
+  it('should export the drop of the last batch when its links are asked for', async () => {
+    const store = createStore();
+    await store.applyFilter({ status: 'active' });
+    await store.create(draft, today);
+
+    await store.exportCreatedLinks();
+
+    expect(service.exportLinks).toHaveBeenCalledWith({ dropId: 'd1' });
   });
 
   it('should not call the backend when the date is in the future', async () => {

@@ -2,47 +2,70 @@
   class="border-primary bg-primary-50 dark:bg-primary-950 flex flex-col gap-3 rounded-xl border p-4"
   role="status"
 >
-  <div class="flex items-center gap-2">
-    <i class="pi pi-check-circle text-primary text-xl" aria-hidden="true"></i>
-    <span class="font-semibold">{{ 'garments.created.title' | t }}</span>
-    <span class="text-muted-color ms-auto">{{
-      'garments.created.edition' | t: { edition: garment().editionNumber }
-    }}</span>
-  </div>
+  @if (single(); as garment) {
+    <div class="flex items-center gap-2">
+      <i class="pi pi-check-circle text-primary text-xl" aria-hidden="true"></i>
+      <span class="font-semibold">{{ 'garments.created.title' | t }}</span>
+      <span class="text-muted-color ms-auto">{{
+        'garments.created.edition' | t: { edition: garment.editionNumber }
+      }}</span>
+    </div>
 
-  <div class="flex items-center gap-2">
-    <span class="flex-1 font-mono text-2xl font-semibold tracking-wide break-all">
-      {{ garment().serialNumber }}
-    </span>
-    <p-button
-      icon="pi pi-copy"
-      severity="secondary"
-      [text]="true"
-      size="small"
-      [ariaLabel]="'garments.created.copySerial' | t"
-      [pTooltip]="'garments.created.copySerial' | t"
-      (onClick)="copySerial()"
-    />
-  </div>
+    <div class="flex items-center gap-2">
+      <span class="flex-1 font-mono text-2xl font-semibold tracking-wide break-all">
+        {{ garment.serialNumber }}
+      </span>
+      <p-button
+        icon="pi pi-copy"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        [ariaLabel]="'garments.created.copySerial' | t"
+        [pTooltip]="'garments.created.copySerial' | t"
+        (onClick)="copySerial(garment)"
+      />
+    </div>
 
-  <div
-    class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 flex items-center gap-2 rounded-lg border px-3 py-2"
-  >
-    <code class="flex-1 text-sm break-all">{{ garment().linkUrl }}</code>
-    <p-button
-      icon="pi pi-copy"
-      [label]="'garments.fields.link' | t"
-      size="small"
-      (onClick)="copyLink()"
-    />
-    <p-button
-      icon="pi pi-key"
-      severity="secondary"
-      [text]="true"
-      size="small"
-      [ariaLabel]="'garments.created.copyToken' | t"
-      [pTooltip]="'garments.created.copyToken' | t"
-      (onClick)="copyToken()"
-    />
-  </div>
+    <div
+      class="border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 flex items-center gap-2 rounded-lg border px-3 py-2"
+    >
+      <code class="flex-1 text-sm break-all">{{ garment.linkUrl }}</code>
+      <p-button
+        icon="pi pi-copy"
+        [label]="'garments.fields.link' | t"
+        size="small"
+        (onClick)="copyLink(garment)"
+      />
+      <p-button
+        icon="pi pi-key"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        [ariaLabel]="'garments.created.copyToken' | t"
+        [pTooltip]="'garments.created.copyToken' | t"
+        (onClick)="copyToken(garment)"
+      />
+    </div>
+  } @else {
+    @let batch = range();
+    <div class="flex flex-wrap items-center gap-2">
+      <i class="pi pi-check-circle text-primary text-xl" aria-hidden="true"></i>
+      <span class="font-semibold">{{
+        'garments.created.batchTitle' | t: { count: batch.count }
+      }}</span>
+      <span class="text-muted-color ms-auto">{{
+        'garments.created.batchRange' | t: { first: batch.first, last: batch.last }
+      }}</span>
+    </div>
+    <div class="flex flex-wrap items-center gap-3">
+      <span class="text-muted-color flex-1 text-sm">{{ 'garments.created.batchHint' | t }}</span>
+      <p-button
+        icon="pi pi-file-excel"
+        [label]="'garments.created.exportBatch' | t"
+        size="small"
+        [loading]="exporting()"
+        (onClick)="exportLinks.emit()"
+      />
+    </div>
+  }
 </div>

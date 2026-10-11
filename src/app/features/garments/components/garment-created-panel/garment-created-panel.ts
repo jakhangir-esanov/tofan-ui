@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, computed, inject, input, output } from '@angular/core';
 import { CreatedGarment } from '../../models/created-garment';
 import { ClipboardService } from '@core/feedback/clipboard.service';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
@@ -13,17 +13,33 @@ import { Tooltip } from '@openng/optimus-ui/tooltip';
 export class GarmentCreatedPanel {
   private readonly clipboard = inject(ClipboardService);
 
-  readonly garment = input.required<CreatedGarment>();
+  readonly garments = input.required<readonly CreatedGarment[]>();
+  readonly exporting = input(false);
 
-  protected copySerial(): Promise<void> {
-    return this.clipboard.copy(this.garment().serialNumber, 'garments.fields.serialNumber');
+  readonly exportLinks = output<void>();
+
+  protected readonly single = computed(() => {
+    const garments = this.garments();
+    return garments.length === 1 ? garments[0] : null;
+  });
+  protected readonly range = computed(() => {
+    const editions = this.garments().map((garment) => garment.editionNumber);
+    return {
+      count: editions.length,
+      first: Math.min(...editions),
+      last: Math.max(...editions),
+    };
+  });
+
+  protected copySerial(garment: CreatedGarment): Promise<void> {
+    return this.clipboard.copy(garment.serialNumber, 'garments.fields.serialNumber');
   }
 
-  protected copyLink(): Promise<void> {
-    return this.clipboard.copy(this.garment().linkUrl, 'garments.fields.link');
+  protected copyLink(garment: CreatedGarment): Promise<void> {
+    return this.clipboard.copy(garment.linkUrl, 'garments.fields.link');
   }
 
-  protected copyToken(): Promise<void> {
-    return this.clipboard.copy(this.garment().token, 'garments.fields.token');
+  protected copyToken(garment: CreatedGarment): Promise<void> {
+    return this.clipboard.copy(garment.token, 'garments.fields.token');
   }
 }

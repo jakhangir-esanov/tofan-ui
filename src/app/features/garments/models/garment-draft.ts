@@ -3,6 +3,8 @@ import { isAfterDay, startOfDay } from '@shared/utils/calendar-date';
 import { GarmentSize } from './garment-catalog';
 
 export const GARMENT_TEXT_MAX_LENGTH = 200;
+export const MIN_GARMENT_BATCH = 1;
+export const MAX_GARMENT_BATCH = 500;
 
 export interface GarmentDraft {
   readonly dropId: string;
@@ -10,6 +12,7 @@ export interface GarmentDraft {
   readonly size: GarmentSize;
   readonly material: string;
   readonly manufacturedAt: Date;
+  readonly quantity: number;
 }
 
 export function latestManufacturingDay(now: Date): Date {
@@ -23,7 +26,11 @@ export function createGarmentDraft(draft: GarmentDraft, now: Date): GarmentDraft
     manufacturedAt: startOfDay(draft.manufacturedAt),
   };
 
-  const issues = [...missingFields(prepared), ...tooLongFields(prepared)];
+  const issues = [
+    ...missingFields(prepared),
+    ...tooLongFields(prepared),
+    ...quantityIssues(prepared),
+  ];
   if (isAfterDay(prepared.manufacturedAt, latestManufacturingDay(now))) {
     issues.push({
       code: 'Garment.ManufacturedInFuture',
@@ -45,6 +52,20 @@ function missingFields(draft: GarmentDraft): ValidationIssue[] {
     issues.push({ code: 'Variant.Empty', message: 'Variant is required.' });
   }
   return issues;
+}
+
+function quantityIssues(draft: GarmentDraft): ValidationIssue[] {
+  const { quantity } = draft;
+  return Number.isInteger(quantity) &&
+    quantity >= MIN_GARMENT_BATCH &&
+    quantity <= MAX_GARMENT_BATCH
+    ? []
+    : [
+        {
+          code: 'Quantity.OutOfRange',
+          message: `Quantity must be between ${MIN_GARMENT_BATCH} and ${MAX_GARMENT_BATCH}.`,
+        },
+      ];
 }
 
 function tooLongFields(draft: GarmentDraft): ValidationIssue[] {

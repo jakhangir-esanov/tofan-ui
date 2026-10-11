@@ -61,9 +61,14 @@ filtered shirts (for example one drop) to Excel for the print shop.
 - The serial number is made by the server: a ULID (26 characters, Crockford base32), returned by
   `POST /admin/garments`. The panel never builds or checks a serial number; older shirts may still
   carry a `PT-…` serial. The created card shows it large with a copy button, for the shirt label.
-- Batch entry: the create dialog stays open after a save. The fields are kept, the created card
-  (serial number, link, token) is shown on top, so for the next shirt the admin only presses save.
-  The form is cleared when the dialog is opened again. The dialog is `components/garment-form-dialog`;
+- Quantity: one request creates 1 to 500 shirts with the same drop, variant, size, material and date
+  (`quantity`, default 1). The form also caps it at the drop's free numbers
+  (`Drop.remainingEditions()`); the backend refuses a batch that does not fit with
+  `Drop.NotEnoughEditions` and creates nothing. The response is an array in number order.
+- Repeated entry: the create dialog stays open after a save and the fields are kept. For one shirt
+  the created card shows the serial number, link and token; for a batch it shows the count, the number
+  range and a button that downloads the Excel links of that drop (`GarmentsStore.exportCreatedLinks`),
+  because a batch's links are only usable from the file. The form is cleared when the dialog is opened again. The dialog is `components/garment-form-dialog`;
   the card is `components/garment-created-panel`.
 
 ## Structure notes
@@ -123,5 +128,5 @@ filtered shirts (for example one drop) to Excel for the print shop.
   `Garment.CannotDeleteClaimed` otherwise): a mistaken or unsold shirt. A claimed shirt is revoked
   instead, so its owner keeps the passport. The trash button is in the row and in the view dialog, both
   behind `confirmDelete`. If the link was already written to a chip, that chip now scans as not found.
-- There is no regenerate-link, no batch create, no transfer and no drop or variant editing on the
+- There is no regenerate-link, no transfer and no drop or variant editing on the
   backend; do not add them here without a backend endpoint.

@@ -8,8 +8,12 @@
   (save)="submit()"
 >
   <div class="flex flex-col gap-6">
-    @if (created(); as garment) {
-      <app-garment-created-panel [garment]="garment" />
+    @if (created(); as garments) {
+      <app-garment-created-panel
+        [garments]="garments"
+        [exporting]="exporting()"
+        (exportLinks)="exportCreated.emit()"
+      />
     }
 
     @if (openDrops().length === 0) {
@@ -30,7 +34,12 @@
         @if (selectedDrop(); as drop) {
           <small class="text-muted-color">{{
             'garments.form.nextEdition'
-              | t: { next: drop.issuedCount + 1, total: drop.totalQuantity }
+              | t
+                : {
+                    next: drop.issuedCount + 1,
+                    total: drop.totalQuantity,
+                    left: drop.remainingEditions(),
+                  }
           }}</small>
         }
       </div>
@@ -51,6 +60,18 @@
           [variants]="selectedDrop()?.variants ?? []"
         />
         <app-field-error [field]="form.variantId()" />
+      </div>
+
+      <div class="flex flex-col gap-2">
+        <label for="quantity" class="font-medium">{{ 'garments.form.quantity' | t }}</label>
+        <app-number-field
+          inputId="quantity"
+          [formField]="form.quantity"
+          [showButtons]="true"
+          [useGrouping]="false"
+          [fluid]="true"
+        />
+        <app-field-error [field]="form.quantity()" />
       </div>
 
       <div class="flex flex-col gap-2">

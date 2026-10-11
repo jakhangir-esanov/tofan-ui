@@ -14,6 +14,7 @@ import { SelectOption } from '@shared/models/select-option';
 import { ChoiceField } from '@shared/components/choice-field/choice-field';
 import { DateField } from '@shared/components/date-field/date-field';
 import { FieldError } from '@shared/components/field-error/field-error';
+import { NumberField } from '@shared/components/number-field/number-field';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { SelectField } from '@shared/components/select-field/select-field';
 import { TextField } from '@shared/components/text-field/text-field';
@@ -39,6 +40,7 @@ import {
     ChoiceField,
     DateField,
     SelectField,
+    NumberField,
     TextField,
     GarmentCreatedPanel,
     GarmentVariantPicker,
@@ -49,10 +51,12 @@ import {
 export class GarmentFormDialog {
   readonly visible = model.required<boolean>();
   readonly saving = input(false);
-  readonly created = input<CreatedGarment | null>(null);
+  readonly created = input<readonly CreatedGarment[] | null>(null);
   readonly drops = input<readonly Drop[]>([]);
+  readonly exporting = input(false);
 
   readonly save = output<GarmentDraft>();
+  readonly exportCreated = output<void>();
 
   protected readonly sizeOptions = GARMENT_SIZE_OPTIONS;
 
@@ -60,7 +64,10 @@ export class GarmentFormDialog {
   protected readonly value = signal<GarmentFormValue>(
     emptyGarmentFormValue(this.latestDay(), null),
   );
-  protected readonly form = form(this.value, garmentFormSchema(this.latestDay));
+  protected readonly form = form(
+    this.value,
+    garmentFormSchema(this.latestDay, () => this.selectedDrop()?.remainingEditions() ?? 0),
+  );
 
   protected readonly openDrops = computed(() =>
     this.drops().filter((drop) => drop.canTakeGarments()),

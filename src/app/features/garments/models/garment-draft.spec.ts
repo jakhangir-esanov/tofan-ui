@@ -14,6 +14,7 @@ const draft: GarmentDraft = {
   size: 'L',
   material: '95% paxta, 5% elastan',
   manufacturedAt: new Date(2026, 7, 14),
+  quantity: 1,
 };
 
 function issueCodes(invalid: GarmentDraft): string[] {
@@ -48,6 +49,16 @@ describe('createGarmentDraft', () => {
     expect(issueCodes({ ...draft, material: 'x'.repeat(GARMENT_TEXT_MAX_LENGTH + 1) })).toEqual([
       'Material.TooLong',
     ]);
+  });
+
+  it('should reject the quantity when it is outside one to five hundred or not whole', () => {
+    expect(issueCodes({ ...draft, quantity: 0 })).toEqual(['Quantity.OutOfRange']);
+    expect(issueCodes({ ...draft, quantity: 501 })).toEqual(['Quantity.OutOfRange']);
+    expect(issueCodes({ ...draft, quantity: 2.5 })).toEqual(['Quantity.OutOfRange']);
+  });
+
+  it('should accept a batch when the quantity is within the limit', () => {
+    expect(createGarmentDraft({ ...draft, quantity: 500 }, now).quantity).toBe(500);
   });
 
   it('should reject the date when it is in the future', () => {

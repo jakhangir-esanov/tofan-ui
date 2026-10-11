@@ -19,6 +19,10 @@ export class Drop {
     return this.issuedCount >= this.totalQuantity;
   }
 
+  remainingEditions(): number {
+    return Math.max(this.totalQuantity - this.issuedCount, 0);
+  }
+
   canTakeGarments(): boolean {
     return !this.isSoldOut() && this.variants.length > 0;
   }

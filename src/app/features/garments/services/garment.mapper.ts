@@ -40,6 +40,7 @@ export function toCreateGarmentRequest(draft: GarmentDraft): CreateGarmentReques
     size: draft.size,
     material: draft.material,
     manufacturedAt: toUtcCalendarDate(draft.manufacturedAt),
+    quantity: draft.quantity,
   };
 }
 

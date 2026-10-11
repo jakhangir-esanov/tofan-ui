@@ -18,6 +18,11 @@ describe('Drop', () => {
     expect(drop(10, []).canTakeGarments()).toBe(false);
   });
 
+  it('should count the free numbers when part of the drop is issued', () => {
+    expect(drop(348).remainingEditions()).toBe(152);
+    expect(drop(500).remainingEditions()).toBe(0);
+  });
+
   it('should report how much of the drop is issued when asked for progress', () => {
     expect(drop(125).progressPercent()).toBe(25);
   });

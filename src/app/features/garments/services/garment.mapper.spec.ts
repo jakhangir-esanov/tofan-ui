@@ -32,6 +32,7 @@ const draft: GarmentDraft = {
   size: 'L',
   material: '',
   manufacturedAt: new Date(2026, 7, 14),
+  quantity: 100,
 };
 
 describe('garment status map', () => {
@@ -77,6 +78,7 @@ describe('garment mapper', () => {
     expect(request).not.toHaveProperty('serialNumber');
     expect(request.dropId).toBe('d1');
     expect(request.variantId).toBe('v1');
+    expect(request.quantity).toBe(100);
   });
 
   it('should take the serial number from the response when a garment is created', () => {

@@ -124,7 +124,9 @@
   [saving]="store.saving()"
   [created]="created()"
   [drops]="store.drops()"
+  [exporting]="store.exporting()"
   (save)="create($event)"
+  (exportCreated)="store.exportCreatedLinks()"
 />
 
 <app-garment-view-dialog

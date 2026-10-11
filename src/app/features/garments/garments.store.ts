@@ -37,6 +37,7 @@ export class GarmentsStore {
   readonly filter = this.currentFilter.asReadonly();
   readonly first = computed(() => this.currentRequest().first);
   readonly drops = signal<readonly Drop[]>([]);
+  private readonly createdDropId = signal<string | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
@@ -65,14 +66,15 @@ export class GarmentsStore {
     await this.load(firstPage(this.currentRequest().rows || DEFAULT_PAGE_SIZE));
   }
 
-  async create(draft: GarmentDraft, now: Date = new Date()): Promise<CreatedGarment | null> {
+  async create(
+    draft: GarmentDraft,
+    now: Date = new Date(),
+  ): Promise<readonly CreatedGarment[] | null> {
     this.saving.set(true);
     try {
       const created = await this.garmentsService.create(createGarmentDraft(draft, now));
-      this.notifications.success('garments.toast.created', {
-        serial: created.serialNumber,
-        edition: created.editionNumber,
-      });
+      this.announceCreated(created);
+      this.createdDropId.set(draft.dropId);
       await Promise.all([this.load(), this.loadDrops()]);
       return created;
     } catch (error) {
@@ -128,14 +130,37 @@ export class GarmentsStore {
     }
   }
 
-  async exportLinks(): Promise<void> {
+  async exportLinks(filter: GarmentFilter = this.currentFilter()): Promise<void> {
     this.exporting.set(true);
     try {
-      this.downloads.save(await this.garmentsService.exportLinks(this.currentFilter()));
+      this.downloads.save(await this.garmentsService.exportLinks(filter));
     } catch (error) {
       this.notifications.error(error);
     } finally {
       this.exporting.set(false);
     }
+  }
+
+  async exportCreatedLinks(): Promise<void> {
+    const dropId = this.createdDropId();
+    if (dropId !== null) {
+      await this.exportLinks({ dropId });
+    }
+  }
+
+  private announceCreated(created: readonly CreatedGarment[]): void {
+    const [first] = created;
+    if (created.length === 1) {
+      this.notifications.success('garments.toast.created', {
+        serial: first.serialNumber,
+        edition: first.editionNumber,
+      });
+      return;
+    }
+    this.notifications.success('garments.toast.createdMany', {
+      count: created.length,
+      first: first.editionNumber,
+      last: created[created.length - 1].editionNumber,
+    });
   }
 }

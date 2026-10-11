@@ -29,6 +29,7 @@ export interface CreateGarmentRequest {
   size: string;
   material: string;
   manufacturedAt: string;
+  quantity: number;
 }
 
 export interface CreateGarmentResponse {

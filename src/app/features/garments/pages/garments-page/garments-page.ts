@@ -77,7 +77,7 @@ export class GarmentsPage {
     this.store.loadError() === null ? this.store.totalCount() : null,
   );
   protected readonly formVisible = signal(false);
-  protected readonly created = signal<CreatedGarment | null>(null);
+  protected readonly created = signal<readonly CreatedGarment[] | null>(null);
   protected readonly extended = signal<Garment | null>(null);
   protected readonly extendVisible = signal(false);
   protected readonly viewed = signal<Garment | null>(null);

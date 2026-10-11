@@ -11,6 +11,7 @@ const value: GarmentFormValue = {
   size: 'M',
   material: '100% paxta',
   manufacturedAt: new Date(2026, 8, 20),
+  quantity: 100,
 };
 
 describe('garment form value', () => {
@@ -21,7 +22,12 @@ describe('garment form value', () => {
       size: 'M',
       material: '100% paxta',
       manufacturedAt: new Date(2026, 8, 20),
+      quantity: 100,
     });
+  });
+
+  it('should build no draft when the quantity is cleared', () => {
+    expect(toGarmentDraft({ ...value, quantity: null }, drop)).toBeNull();
   });
 
   it('should build no draft when the size is not chosen yet', () => {
@@ -40,6 +46,7 @@ describe('garment form value', () => {
       size: null,
       material: '',
       manufacturedAt: new Date(2026, 8, 23),
+      quantity: 1,
     });
   });
 });
