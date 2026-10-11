@@ -37,7 +37,7 @@ export class GarmentsStore {
   readonly filter = this.currentFilter.asReadonly();
   readonly first = computed(() => this.currentRequest().first);
   readonly drops = signal<readonly Drop[]>([]);
-  private readonly createdDropId = signal<string | null>(null);
+  private readonly createdBatch = signal<GarmentFilter | null>(null);
 
   async load(request: PageRequest = this.currentRequest()): Promise<void> {
     this.currentRequest.set(request);
@@ -74,7 +74,7 @@ export class GarmentsStore {
     try {
       const created = await this.garmentsService.create(createGarmentDraft(draft, now));
       this.announceCreated(created);
-      this.createdDropId.set(draft.dropId);
+      this.createdBatch.set(batchFilter(draft.dropId, created));
       await Promise.all([this.load(), this.loadDrops()]);
       return created;
     } catch (error) {
@@ -142,9 +142,9 @@ export class GarmentsStore {
   }
 
   async exportCreatedLinks(): Promise<void> {
-    const dropId = this.createdDropId();
-    if (dropId !== null) {
-      await this.exportLinks({ dropId });
+    const batch = this.createdBatch();
+    if (batch !== null) {
+      await this.exportLinks(batch);
     }
   }
 
@@ -163,4 +163,9 @@ export class GarmentsStore {
       last: created[created.length - 1].editionNumber,
     });
   }
+}
+
+function batchFilter(dropId: string, created: readonly CreatedGarment[]): GarmentFilter {
+  const editions = created.map((garment) => garment.editionNumber);
+  return { dropId, editionFrom: Math.min(...editions), editionTo: Math.max(...editions) };
 }

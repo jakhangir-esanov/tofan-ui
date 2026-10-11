@@ -1,5 +1,5 @@
-<div class="mb-4 flex flex-wrap items-start gap-3">
-  <div class="flex min-w-56 flex-1 flex-col gap-1">
+<div class="mb-4 grid grid-cols-1 items-start gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="flex flex-col gap-1">
     <label for="filterSerialNumber" class="text-muted-color text-sm">{{
       'garments.filters.serialNumber' | t
     }}</label>
@@ -22,6 +22,35 @@
       [options]="dropOptions()"
       [placeholder]="'garments.filters.all' | t"
       [showClear]="true"
+      [fluid]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterVariant" class="text-muted-color text-sm">{{
+      'garments.filters.variant' | t
+    }}</label>
+    <app-select-field
+      inputId="filterVariant"
+      [formField]="form.variantId"
+      [options]="variantOptions()"
+      [placeholder]="'garments.filters.all' | t"
+      [showClear]="true"
+      [fluid]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label for="filterSize" class="text-muted-color text-sm">{{
+      'garments.filters.size' | t
+    }}</label>
+    <app-select-field
+      inputId="filterSize"
+      [formField]="form.size"
+      [options]="sizeOptions"
+      [placeholder]="'garments.filters.all' | t"
+      [showClear]="true"
+      [fluid]="true"
     />
   </div>
 
@@ -35,10 +64,46 @@
       [options]="statusOptions()"
       [placeholder]="'garments.filters.all' | t"
       [showClear]="true"
+      [fluid]="true"
     />
   </div>
 
-  <div class="flex min-w-72 flex-col gap-1">
+  <div class="flex flex-col gap-1">
+    <label for="filterClaim" class="text-muted-color text-sm">{{
+      'garments.filters.owner' | t
+    }}</label>
+    <app-select-field
+      inputId="filterClaim"
+      [formField]="form.claim"
+      [options]="claimOptions()"
+      [placeholder]="'garments.filters.all' | t"
+      [showClear]="true"
+      [fluid]="true"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span class="text-muted-color text-sm">{{ 'garments.filters.edition' | t }}</span>
+    <div class="flex items-center gap-2">
+      <app-number-field
+        inputId="filterEditionFrom"
+        [formField]="form.editionFrom"
+        [useGrouping]="false"
+        [placeholder]="'garments.filters.from' | t"
+        [fluid]="true"
+      />
+      <span class="text-muted-color">–</span>
+      <app-number-field
+        inputId="filterEditionTo"
+        [formField]="form.editionTo"
+        [useGrouping]="false"
+        [placeholder]="'garments.filters.to' | t"
+        [fluid]="true"
+      />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-1">
     <label for="filterOwnerId" class="text-muted-color text-sm">{{
       'garments.filters.ownerId' | t
     }}</label>
@@ -55,7 +120,7 @@
   </div>
 
   <p-button
-    class="self-end"
+    class="self-end sm:col-span-2 lg:col-span-4 lg:justify-self-end"
     [label]="'common.actions.clear' | t"
     icon="pi pi-filter-slash"
     severity="secondary"

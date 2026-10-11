@@ -6,30 +6,25 @@ import { InputText } from '@openng/optimus-ui/inputtext';
 import { debounceTime, skip } from 'rxjs';
 import { Drop } from '../../models/drop';
 import { GarmentFilter } from '../../models/garment-filter';
-import { GARMENT_STATUS_OPTIONS } from '../../models/garment-labels';
-import { GarmentStatus } from '../../models/garment-status';
+import { GARMENT_SIZE_OPTIONS, GARMENT_STATUS_OPTIONS } from '../../models/garment-labels';
 import { TranslatePipe } from '@core/i18n/translate.pipe';
 import { Translator } from '@core/i18n/translator';
 import { SelectOption } from '@shared/models/select-option';
+import { NumberField } from '@shared/components/number-field/number-field';
 import { SelectField } from '@shared/components/select-field/select-field';
 import { isUuid } from '@shared/utils/identifiers';
+import {
+  CLAIM_STATE_OPTIONS,
+  GarmentFilterValue,
+  emptyGarmentFilterValue,
+  toGarmentFilter,
+} from './garment-filter.form';
 
 const SEARCH_DEBOUNCE_MS = 400;
 
-interface GarmentFilterValue {
-  serialNumber: string;
-  status: GarmentStatus | null;
-  ownerId: string;
-  dropId: string | null;
-}
-
-function emptyValue(): GarmentFilterValue {
-  return { serialNumber: '', status: null, ownerId: '', dropId: null };
-}
-
 @Component({
   selector: 'app-garment-filters',
-  imports: [FormField, Button, InputText, SelectField, TranslatePipe],
+  imports: [FormField, Button, InputText, NumberField, SelectField, TranslatePipe],
   templateUrl: './garment-filters.html',
 })
 export class GarmentFilters {
@@ -38,20 +33,26 @@ export class GarmentFilters {
   readonly drops = input<readonly Drop[]>([]);
   readonly filterChange = output<GarmentFilter>();
 
+  protected readonly sizeOptions = GARMENT_SIZE_OPTIONS;
   protected readonly dropOptions = computed<readonly SelectOption<string>[]>(() =>
     this.drops().map((drop) => ({ value: drop.id, label: drop.name })),
   );
-
+  protected readonly variantOptions = computed<readonly SelectOption<string>[]>(() => {
+    const drop = this.drops().find((candidate) => candidate.id === this.value().dropId);
+    return (drop?.variants ?? []).map((variant) => ({ value: variant.id, label: variant.name }));
+  });
   protected readonly statusOptions = computed(() =>
     this.translator.options(GARMENT_STATUS_OPTIONS),
   );
-  protected readonly value = signal<GarmentFilterValue>(emptyValue());
+  protected readonly claimOptions = computed(() => this.translator.options(CLAIM_STATE_OPTIONS));
+
+  protected readonly value = signal<GarmentFilterValue>(emptyGarmentFilterValue());
   protected readonly form = form(this.value);
 
   constructor() {
     toObservable(this.value)
       .pipe(skip(1), debounceTime(SEARCH_DEBOUNCE_MS), takeUntilDestroyed())
-      .subscribe((value) => this.filterChange.emit(toFilter(value)));
+      .subscribe((value) => this.filterChange.emit(toGarmentFilter(value, this.drops())));
   }
 
   protected ownerIdInvalid(): boolean {
@@ -60,17 +61,6 @@ export class GarmentFilters {
   }
 
   protected reset(): void {
-    this.form().reset(emptyValue());
+    this.form().reset(emptyGarmentFilterValue());
   }
-}
-
-function toFilter(value: GarmentFilterValue): GarmentFilter {
-  const serialNumber = value.serialNumber.trim();
-  const ownerId = value.ownerId.trim();
-  return {
-    ...(serialNumber.length === 0 ? {} : { serialNumber }),
-    ...(value.status === null ? {} : { status: value.status }),
-    ...(isUuid(ownerId) ? { ownerId } : {}),
-    ...(value.dropId === null ? {} : { dropId: value.dropId }),
-  };
 }

@@ -158,14 +158,36 @@ describe('GarmentsStore', () => {
     });
   });
 
-  it('should export the drop of the last batch when its links are asked for', async () => {
+  it('should export only the numbers of the last batch when its links are asked for', async () => {
+    vi.mocked(service.create).mockResolvedValue([
+      { ...created, editionNumber: 6 },
+      { ...created, editionNumber: 7 },
+      { ...created, editionNumber: 35 },
+    ]);
     const store = createStore();
     await store.applyFilter({ status: 'active' });
-    await store.create(draft, today);
+    await store.create({ ...draft, quantity: 3 }, today);
 
     await store.exportCreatedLinks();
 
-    expect(service.exportLinks).toHaveBeenCalledWith({ dropId: 'd1' });
+    expect(service.exportLinks).toHaveBeenCalledWith({
+      dropId: 'd1',
+      editionFrom: 6,
+      editionTo: 35,
+    });
+  });
+
+  it('should export with every filter of the list when the toolbar export is used', async () => {
+    const store = createStore();
+    await store.applyFilter({ dropId: 'd1', size: '3XL', isClaimed: false });
+
+    await store.exportLinks();
+
+    expect(service.exportLinks).toHaveBeenCalledWith({
+      dropId: 'd1',
+      size: '3XL',
+      isClaimed: false,
+    });
   });
 
   it('should not call the backend when the date is in the future', async () => {

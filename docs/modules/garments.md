@@ -14,7 +14,7 @@ filtered shirts (for example one drop) to Excel for the print shop.
 - Base routes: `/admin/garments`, `/admin/drops` (backend Garment module, handover:
   `tofan/docs/garment-ui-v1.1.md`)
 - Endpoints used: `GET /admin/garments` (paged, filters `SerialNumber` (ILIKE), `Status`, `OwnerId`,
-  `DropId`), `POST /admin/garments`, `POST /admin/garments/{id}/status`,
+  `DropId`, `VariantId`, `Size`, `IsClaimed`, `EditionFrom`/`EditionTo`), `POST /admin/garments`, `POST /admin/garments/{id}/status`,
   `POST /admin/garments/{id}/extend`, `DELETE /admin/garments/{id}`, `GET /admin/garments/export-links`
   (same filters, no paging), `GET /admin/drops` (every drop with its variants, no paging),
   `POST /admin/drops`, `POST /admin/drops/{id}/variants`, and `POST /files` with category
@@ -67,11 +67,17 @@ filtered shirts (for example one drop) to Excel for the print shop.
   `Drop.NotEnoughEditions` and creates nothing. The response is an array in number order.
 - Repeated entry: the create dialog stays open after a save and the fields are kept. For one shirt
   the created card shows the serial number, link and token; for a batch it shows the count, the number
-  range and a button that downloads the Excel links of that drop (`GarmentsStore.exportCreatedLinks`),
-  because a batch's links are only usable from the file. The form is cleared when the dialog is opened again. The dialog is `components/garment-form-dialog`;
+  range and a button that downloads the Excel links of exactly that batch
+  (`GarmentsStore.exportCreatedLinks`: drop plus `editionFrom`/`editionTo`, the batch numbers are
+  consecutive), because a batch's links are only usable from the file. The form is cleared when the dialog is opened again. The dialog is `components/garment-form-dialog`;
   the card is `components/garment-created-panel`.
 
 ## Structure notes
+
+- Filters (`components/garment-filters`, value → filter in `garment-filter.form.ts`): serial number,
+  drop, variant (of the chosen drop only), size, status, owner present or not, number range in the
+  drop, owner id. The toolbar export always sends the current filter, so the file holds exactly what
+  the list shows.
 
 - Clicking a row (or the serial number button, which is keyboard reachable) opens
   `components/garment-view-dialog`: every field of the row with a copy button each, the status tag,
