@@ -19,54 +19,40 @@ export const LANDING_UZ = {
     language: 'Tilni tanlash',
   },
   hero: {
-    badge: 'Fitnes ilovasi · o‘zbek va rus tilida',
-    title: 'Mashq, ovqat va jamoa - hammasi bitta ilovada',
-    text: 'Tofan sizga tayyor mashg‘ulot rejalari, kaloriya hisobi, AI trener va tajribali trenerlarni bir joyda beradi. Ro‘yxatdan o‘ting va bugun boshlang.',
+    title: 'Har kuni kuchliroq',
+    text: 'Tofan mashg‘ulot rejangiz, ovqatlanishingiz va natijalaringizni bitta ilovada jamlaydi. Yuklab olish va boshlash bepul.',
     coachPrompt: 'Trenermisiz?',
     coachLink: 'Trener bo‘lish',
-    perks: {
-      free: 'Boshlash bepul',
-      payments: 'Click · Payme',
-      daily: 'Har kuni yangilanadi',
-    },
+    screenAlt: 'Tofan ilovasining bosh ekrani: bugungi kaloriya, qadamlar va vazn',
   },
   store: {
     caption: 'Yuklab oling',
     appStore: 'App Store',
     googlePlay: 'Google Play',
   },
-  phone: {
-    greeting: 'Salom, Jahongir!',
-    streakTitle: '12 kun seriya',
-    streakText: 'Bugun mashq qiling',
-    steps: '1 392',
-    stepsLabel: 'Qadam',
-    calories: '1 821',
-    caloriesLabel: 'kkal',
-    weight: '72,0',
-    weightLabel: 'Vazn',
-    workoutTitle: 'Legs A',
-    workoutText: '7 ta mashq · 52 daq',
-    mealTitle: 'Tushlik 13:00',
-    mealText: '531 kkal reja',
-    aiCoach: 'AI trener: texnika to‘g‘ri',
-  },
   features: {
-    eyebrow: 'Imkoniyatlar',
-    title: 'Tofan nimalar qila oladi',
-    text: 'Oltita asosiy imkoniyat: mashq qilishdan ovqatlanishgacha va jamoagacha.',
-    soon: 'Tez orada',
+    title: 'Ilova ichida',
+    text: 'Har kuni kerak bo‘ladigan uch narsa: reja, ovqat va natija.',
     workouts: {
       title: 'Mashg‘ulot',
-      text: 'Uy va zal uchun tayyor rejalar, har mashqning video darsligi va set/rep hisobi.',
-    },
-    aiCoach: {
-      title: 'AI trener',
-      text: 'Kamerangiz texnikani tekshiradi, replarni sanaydi va tanlagan tilingizda maslahat beradi.',
+      text: 'Haftalik reja tayyor: qaysi kuni mashq, qaysi kuni dam olish ekanini ko‘rasiz. Har bir mashqning video darsligi va set/rep hisobi bor.',
+      alt: 'Mashg‘ulotlar ekrani: haftalik reja va bugungi mashq',
     },
     nutrition: {
       title: 'Ovqatlanish',
-      text: 'Kunlik kaloriya va makrolar. Ovqatni suratga oling, AI kaloriyasini aniqlaydi.',
+      text: 'Kunlik kaloriya, oqsil, uglevod va yog‘ hisoblanadi. Har bir ovqatni belgilab borasiz va kun oxirigacha qancha qolganini ko‘rasiz.',
+      alt: 'Ovqatlanish ekrani: kunlik kaloriya va ovqatlar ro‘yxati',
+    },
+    progress: {
+      title: 'Natija',
+      text: 'Vazn, bo‘y, tana massasi indeksi va maqsadgacha qolgan vaqt bir joyda. Seriya va rekordlaringiz ham shu yerda.',
+      alt: 'Profil ekrani: tana ko‘rsatkichlari va maqsad',
+    },
+    more: 'Shuningdek',
+    soon: 'Tez orada',
+    aiCoach: {
+      title: 'AI trener',
+      text: 'Kamerangiz texnikani tekshiradi, replarni sanaydi va tanlagan tilingizda maslahat beradi.',
     },
     trainers: {
       title: 'Trenerlar',
@@ -82,7 +68,6 @@ export const LANDING_UZ = {
     },
   },
   steps: {
-    eyebrow: 'Qanday ishlaydi',
     title: 'Uch qadamda boshlang',
     signUp: {
       title: 'Yuklab oling va kiring',
@@ -98,10 +83,10 @@ export const LANDING_UZ = {
     },
   },
   apparel: {
-    eyebrow: 'Kiyim',
     title: 'TOFAN NFC futbolka',
     text: 'Telefoningizni chipga tekkizing: futbolka original ekani tasdiqlanadi va profilingizga ulanadi.',
     chip: 'NFC chip ichida',
+    photoAlt: 'To‘q ko‘k TOFAN futbolka kiygan yigit telefonni ko‘krakdagi logotipga tutib turibdi',
     passport: 'Raqamli pasport: model, o‘lcham, seriya raqami, kafolat',
     original: 'Original ekanini bir tegizishda tekshirasiz',
     profile: 'Futbolka Tofan profilingizga ulanadi',
@@ -109,7 +94,6 @@ export const LANDING_UZ = {
     buy: 'Sotib olish',
   },
   coaches: {
-    eyebrow: 'Trenerlar uchun',
     title: 'Trener bo‘lmoqchimisiz?',
     text: 'Kurslaringiz va ovqat rejalaringizni joylang, o‘quvchilar bilan ishlang va daromadingizni istalgan vaqtda kartaga yechib oling.',
     contact: 'Admin bilan bog‘lanish',
@@ -120,7 +104,6 @@ export const LANDING_UZ = {
     courseStep: { title: 'Kurs yarating', text: 'Mashg‘ulot va ovqat rejasini yuklang' },
   },
   faq: {
-    eyebrow: 'Savollar',
     title: 'Ko‘p so‘raladigan savollar',
     free: {
       question: 'Ilova bepulmi?',

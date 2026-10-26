@@ -1,12 +1,12 @@
 <section class="section">
   <div class="container content">
-    <landing-section-heading eyebrow="steps.eyebrow" title="steps.title" />
-    <ol class="grid">
+    <landing-section-heading title="steps.title" />
+    <ol class="steps">
       @for (step of steps; track step.title; let number = $index) {
-        <li class="card">
-          <span class="number">{{ number + 1 }}</span>
-          <h3 class="card-title">{{ step.title | t }}</h3>
-          <p class="card-text">{{ step.text | t }}</p>
+        <li class="step reveal" [style.--i]="number">
+          <span class="display number" aria-hidden="true">{{ number + 1 }}</span>
+          <h3 class="step-title">{{ step.title | t }}</h3>
+          <p class="step-text">{{ step.text | t }}</p>
         </li>
       }
     </ol>

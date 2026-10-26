@@ -1,23 +1,30 @@
-<section class="section section-surface" [id]="sectionId">
+<section class="section" [id]="sectionId">
   <div class="container content">
-    <landing-section-heading
-      eyebrow="features.eyebrow"
-      title="features.title"
-      text="features.text"
-    />
-    <ul class="grid">
-      @for (capability of capabilities; track capability.title) {
-        <li class="card">
-          <div class="card-top">
-            <span class="icon-tile"><landing-icon [name]="capability.icon" /></span>
-            @if (capability.comingSoon) {
-              <span class="soon">{{ 'features.soon' | t }}</span>
-            }
-          </div>
-          <h3 class="card-title">{{ capability.title | t }}</h3>
-          <p class="card-text">{{ capability.text | t }}</p>
+    <landing-section-heading title="features.title" text="features.text" />
+    <ul class="chapters">
+      @for (chapter of chapters; track chapter.title; let index = $index) {
+        <li class="chapter reveal" [style.--i]="index">
+          <landing-app-screen class="screen" [image]="chapter.screen" [alt]="chapter.alt" />
+          <h3 class="display chapter-title">{{ chapter.title | t }}</h3>
+          <p class="chapter-text">{{ chapter.text | t }}</p>
         </li>
       }
     </ul>
+    <div class="more">
+      <h3 class="more-title reveal">{{ 'features.more' | t }}</h3>
+      <ul class="more-list">
+        @for (feature of moreFeatures; track feature.title; let index = $index) {
+          <li class="more-item reveal" [style.--i]="index">
+            <p class="more-name">
+              {{ feature.title | t }}
+              @if (feature.comingSoon) {
+                <span class="soon">{{ 'features.soon' | t }}</span>
+              }
+            </p>
+            <p class="more-text">{{ feature.text | t }}</p>
+          </li>
+        }
+      </ul>
+    </div>
   </div>
 </section>

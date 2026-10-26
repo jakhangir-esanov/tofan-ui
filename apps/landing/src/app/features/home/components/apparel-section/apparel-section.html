@@ -1,26 +1,36 @@
 <section class="section" [id]="sectionId">
   <div class="container layout">
-    <div class="visual">
-      <landing-icon class="shirt" name="shirt" />
-      <span class="chip">
-        <landing-icon name="nfc" />
-        {{ 'apparel.chip' | t }}
-      </span>
-    </div>
+    <figure class="photo">
+      <img
+        [src]="photo.src"
+        [width]="photo.width"
+        [height]="photo.height"
+        [alt]="'apparel.photoAlt' | t"
+        loading="lazy"
+        decoding="async"
+      />
+      <figcaption class="hotspot">
+        <span class="hotspot-dot" aria-hidden="true"></span>
+        <span class="hotspot-line" aria-hidden="true"></span>
+        <span class="chip">
+          <landing-icon name="nfc" />
+          {{ 'apparel.chip' | t }}
+        </span>
+      </figcaption>
+    </figure>
     <div class="copy">
-      <p class="eyebrow">{{ 'apparel.eyebrow' | t }}</p>
-      <h2 class="section-title">{{ 'apparel.title' | t }}</h2>
-      <p class="section-text">{{ 'apparel.text' | t }}</p>
+      <h2 class="display section-title reveal">{{ 'apparel.title' | t }}</h2>
+      <p class="section-text reveal" [style.--i]="1">{{ 'apparel.text' | t }}</p>
       <ul class="points">
-        @for (point of points; track point) {
-          <li class="point">
+        @for (point of points; track point; let index = $index) {
+          <li class="point reveal" [style.--i]="index + 2">
             <landing-icon name="check" />
             <span>{{ point | t }}</span>
           </li>
         }
       </ul>
-      <div class="purchase">
-        <p class="price">{{ 'apparel.price' | t }}</p>
+      <div class="purchase reveal" [style.--i]="5">
+        <p class="display price">{{ 'apparel.price' | t }}</p>
         <a class="btn btn-primary" target="_blank" rel="noopener" [attr.href]="shopUrl">
           <landing-icon name="bag" />
           {{ 'apparel.buy' | t }}

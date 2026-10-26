@@ -21,54 +21,40 @@ export const LANDING_EN: LandingDictionary = {
     language: 'Choose language',
   },
   hero: {
-    badge: 'Fitness app · in Uzbek and Russian',
-    title: 'Workouts, nutrition and community - all in one app',
-    text: 'Tofan brings ready-made workout plans, calorie tracking, an AI coach and experienced trainers together. Sign up and start today.',
+    title: 'Stronger every day',
+    text: 'Tofan keeps your training plan, meals and progress in one app. Free to download and start.',
     coachPrompt: 'Are you a coach?',
     coachLink: 'Become a coach',
-    perks: {
-      free: 'Free to start',
-      payments: 'Click · Payme',
-      daily: 'Updated every day',
-    },
+    screenAlt: 'Tofan home screen: today’s calories, steps and weight',
   },
   store: {
     caption: 'Download on',
     appStore: 'App Store',
     googlePlay: 'Google Play',
   },
-  phone: {
-    greeting: 'Hi, Jahongir!',
-    streakTitle: '12-day streak',
-    streakText: 'Work out today',
-    steps: '1,392',
-    stepsLabel: 'Steps',
-    calories: '1,821',
-    caloriesLabel: 'kcal',
-    weight: '72.0',
-    weightLabel: 'Weight',
-    workoutTitle: 'Legs A',
-    workoutText: '7 exercises · 52 min',
-    mealTitle: 'Lunch 13:00',
-    mealText: '531 kcal plan',
-    aiCoach: 'AI coach: good form',
-  },
   features: {
-    eyebrow: 'Features',
-    title: 'What Tofan can do',
-    text: 'Six core features: from training to nutrition and community.',
-    soon: 'Coming soon',
+    title: 'Inside the app',
+    text: 'The three things you need every day: a plan, your meals and your progress.',
     workouts: {
       title: 'Workouts',
-      text: 'Ready-made plans for home and gym, a video lesson for every exercise and set/rep tracking.',
-    },
-    aiCoach: {
-      title: 'AI coach',
-      text: 'Your camera checks your form, counts reps and gives tips in the language you choose.',
+      text: 'Your weekly plan is ready: you see which days are for training and which are for rest. Every exercise has a video lesson and set and rep tracking.',
+      alt: 'Workouts screen: weekly plan and today’s session',
     },
     nutrition: {
       title: 'Nutrition',
-      text: 'Daily calories and macros. Take a photo of your meal and AI works out its calories.',
+      text: 'Calories, protein, carbs and fat are counted for the day. Tick off each meal and see how much is left.',
+      alt: 'Nutrition screen: daily calories and meal list',
+    },
+    progress: {
+      title: 'Progress',
+      text: 'Weight, height, body mass index and time to your goal in one place. Your streak and records live here too.',
+      alt: 'Profile screen: body stats and goal',
+    },
+    more: 'Also in Tofan',
+    soon: 'Coming soon',
+    aiCoach: {
+      title: 'AI coach',
+      text: 'Your camera checks your form, counts reps and gives tips in the language you choose.',
     },
     trainers: {
       title: 'Trainers',
@@ -84,7 +70,6 @@ export const LANDING_EN: LandingDictionary = {
     },
   },
   steps: {
-    eyebrow: 'How it works',
     title: 'Start in three steps',
     signUp: {
       title: 'Download and sign in',
@@ -100,10 +85,10 @@ export const LANDING_EN: LandingDictionary = {
     },
   },
   apparel: {
-    eyebrow: 'Apparel',
     title: 'TOFAN NFC T-shirt',
     text: 'Tap your phone on the chip: the T-shirt is confirmed as original and linked to your profile.',
     chip: 'NFC chip inside',
+    photoAlt: 'A man in a navy TOFAN T-shirt holds his phone to the logo on his chest',
     passport: 'Digital passport: model, size, serial number, warranty',
     original: 'Check it is original with a single tap',
     profile: 'The T-shirt is linked to your Tofan profile',
@@ -111,7 +96,6 @@ export const LANDING_EN: LandingDictionary = {
     buy: 'Buy now',
   },
   coaches: {
-    eyebrow: 'For coaches',
     title: 'Want to become a coach?',
     text: 'Publish your courses and meal plans, work with students and withdraw your earnings to your card at any time.',
     contact: 'Contact the admin',
@@ -122,7 +106,6 @@ export const LANDING_EN: LandingDictionary = {
     courseStep: { title: 'Create a course', text: 'Upload your workout and meal plan' },
   },
   faq: {
-    eyebrow: 'FAQ',
     title: 'Frequently asked questions',
     free: {
       question: 'Is the app free?',

@@ -1,23 +1,23 @@
-<section class="hero">
+<section class="hero" (pointermove)="track($event)" (pointerleave)="rest()">
   <div class="container layout">
+    @let title = 'hero.title' | t;
+    <h1 class="display title">
+      @for (word of title.split(' '); track $index) {
+        <span class="word" [style.--i]="$index">{{ word }} </span>
+      }
+    </h1>
     <div class="copy">
-      <p class="badge">{{ 'hero.badge' | t }}</p>
-      <h1 class="title">{{ 'hero.title' | t }}</h1>
       <p class="text">{{ 'hero.text' | t }}</p>
       <landing-store-badges />
       <p class="coach">
         <span>{{ 'hero.coachPrompt' | t }}</span>
         <a class="coach-link" [routerLink]="homeUrl()" [fragment]="coachesSection">
           {{ 'hero.coachLink' | t }}
-          <landing-icon name="arrow" />
         </a>
       </p>
-      <ul class="perks">
-        @for (perk of perks; track perk) {
-          <li>{{ perk | t }}</li>
-        }
-      </ul>
     </div>
-    <landing-phone-preview class="visual" />
+    <div class="visual">
+      <landing-app-screen class="screen" [image]="screen" alt="hero.screenAlt" loading="eager" />
+    </div>
   </div>
 </section>

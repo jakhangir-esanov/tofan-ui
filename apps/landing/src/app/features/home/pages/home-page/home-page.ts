@@ -5,12 +5,14 @@ import { CoachSection } from '../../components/coach-section/coach-section';
 import { DownloadSection } from '../../components/download-section/download-section';
 import { FaqSection } from '../../components/faq-section/faq-section';
 import { HeroSection } from '../../components/hero-section/hero-section';
+import { MarqueeBand } from '../../components/marquee-band/marquee-band';
 import { StepsSection } from '../../components/steps-section/steps-section';
 
 @Component({
   selector: 'landing-home-page',
   imports: [
     HeroSection,
+    MarqueeBand,
     CapabilitiesSection,
     StepsSection,
     ApparelSection,
@@ -20,6 +22,7 @@ import { StepsSection } from '../../components/steps-section/steps-section';
   ],
   template: `
     <landing-hero-section />
+    <landing-marquee-band />
     <landing-capabilities-section />
     <landing-steps-section />
     <landing-apparel-section />

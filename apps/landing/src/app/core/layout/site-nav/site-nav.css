@@ -1,7 +1,31 @@
 .nav {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 10;
-  background: var(--landing-bg);
+  border-bottom: 1px solid transparent;
+  background: var(--landing-glass);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+@keyframes nav-settle {
+  from {
+    background-color: transparent;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  to {
+    border-bottom-color: var(--landing-border);
+  }
+}
+
+@supports (animation-timeline: scroll()) {
+  .nav {
+    animation: nav-settle linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 120px;
+  }
 }
 
 .bar {
@@ -9,7 +33,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 24px;
-  min-height: 88px;
+  min-height: var(--landing-header-height);
 }
 
 .brand {
@@ -24,11 +48,31 @@
 }
 
 .link {
+  position: relative;
+  padding-block: 6px;
   color: var(--landing-muted);
   font-size: 15px;
   font-weight: 500;
   line-height: 18px;
   transition: color 0.15s ease;
+}
+
+.link::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1.5px;
+  background: var(--landing-gold);
+  content: '';
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
 }
 
 .link:hover {
@@ -94,10 +138,6 @@
 }
 
 @media (max-width: 767px) {
-  .bar {
-    min-height: 62px;
-  }
-
   .actions {
     gap: 10px;
   }

@@ -1,101 +1,89 @@
-.card {
-  display: grid;
-  gap: 32px;
-  padding: 56px;
-  border: 1.5px solid var(--landing-gold);
-  border-radius: 32px;
-  background: var(--landing-bg);
+.coaches {
+  border-block: 1px solid var(--landing-navy-border);
+  background: var(--landing-navy);
 }
 
 .layout {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
   align-items: start;
-  gap: 56px;
+  gap: 48px clamp(40px, 6vw, 96px);
 }
 
 .copy {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+  display: grid;
+  justify-items: start;
+  gap: 24px;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-start;
   gap: 12px;
+  padding-top: 8px;
+}
+
+.btn-outline {
+  border-color: var(--landing-navy-border);
 }
 
 .steps {
   display: grid;
-  gap: 12px;
 }
 
 .step {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 16px;
-  border-radius: 18px;
-  background: var(--landing-surface);
+  gap: 24px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--landing-navy-border);
+}
+
+.step:first-child {
+  padding-top: 0;
 }
 
 .number {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--landing-gold);
-  color: var(--landing-bg);
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
+  flex: 0 0 40px;
+  color: var(--landing-gold);
+  font-size: 72px;
+  line-height: 0.8;
 }
 
 .step-lines {
   display: grid;
-  gap: 1px;
+  gap: 4px;
 }
 
 .step-title {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 19px;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
 }
 
 .step-text {
   color: var(--landing-muted);
-  font-size: 13px;
-  line-height: 16px;
+  font-size: 15px;
+  line-height: 21px;
 }
 
 .partners {
   display: flex;
+  grid-column: 1 / -1;
   align-items: center;
   gap: 10px;
   color: var(--landing-muted);
-  font-size: 14px;
-  line-height: 17px;
+  font-size: 15px;
+  line-height: 21px;
   --icon-size: 18px;
 }
 
-@media (max-width: 991px) {
+@media (max-width: 899px) {
   .layout {
     grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-  }
-}
-
-@media (max-width: 767px) {
-  .card {
-    gap: 24px;
-    padding: 24px;
   }
 
-  .actions {
-    flex-direction: column;
+  .partners {
+    align-items: flex-start;
   }
 }

@@ -1,37 +1,32 @@
-<section class="section section-surface" [id]="sectionId">
-  <div class="container">
-    <div class="card">
-      <div class="layout">
-        <div class="copy">
-          <p class="eyebrow">{{ 'coaches.eyebrow' | t }}</p>
-          <h2 class="section-title">{{ 'coaches.title' | t }}</h2>
-          <p class="section-text">{{ 'coaches.text' | t }}</p>
-          <div class="actions">
-            <a class="btn btn-primary" target="_blank" rel="noopener" [attr.href]="adminUrl">
-              <landing-icon name="send" />
-              {{ 'coaches.contact' | t }}
-            </a>
-            <a class="btn btn-outline" target="_blank" rel="noopener" [attr.href]="panelUrl">
-              {{ 'coaches.panel' | t }}
-            </a>
-          </div>
-        </div>
-        <ol class="steps">
-          @for (step of steps; track step.title; let number = $index) {
-            <li class="step">
-              <span class="number">{{ number + 1 }}</span>
-              <span class="step-lines">
-                <span class="step-title">{{ step.title | t }}</span>
-                <span class="step-text">{{ step.text | t }}</span>
-              </span>
-            </li>
-          }
-        </ol>
+<section class="section coaches" [id]="sectionId">
+  <div class="container layout">
+    <div class="copy">
+      <h2 class="display section-title reveal">{{ 'coaches.title' | t }}</h2>
+      <p class="section-text reveal" [style.--i]="1">{{ 'coaches.text' | t }}</p>
+      <div class="actions reveal" [style.--i]="2">
+        <a class="btn btn-primary" target="_blank" rel="noopener" [attr.href]="adminUrl">
+          <landing-icon name="send" />
+          {{ 'coaches.contact' | t }}
+        </a>
+        <a class="btn btn-outline" target="_blank" rel="noopener" [attr.href]="panelUrl">
+          {{ 'coaches.panel' | t }}
+        </a>
       </div>
-      <p class="partners">
-        <landing-icon name="shield" />
-        {{ 'coaches.partners' | t }}
-      </p>
     </div>
+    <ol class="steps">
+      @for (step of steps; track step.title; let number = $index) {
+        <li class="step reveal" [style.--i]="number">
+          <span class="display number" aria-hidden="true">{{ number + 1 }}</span>
+          <span class="step-lines">
+            <span class="step-title">{{ step.title | t }}</span>
+            <span class="step-text">{{ step.text | t }}</span>
+          </span>
+        </li>
+      }
+    </ol>
+    <p class="partners">
+      <landing-icon name="shield" />
+      {{ 'coaches.partners' | t }}
+    </p>
   </div>
 </section>

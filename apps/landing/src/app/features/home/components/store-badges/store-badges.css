@@ -21,12 +21,15 @@
   border-radius: 14px;
   background: var(--badge-bg);
   color: var(--badge-text);
-  transition: filter 0.15s ease;
+  transition:
+    filter 0.15s ease,
+    translate 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
   --icon-size: 26px;
 }
 
 .badge:hover {
   filter: brightness(1.08);
+  translate: 0 -3px;
 }
 
 .labels {
@@ -44,4 +47,25 @@
   font-size: 18px;
   font-weight: 700;
   line-height: 22px;
+}
+
+@media (max-width: 479px) {
+  :host {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    width: 100%;
+  }
+
+  .badge {
+    gap: 10px;
+    padding: 11px 12px;
+    --icon-size: 22px;
+  }
+
+  .name {
+    font-size: 15px;
+    line-height: 19px;
+    white-space: nowrap;
+  }
 }

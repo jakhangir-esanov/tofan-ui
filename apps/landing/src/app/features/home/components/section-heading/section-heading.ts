@@ -6,16 +6,14 @@ import { LandingTranslatePipe } from '@landing/core/i18n/landing-translate.pipe'
   selector: 'landing-section-heading',
   imports: [LandingTranslatePipe],
   template: `
-    <p class="eyebrow">{{ eyebrow() | t }}</p>
-    <h2 class="section-title">{{ title() | t }}</h2>
+    <h2 class="display section-title reveal">{{ title() | t }}</h2>
     @if (text(); as text) {
-      <p class="section-text">{{ text | t }}</p>
+      <p class="section-text reveal" [style.--i]="1">{{ text | t }}</p>
     }
   `,
   styleUrl: './section-heading.css',
 })
 export class SectionHeading {
-  readonly eyebrow = input.required<LandingKey>();
   readonly title = input.required<LandingKey>();
   readonly text = input<LandingKey>();
 }

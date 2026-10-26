@@ -1,7 +1,7 @@
 <section class="section">
   <div class="container content">
-    <p class="eyebrow">{{ status }}</p>
-    <h1 class="section-title">{{ 'notFound.title' | t }}</h1>
+    <p class="display status" aria-hidden="true">{{ status }}</p>
+    <h1 class="display section-title">{{ 'notFound.title' | t }}</h1>
     <p class="section-text">{{ 'notFound.text' | t }}</p>
     <a class="btn btn-primary" [routerLink]="homeUrl()">{{ 'notFound.home' | t }}</a>
   </div>

@@ -26,7 +26,7 @@ describe('HomePage', () => {
     fixture.detectChanges();
 
     expect((fixture.nativeElement as HTMLElement).querySelector('h1')?.textContent).toContain(
-      'Тренировки, питание и сообщество',
+      'Сильнее каждый день',
     );
   });
 });

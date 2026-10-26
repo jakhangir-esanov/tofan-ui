@@ -9,7 +9,7 @@ const WORDMARK = 'TOFAN';
   selector: 'landing-brand-logo',
   imports: [Icon],
   template: `
-    <span class="mark"><landing-icon name="peak" /></span>
+    <landing-icon class="mark" name="mark" />
     <span class="wordmark">{{ wordmark }}</span>
   `,
   styleUrl: './brand-logo.css',

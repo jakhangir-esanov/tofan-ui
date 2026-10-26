@@ -1,111 +1,172 @@
 .layout {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
-  gap: 80px;
+  gap: clamp(40px, 6vw, 96px);
 }
 
-.visual {
-  display: flex;
-  flex: 0 0 520px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  min-height: 362px;
-  padding-block: 56px;
-  border-radius: 32px;
-  background: var(--landing-apparel);
+.photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 28px;
+  background: var(--landing-surface);
 }
 
-.shirt {
-  color: var(--landing-gold);
-  --icon-size: 200px;
+.photo img {
+  width: 100%;
+}
+
+.hotspot-dot {
+  position: relative;
+}
+
+.hotspot-dot::before,
+.hotspot-dot::after {
+  position: absolute;
+  inset: -2px;
+  border: 1.5px solid var(--landing-gold);
+  border-radius: 50%;
+  content: '';
+  opacity: 0;
+}
+
+@keyframes photo-settle {
+  from {
+    scale: 1.16;
+  }
+}
+
+@keyframes nfc-wave {
+  from {
+    opacity: 0.9;
+    scale: 1;
+  }
+
+  to {
+    opacity: 0;
+    scale: 4.5;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hotspot-dot::before,
+  .hotspot-dot::after {
+    animation: nfc-wave 2.4s cubic-bezier(0.2, 0.7, 0.2, 1) infinite;
+  }
+
+  .hotspot-dot::after {
+    animation-delay: 1.2s;
+  }
+
+  @supports (animation-timeline: view()) {
+    .photo img {
+      animation: photo-settle linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 50%;
+    }
+  }
+}
+
+.hotspot {
+  position: absolute;
+  top: 40.5%;
+  left: 50.3%;
+  display: flex;
+  align-items: center;
+  transform: translate(-6px, -50%);
+}
+
+.hotspot-dot {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--landing-bg);
+  border-radius: 50%;
+  background: var(--landing-gold);
+  box-shadow: 0 0 0 6px var(--landing-gold-soft);
+}
+
+.hotspot-line {
+  width: clamp(24px, 4vw, 56px);
+  height: 1px;
+  background: var(--landing-gold);
 }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 14px;
+  padding: 7px 12px;
   border: 1px solid var(--landing-gold);
   border-radius: 999px;
-  background: var(--landing-gold-tint);
+  background: var(--landing-bg);
   color: var(--landing-gold);
   font-size: 13px;
   font-weight: 600;
   line-height: 16px;
-  --icon-size: 18px;
+  white-space: nowrap;
+  --icon-size: 16px;
 }
 
 .copy {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 20px;
-  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 24px;
 }
 
 .points {
   display: grid;
-  gap: 20px;
+  gap: 14px;
+  padding-block: 4px;
 }
 
 .point {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  font-size: 15px;
-  line-height: 22px;
-  color: var(--landing-gold);
+  gap: 12px;
+  font-size: 16px;
+  line-height: 23px;
   --icon-size: 20px;
 }
 
-.point span {
-  color: var(--landing-text);
+.point landing-icon {
+  color: var(--landing-gold);
 }
 
 .purchase {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 12px 16px;
+  gap: 16px 28px;
+  padding-top: 8px;
 }
 
 .price {
-  font-size: 26px;
-  font-weight: 700;
-  line-height: 31px;
+  color: var(--landing-gold);
+  font-size: clamp(52px, calc(44.57px + 1.905vw), 72px);
 }
 
-@media (max-width: 991px) {
+@media (max-width: 899px) {
   .layout {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 32px;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .visual {
-    flex-basis: auto;
+  .photo {
+    border-radius: 22px;
   }
 }
 
-@media (max-width: 767px) {
-  .visual {
-    min-height: 280px;
-    padding-block: 40px;
+@media (max-width: 479px) {
+  .hotspot-line {
+    width: 12px;
   }
 
-  .shirt {
-    --icon-size: 150px;
+  .chip {
+    padding: 6px 10px;
+    font-size: 12px;
   }
 
-  .copy,
-  .points {
-    gap: 14px;
-  }
-
-  .purchase {
-    flex-direction: column;
-    align-items: flex-start;
+  .chip landing-icon {
+    display: none;
   }
 }

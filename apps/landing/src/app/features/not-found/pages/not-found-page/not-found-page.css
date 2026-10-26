@@ -1,12 +1,17 @@
 .content {
   display: grid;
-  justify-items: center;
-  gap: 16px;
-  min-height: 50vh;
+  justify-items: start;
   align-content: center;
-  text-align: center;
+  gap: 20px;
+  min-height: 60vh;
+}
+
+.status {
+  color: var(--landing-gold);
+  font-size: clamp(120px, calc(64.29px + 14.29vw), 270px);
+  line-height: 0.8;
 }
 
 .btn {
-  margin-top: 8px;
+  margin-top: 12px;
 }
