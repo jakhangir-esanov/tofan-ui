@@ -1,0 +1,31 @@
+<section class="section hero">
+  <div class="container layout">
+    <div class="portrait">
+      @if (trainer().photoUrl; as photoUrl) {
+        <img [src]="photoUrl" [alt]="trainer().displayName" width="480" height="600" />
+      } @else {
+        <span class="display monogram" aria-hidden="true">{{ initials() }}</span>
+      }
+    </div>
+    <div class="copy">
+      <p class="role">
+        <landing-icon name="award" />
+        {{ 'trainer.role' | t }}
+      </p>
+      <h1 class="display name">{{ trainer().displayName }}</h1>
+      @if (rating(); as rating) {
+        <p class="rating">
+          <landing-icon name="star" />
+          {{ 'trainer.rating' | t: rating }}
+        </p>
+      }
+      <p class="display price">{{ 'trainer.price' | t: price() }}</p>
+      <p class="note">{{ 'trainer.priceNote' | t }}</p>
+      <a class="btn btn-primary subscribe" [href]="downloadUrl">
+        <landing-icon name="arrow" />
+        {{ 'trainer.subscribe' | t }}
+      </a>
+      <p class="note">{{ 'trainer.subscribeText' | t }}</p>
+    </div>
+  </div>
+</section>

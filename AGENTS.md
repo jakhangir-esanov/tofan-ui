@@ -41,7 +41,7 @@ apps/coach/src/app/
 apps/landing/src/app/
   core/          links, landing dictionary and locale routes, shell, SEO head
   shared/        icon sprite and icon component
-  features/<x>/  home, not-found
+  features/<x>/  home, trainer, not-found
   routes/        app.routes.ts and app.routes.server.ts
 libs/core/src/   shared auth, http, feedback and i18n
 libs/shared/src/ reusable components, models and utilities
@@ -53,7 +53,8 @@ and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only uses `loadChi
 `features/exercises`.
 
 Import aliases: `@core/*`, `@shared/*`, `@features/*`, `@coach/*`, `@environments/*`, `@coach-environments/*`, `@landing/*`.
-The landing (`apps/landing`) is SSR with prerendered `/`, `/ru`, `/en`, calls no backend, uses no Optimus UI and keeps its
+The landing (`apps/landing`) is SSR with prerendered `/`, `/ru`, `/en`, calls one public endpoint (the server-rendered trainer
+page `/t/<slug>`), uses no Optimus UI and keeps its
 own typed dictionary in `apps/landing/src/app/core/i18n`; see `docs/modules/landing.md`.
 Use relative imports inside a feature and aliases across boundaries.
 

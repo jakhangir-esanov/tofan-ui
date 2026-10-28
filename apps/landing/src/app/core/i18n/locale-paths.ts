@@ -14,3 +14,11 @@ export const LOCALES_BY_ROUTE_ORDER: readonly AppLocale[] = [
 export function localeHomeUrl(locale: AppLocale): string {
   return `/${LOCALE_PATHS[locale]}`;
 }
+
+export function localePageUrl(locale: AppLocale, path: string): string {
+  if (path === '') {
+    return localeHomeUrl(locale);
+  }
+  const prefix = LOCALE_PATHS[locale];
+  return prefix === '' ? `/${path}` : `/${prefix}/${path}`;
+}

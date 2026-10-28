@@ -148,6 +148,37 @@ export const LANDING_RU: LandingDictionary = {
     youtube: 'YouTube',
     copyright: '© {year} Peaktofan. Все права защищены.',
   },
+  trainer: {
+    role: 'Тренер Tofan',
+    rating: '{rating} · отзывов: {count}',
+    price: '{price} сум / мес',
+    priceNote: 'Итоговую цену приложение покажет перед оплатой.',
+    subscribe: 'Подписаться в приложении',
+    subscribeText:
+      'Программы, план на каждый день и чат с тренером открываются в приложении Tofan.',
+    about: 'О тренере',
+    workoutPrograms: 'Программы тренировок',
+    mealPrograms: 'Программы питания',
+    noPrograms: 'Пока нет программ',
+    untitledProgram: 'Программа',
+    programsLocked: 'Дни и блюда внутри программы открываются после подписки.',
+    goals: {
+      loseWeight: 'Похудение',
+      gainMuscle: 'Набор массы',
+      maintain: 'Поддержание веса',
+      recomposition: 'Рекомпозиция',
+    },
+    videos: 'Видео тренера',
+    video: 'Видео {number}',
+    metaTitle: '{name} - тренер Tofan',
+    metaDescription:
+      'Тренируйтесь с {name} в приложении Tofan: программы тренировок и питания, видеоуроки.',
+    notFound: 'Тренер не найден',
+    notFoundText:
+      'Ссылка устарела или страница тренера ещё не опубликована. Найдите других тренеров в приложении Tofan.',
+    download: 'Скачать приложение',
+    home: 'На главную',
+  },
   notFound: {
     title: 'Страница не найдена',
     text: 'Такой страницы нет или она переехала по другому адресу.',
