@@ -463,6 +463,12 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
     voiceTooShort: 'Голосовое сообщение слишком короткое',
     mixedAttachments: 'Отправьте фото и файлы отдельными сообщениями',
     tooManyAttachments: 'В одно сообщение можно добавить до {max}',
+    menuTitle: 'Сообщение',
+    copy: 'Копировать',
+    copySubject: 'Текст сообщения',
+    delete: 'Удалить',
+    deleteTitle: 'Удалить сообщение?',
+    deleteMessage: 'Сообщение удалится у обоих собеседников. Восстановить его нельзя.',
   },
   profile: {
     editTitle: 'Редактировать профиль',

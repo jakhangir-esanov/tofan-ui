@@ -5,7 +5,7 @@ import { AccessDeniedError } from '@shared/models/errors/access-denied.error';
 import { ServiceUnavailableError } from '@shared/models/errors/service-unavailable.error';
 import { ChatListStore } from './chat-list.store';
 import { ConversationStore } from './conversation.store';
-import { Conversation, Message, Presence } from './models/chat';
+import { Conversation, Message, MessageDeletion, Presence } from './models/chat';
 import { ActivityNotice } from './models/chat-activity';
 import { ChatHub, ReadNotice } from './services/chat-hub.service';
 import { ChatService } from './services/chat.service';
@@ -49,6 +49,7 @@ describe('chat stores', () => {
   const notifications = { error: vi.fn() };
   const hub = {
     messages: new Subject<Message>(),
+    deletions: new Subject<MessageDeletion>(),
     reads: new Subject<ReadNotice>(),
     activities: new Subject<ActivityNotice>(),
     presence: new Subject<Presence>(),
@@ -82,6 +83,34 @@ describe('chat stores', () => {
     hub.presence.next({ userId: 'them', isOnline: true, lastSeen: null });
 
     expect(store.conversations()?.[0].online).toBe(true);
+  });
+
+  it('should refresh the list when a message is deleted anywhere', async () => {
+    const store = TestBed.inject(ChatListStore);
+    service.conversations.mockResolvedValue([conversation('a', 2), conversation('bb')]);
+    await store.load();
+    service.conversations.mockResolvedValue([conversation('bb')]);
+
+    hub.deletions.next({ conversationId: 'a', messageId: 'm1' });
+
+    await vi.waitFor(() => expect(store.conversations()?.map((item) => item.id)).toEqual(['bb']));
+  });
+
+  it('should forget a message and drop the ones deleted while the hub was away', async () => {
+    const store = TestBed.inject(ConversationStore);
+    service.conversations.mockResolvedValue([{ ...conversation('c1'), id: 'c1' }]);
+    service.messages.mockResolvedValue({
+      messages: [message('m3', 'me', 3), message('m2', 'them', 2), message('m1', 'me', 1)],
+      otherReadUpTo: null,
+    });
+    await store.open({ conversationId: 'c1' });
+
+    store.forget('m3');
+    expect(store.messages().map((item) => item.id)).toEqual(['m2', 'm1']);
+    service.messages.mockResolvedValue({ messages: [message('m1', 'me', 1)], otherReadUpTo: null });
+    hub.reconnected.next();
+
+    await vi.waitFor(() => expect(store.messages().map((item) => item.id)).toEqual(['m1']));
   });
 
   it('should open a conversation with a user and load its first page', async () => {

@@ -1,11 +1,12 @@
 import { toDateOrNull } from '@coach/core/payments/payment.mapper';
-import { Conversation, Message, Presence } from '../models/chat';
+import { Conversation, Message, MessageDeletion, Presence } from '../models/chat';
 import { ActivityNotice } from '../models/chat-activity';
 import { Attachment, MessageKind } from '../models/chat-attachment';
 import {
   ActivityEvent,
   ConversationResponse,
   MessageAttachmentResponse,
+  MessageDeletedEvent,
   MessageKindDto,
   MessageResponse,
   PresenceEvent,
@@ -65,6 +66,13 @@ export function toActivityNotice(event: ActivityEvent): ActivityNotice | null {
     return null;
   }
   return { conversationId: event.conversationId, userId: event.userId, activity };
+}
+
+export function toMessageDeletion(event: MessageDeletedEvent): MessageDeletion | null {
+  if (!event.conversationId || !event.messageId) {
+    return null;
+  }
+  return { conversationId: event.conversationId, messageId: event.messageId };
 }
 
 function toKind(kind: MessageKindDto): MessageKind {

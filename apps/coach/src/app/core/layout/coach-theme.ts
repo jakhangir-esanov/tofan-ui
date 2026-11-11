@@ -125,6 +125,24 @@ export const COACH_THEME = definePreset(Aura, {
     },
   },
   components: {
+    contextmenu: {
+      root: {
+        background: '{coach.surface}',
+        borderColor: '{coach.border}',
+        color: '{coach.text}',
+        borderRadius: '12px',
+        shadow: '0 8px 24px {coach.shadow}',
+      },
+      list: { padding: '4px', gap: '2px' },
+      item: {
+        focusBackground: '{coach.surface2}',
+        activeBackground: '{coach.surface2}',
+        color: '{coach.text}',
+        focusColor: '{coach.text}',
+        activeColor: '{coach.text}',
+        borderRadius: '8px',
+      },
+    },
     toast: {
       root: { width: '360px', borderRadius: '16px', borderWidth: '1px', blur: '0' },
       icon: { size: '20px' },

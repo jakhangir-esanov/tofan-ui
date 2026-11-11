@@ -1,4 +1,4 @@
-import { toActivityNotice, toConversation, toMessage } from './chat.mapper';
+import { toActivityNotice, toConversation, toMessage, toMessageDeletion } from './chat.mapper';
 import { ConversationResponse, MessageResponse } from './chat.dto';
 
 const apiUrl = (path: string) => `/api${path}`;
@@ -93,5 +93,25 @@ describe('chat mapper', () => {
       toActivityNotice({ conversationId: 'c1', userId: 'them', activity: futureValue }),
     ).toBeNull();
     expect(toActivityNotice({ userId: 'them', activity: 1 })).toBeNull();
+  });
+});
+
+describe('toMessageDeletion', () => {
+  it('should take the conversation and the message when a deletion event arrives', () => {
+    expect(
+      toMessageDeletion({
+        conversationId: 'c1',
+        messageId: 'm1',
+        lastMessageSenderUserId: null,
+        lastMessageKind: null,
+        lastMessageText: '',
+        lastMessageOnUtc: null,
+      }),
+    ).toEqual({ conversationId: 'c1', messageId: 'm1' });
+  });
+
+  it('should ignore a deletion event without its ids', () => {
+    expect(toMessageDeletion({ conversationId: 'c1' })).toBeNull();
+    expect(toMessageDeletion({ messageId: 'm1' })).toBeNull();
   });
 });

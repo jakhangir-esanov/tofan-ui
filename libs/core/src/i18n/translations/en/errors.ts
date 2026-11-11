@@ -10,6 +10,8 @@ export const ERRORS_EN: Dictionary['errors'] = {
       UserNotFound: 'User not found.',
     },
     Chat: {
+      ConversationNotFound: 'Conversation not found. Refresh the chat list.',
+      MessageNotFound: 'Message not found. It may already be deleted.',
       SubscriptionRequired: 'Chat is open only to athletes with an active VIP subscription.',
     },
     NotificationTemplate: {

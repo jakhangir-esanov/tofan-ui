@@ -1,0 +1,13 @@
+.item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  color: var(--c-text);
+  cursor: pointer;
+  --icon-size: 18px;
+}
+
+.item.is-destructive {
+  color: var(--c-danger);
+}

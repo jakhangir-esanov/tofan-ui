@@ -3,7 +3,7 @@ import { HubConnection, HubConnectionBuilder, HubConnectionState } from '@micros
 import { Subject } from 'rxjs';
 import { API_BASE_URL } from '@core/http/api-base-url';
 import { AuthSessionStorage } from '@core/auth/auth-session.storage';
-import { Message, Presence } from '../models/chat';
+import { Message, MessageDeletion, Presence } from '../models/chat';
 import {
   ActivityNotice,
   ChatActivity,
@@ -12,12 +12,13 @@ import {
 } from '../models/chat-activity';
 import {
   ActivityEvent,
+  MessageDeletedEvent,
   MessageResponse,
   PresenceEvent,
   ReadEvent,
   chatActivities,
 } from './chat.dto';
-import { toActivityNotice, toMessage, toPresence } from './chat.mapper';
+import { toActivityNotice, toMessage, toMessageDeletion, toPresence } from './chat.mapper';
 
 const HUB_PATH = '/hubs/chat';
 
@@ -35,6 +36,7 @@ export class ChatHub {
   private readonly lastActivity = new Map<string, SentActivity>();
 
   readonly messages = new Subject<Message>();
+  readonly deletions = new Subject<MessageDeletion>();
   readonly reads = new Subject<ReadNotice>();
   readonly activities = new Subject<ActivityNotice>();
   readonly presence = new Subject<Presence>();
@@ -107,6 +109,12 @@ export class ChatHub {
     connection.on('MessageReceived', (payload: MessageResponse) =>
       this.messages.next(toMessage(payload, (path) => `${this.baseUrl}${path}`)),
     );
+    connection.on('MessageDeleted', (payload: MessageDeletedEvent) => {
+      const deletion = toMessageDeletion(payload);
+      if (deletion !== null) {
+        this.deletions.next(deletion);
+      }
+    });
     connection.on('ConversationRead', (payload: ReadEvent) => this.read(payload));
     connection.on('UserActivity', (payload: ActivityEvent) => {
       const notice = toActivityNotice(payload);

@@ -457,6 +457,12 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
     voiceTooShort: 'The voice message is too short',
     mixedAttachments: 'Send photos and files in separate messages',
     tooManyAttachments: 'Up to {max} can go into one message',
+    menuTitle: 'Message',
+    copy: 'Copy',
+    copySubject: 'Message text',
+    delete: 'Delete',
+    deleteTitle: 'Delete this message?',
+    deleteMessage: 'The message is deleted for both of you. It cannot be restored.',
   },
   profile: {
     editTitle: 'Edit profile',

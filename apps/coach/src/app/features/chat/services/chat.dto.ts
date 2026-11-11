@@ -92,3 +92,12 @@ export interface ActivityEvent {
   userId?: string;
   activity?: ChatActivityDto;
 }
+
+export interface MessageDeletedEvent {
+  conversationId?: string;
+  messageId?: string;
+  lastMessageSenderUserId?: string | null;
+  lastMessageKind?: MessageKindDto | null;
+  lastMessageText?: string;
+  lastMessageOnUtc?: string | null;
+}

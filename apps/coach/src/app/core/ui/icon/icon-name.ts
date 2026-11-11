@@ -9,6 +9,7 @@ export type IconName =
   | 'chevron-left'
   | 'chevron-right'
   | 'clock'
+  | 'copy'
   | 'close'
   | 'credit-card'
   | 'bell'

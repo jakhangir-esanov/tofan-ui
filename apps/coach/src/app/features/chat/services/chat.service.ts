@@ -61,6 +61,12 @@ export class ChatService {
     );
   }
 
+  async delete(conversationId: string, messageId: string): Promise<void> {
+    await this.api.delete(
+      `${CHAT}/${encodeURIComponent(conversationId)}/messages/${encodeURIComponent(messageId)}`,
+    );
+  }
+
   async markRead(conversationId: string): Promise<void> {
     await this.api.post(`${CHAT}/${encodeURIComponent(conversationId)}/read`);
   }

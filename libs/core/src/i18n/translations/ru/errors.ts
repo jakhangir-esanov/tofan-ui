@@ -10,6 +10,8 @@ export const ERRORS_RU: Dictionary['errors'] = {
       UserNotFound: 'Пользователь не найден.',
     },
     Chat: {
+      ConversationNotFound: 'Диалог не найден. Обновите список чатов.',
+      MessageNotFound: 'Сообщение не найдено. Возможно, оно уже удалено.',
       SubscriptionRequired: 'Чат открыт только для спортсменов с активной VIP-подпиской.',
     },
     NotificationTemplate: {
