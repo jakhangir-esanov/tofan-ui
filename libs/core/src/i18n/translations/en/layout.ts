@@ -101,8 +101,4 @@ export const LAYOUT_EN: Dictionary['layout'] = {
     notFoundTitle: '404 — Page not found',
     notFoundMessage: 'The page does not exist or has moved.',
   },
-  dashboard: {
-    welcome: 'Welcome',
-    welcomeName: 'Welcome, {name}',
-  },
 };

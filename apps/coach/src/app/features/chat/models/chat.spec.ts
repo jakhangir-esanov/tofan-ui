@@ -7,8 +7,10 @@ import {
   isMine,
   isRead,
   mergeMessages,
+  mergeNewestPage,
   newestFirst,
   opensDay,
+  withoutMessage,
 } from './chat';
 
 const conversation = (
@@ -139,5 +141,90 @@ describe('chatInitials', () => {
     expect(chatInitials('aziz')).toBe('AZ');
     expect(chatInitials(' Aziz  Karim  Rahimov ')).toBe('AR');
     expect(chatInitials('')).toBe('');
+  });
+});
+
+describe('message removal rules', () => {
+  const at = (hour: number): string => `2026-10-22T${String(hour).padStart(2, '0')}:00:00Z`;
+  const ids = (messages: readonly Message[]): string[] => messages.map((item) => item.id);
+  const shownIds = (messages: readonly Message[]): ReadonlySet<string> => new Set(ids(messages));
+
+  it('should drop only the message with the given id when one is removed', () => {
+    const shown = [message('b', 'me', at(11)), message('a', 'them', at(10))];
+
+    expect(ids(withoutMessage(shown, 'b'))).toEqual(['a']);
+    expect(ids(withoutMessage(shown, 'missing'))).toEqual(['b', 'a']);
+  });
+
+  it('should drop a shown message the newest page no longer has when the page reaches back to it', () => {
+    const shown = [
+      message('c', 'me', at(12)),
+      message('b', 'me', at(11)),
+      message('a', 'me', at(10)),
+    ];
+    const page = [message('c', 'me', at(12)), message('a', 'me', at(10))];
+
+    const merged = mergeNewestPage(
+      { messages: page, complete: false, shownBefore: shownIds(shown) },
+      shown,
+      new Date(),
+    );
+
+    expect(ids(merged)).toEqual(['c', 'a']);
+  });
+
+  it('should drop the newest shown message when it was deleted while the page was not watched', () => {
+    const shown = [message('b', 'them', at(11)), message('a', 'me', at(10))];
+    const page = [message('a', 'me', at(10))];
+
+    const merged = mergeNewestPage(
+      { messages: page, complete: true, shownBefore: shownIds(shown) },
+      shown,
+      new Date(),
+    );
+
+    expect(ids(merged)).toEqual(['a']);
+  });
+
+  it('should keep older shown messages when the full newest page does not reach them', () => {
+    const shown = [
+      message('c', 'me', at(12)),
+      message('b', 'me', at(11)),
+      message('a', 'me', at(10)),
+    ];
+    const page = [message('c', 'me', at(12)), message('b', 'me', at(11))];
+
+    const merged = mergeNewestPage(
+      { messages: page, complete: false, shownBefore: shownIds(shown) },
+      shown,
+      new Date(),
+    );
+
+    expect(ids(merged)).toEqual(['c', 'b', 'a']);
+  });
+
+  it('should keep a message that arrived while the page was loading', () => {
+    const before = [message('c', 'me', at(12))];
+    const shown = [message('d', 'them', at(13)), ...before];
+
+    const merged = mergeNewestPage(
+      { messages: before, complete: true, shownBefore: shownIds(before) },
+      shown,
+      new Date(),
+    );
+
+    expect(ids(merged)).toEqual(['d', 'c']);
+  });
+
+  it('should drop everything shown before when the whole history comes back empty', () => {
+    const shown = [message('a', 'me', at(10))];
+
+    const merged = mergeNewestPage(
+      { messages: [], complete: true, shownBefore: shownIds(shown) },
+      shown,
+      new Date(),
+    );
+
+    expect(merged).toEqual([]);
   });
 });

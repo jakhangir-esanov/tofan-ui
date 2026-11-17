@@ -36,7 +36,7 @@ export class ChatListStore {
   constructor() {
     const destroyed = inject(DestroyRef);
     destroyed.onDestroy(() => this.board.dispose());
-    merge(this.hub.messages, this.hub.reads, this.hub.reconnected)
+    merge(this.hub.messages, this.hub.deletions, this.hub.reads, this.hub.reconnected)
       .pipe(takeUntilDestroyed(destroyed))
       .subscribe(() => void this.refreshQuietly());
     this.hub.messages

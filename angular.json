@@ -71,7 +71,7 @@
         "serve": {
           "builder": "@angular/build:dev-server",
           "options": {
-            "proxyConfig": "proxy.conf.json"
+            "proxyConfig": "scripts/dev-proxy/admin.local.mjs"
           },
           "configurations": {
             "production": {
@@ -82,11 +82,11 @@
             },
             "staging": {
               "buildTarget": "admin:build:development",
-              "proxyConfig": "proxy.staging.conf.json"
+              "proxyConfig": "scripts/dev-proxy/admin.staging.mjs"
             },
             "prod": {
               "buildTarget": "admin:build:development",
-              "proxyConfig": "proxy.prod.conf.json"
+              "proxyConfig": "scripts/dev-proxy/admin.prod.mjs"
             }
           },
           "defaultConfiguration": "development"

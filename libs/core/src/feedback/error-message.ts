@@ -42,6 +42,8 @@ const MESSAGES_BY_CODE: Readonly<Record<string, TranslationKey>> = {
   'User.NotBlocked': 'errors.backend.User.NotBlocked',
   'User.CannotBlockSelf': 'errors.backend.User.CannotBlockSelf',
   'User.InvalidUsername': 'errors.backend.User.InvalidUsername',
+  'Chat.ConversationNotFound': 'errors.backend.Chat.ConversationNotFound',
+  'Chat.MessageNotFound': 'errors.backend.Chat.MessageNotFound',
   'Chat.SubscriptionRequired': 'errors.backend.Chat.SubscriptionRequired',
   GetUsersQuery: 'errors.backend.GetUsersQuery',
   'Garment.NotFound': 'errors.backend.Garment.NotFound',

@@ -1,0 +1,21 @@
+@if (rows().length === 0) {
+  <p class="text-muted-color m-0 text-sm">{{ 'dashboard.states.noData' | t }}</p>
+} @else {
+  <ul class="m-0 flex list-none flex-col gap-3 p-0">
+    @for (row of rows(); track row.key) {
+      <li class="flex flex-col gap-1">
+        <div class="flex items-baseline justify-between gap-3 text-sm">
+          @let label = row.placeholder === null ? row.label : (row.placeholder | t);
+          <span class="min-w-0 truncate" [title]="label">{{ label }}</span>
+          <span class="shrink-0 font-medium tabular-nums">{{ row.value }}</span>
+        </div>
+        <div class="bg-surface-100 dark:bg-surface-800 h-1.5 overflow-hidden rounded-full">
+          <div class="bg-primary h-full rounded-full" [style.width.%]="widthOf(row)"></div>
+        </div>
+        @if (row.caption) {
+          <span class="text-muted-color text-xs">{{ row.caption }}</span>
+        }
+      </li>
+    }
+  </ul>
+}

@@ -16,6 +16,7 @@ import { NOTIFICATIONS_EN } from './notifications';
 import { ENUMS_EN } from './enums';
 import { ERRORS_EN } from './errors';
 import { LAYOUT_EN } from './layout';
+import { DASHBOARD_EN } from './dashboard';
 import { COACH_APP_EN } from './coach-app';
 
 export const DICTIONARY_EN: Dictionary = {
@@ -36,5 +37,6 @@ export const DICTIONARY_EN: Dictionary = {
   enums: ENUMS_EN,
   errors: ERRORS_EN,
   layout: LAYOUT_EN,
+  dashboard: DASHBOARD_EN,
   coachApp: COACH_APP_EN,
 };

@@ -1,0 +1,24 @@
+<div class="flex flex-wrap items-center gap-3">
+  <p-selectbutton
+    [ngModel]="app()"
+    (ngModelChange)="appChange.emit($event)"
+    [options]="appOptions()"
+    optionLabel="label"
+    optionValue="value"
+    [allowEmpty]="false"
+    [ariaLabelledBy]="'dashboard-app-label'"
+    size="small"
+  />
+  <span id="dashboard-app-label" class="sr-only">{{ 'dashboard.filters.app' | t }}</span>
+  <p-selectbutton
+    [ngModel]="period()"
+    (ngModelChange)="periodChange.emit($event)"
+    [options]="periodOptions()"
+    optionLabel="label"
+    optionValue="value"
+    [allowEmpty]="false"
+    [ariaLabelledBy]="'dashboard-period-label'"
+    size="small"
+  />
+  <span id="dashboard-period-label" class="sr-only">{{ 'dashboard.filters.period' | t }}</span>
+</div>

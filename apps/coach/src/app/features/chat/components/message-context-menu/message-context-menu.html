@@ -1,0 +1,10 @@
+<p-contextmenu [model]="items()" appendTo="body" [ariaLabel]="label()">
+  <ng-template #item let-item>
+    @if (actionOf(item); as action) {
+      <span class="item" [class.is-destructive]="action.destructive">
+        <coach-icon [name]="action.icon" />
+        <span class="t-base3 font-medium">{{ action.label }}</span>
+      </span>
+    }
+  </ng-template>
+</p-contextmenu>

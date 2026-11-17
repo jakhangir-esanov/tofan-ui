@@ -1,0 +1,26 @@
+<article
+  class="border-surface-200 dark:border-surface-700 flex h-full flex-col gap-2 rounded-xl border p-4"
+>
+  <span class="text-muted-color text-sm">{{ label() }}</span>
+  <strong class="text-2xl font-semibold">{{ value() }}</strong>
+  @if (change(); as text) {
+    <span
+      class="text-xs font-medium"
+      [class.text-green-600]="tone() === 'up'"
+      [class.dark:text-green-400]="tone() === 'up'"
+      [class.text-red-600]="tone() === 'down'"
+      [class.dark:text-red-400]="tone() === 'down'"
+      [class.text-muted-color]="tone() === 'flat'"
+    >
+      @if (tone() === 'up') {
+        <i class="pi pi-arrow-up-right mr-1 text-xs"></i>
+      } @else if (tone() === 'down') {
+        <i class="pi pi-arrow-down-right mr-1 text-xs"></i>
+      }
+      {{ text }}
+    </span>
+  }
+  @if (hint(); as text) {
+    <span class="text-muted-color text-xs">{{ text }}</span>
+  }
+</article>

@@ -5,7 +5,14 @@ import { FileDownloadService } from '@core/feedback/file-download.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { ConversationTarget, locateConversation } from './conversation-locator';
 import { ConversationPeer } from './conversation-peer';
-import { MESSAGE_MAX_LENGTH, Message, PAGE_SIZE, mergeMessages } from './models/chat';
+import {
+  MESSAGE_MAX_LENGTH,
+  Message,
+  PAGE_SIZE,
+  mergeMessages,
+  mergeNewestPage,
+  withoutMessage,
+} from './models/chat';
 import { ChatActivity } from './models/chat-activity';
 import { Attachment } from './models/chat-attachment';
 import { isSubscriptionRequired } from './models/chat-access';
@@ -109,6 +116,10 @@ export class ConversationStore {
     this.messages.update((shown) => mergeMessages(messages, shown, new Date()));
   }
 
+  forget(messageId: string): void {
+    this.messages.update((shown) => withoutMessage(shown, messageId));
+  }
+
   refused(error: unknown): void {
     if (isSubscriptionRequired(error)) {
       this.canWrite.set(false);
@@ -173,9 +184,13 @@ export class ConversationStore {
     if (id === null) {
       return;
     }
+    const shownBefore = new Set(this.messages().map((message) => message.id));
     try {
       const page = await this.service.messages(id, PAGE_SIZE);
-      this.show(page.messages);
+      const complete = page.messages.length < PAGE_SIZE;
+      this.messages.update((shown) =>
+        mergeNewestPage({ messages: page.messages, complete, shownBefore }, shown, new Date()),
+      );
       this.peer.readUpTo.set(page.otherReadUpTo ?? this.otherReadUpTo());
       void this.markRead();
     } catch {

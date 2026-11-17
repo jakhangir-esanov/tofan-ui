@@ -34,6 +34,11 @@ export interface Message {
   readonly sentOn: Date;
 }
 
+export interface MessageDeletion {
+  readonly conversationId: string;
+  readonly messageId: string;
+}
+
 export interface Presence {
   readonly userId: string;
   readonly isOnline: boolean;
@@ -92,6 +97,30 @@ export function mergeMessages(
     }
   }
   return [...byId.values()].sort((a, b) => b.sentOn.getTime() - a.sentOn.getTime());
+}
+
+export interface NewestPage {
+  readonly messages: readonly Message[];
+  readonly complete: boolean;
+  readonly shownBefore: ReadonlySet<string>;
+}
+
+export function mergeNewestPage(page: NewestPage, shown: readonly Message[], now: Date): Message[] {
+  const inPage = new Set(page.messages.map((message) => message.id));
+  const oldest = page.complete
+    ? Number.NEGATIVE_INFINITY
+    : Math.min(...page.messages.map((message) => message.sentOn.getTime()));
+  const kept = shown.filter(
+    (message) =>
+      inPage.has(message.id) ||
+      !page.shownBefore.has(message.id) ||
+      message.sentOn.getTime() < oldest,
+  );
+  return mergeMessages(page.messages, kept, now);
+}
+
+export function withoutMessage(messages: readonly Message[], messageId: string): Message[] {
+  return messages.filter((message) => message.id !== messageId);
 }
 
 function withKnownUrls(message: Message, shown: Message | undefined, now: Date): Message {

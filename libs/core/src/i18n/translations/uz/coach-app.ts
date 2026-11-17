@@ -453,6 +453,12 @@ export const COACH_APP_UZ = {
     voiceTooShort: 'Ovozli xabar juda qisqa',
     mixedAttachments: 'Rasm va faylni alohida xabarda yuboring',
     tooManyAttachments: 'Bitta xabarga {max} tagacha qo‘shiladi',
+    menuTitle: 'Xabar',
+    copy: 'Nusxa olish',
+    copySubject: 'Xabar matni',
+    delete: 'O‘chirish',
+    deleteTitle: 'Xabarni o‘chirasizmi?',
+    deleteMessage: 'Xabar ikkala tomonda ham o‘chadi. Uni qaytarib bo‘lmaydi.',
   },
   profile: {
     editTitle: 'Profilni tahrirlash',

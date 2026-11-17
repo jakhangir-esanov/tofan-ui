@@ -1,0 +1,17 @@
+<div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2 2xl:grid-cols-3">
+  <app-dashboard-panel [heading]="'dashboard.reach.platforms' | t">
+    <app-usage-list [rows]="platformRows()" />
+  </app-dashboard-panel>
+  <app-dashboard-panel [heading]="'dashboard.reach.versions' | t">
+    <app-usage-list [rows]="versionRows()" />
+  </app-dashboard-panel>
+  <app-dashboard-panel [heading]="'dashboard.reach.countries' | t">
+    <app-usage-list [rows]="countryRows()" />
+  </app-dashboard-panel>
+  <app-dashboard-panel [heading]="'dashboard.reach.operatingSystems' | t">
+    <app-usage-list [rows]="systemRows()" />
+  </app-dashboard-panel>
+  <app-dashboard-panel [heading]="'dashboard.reach.devices' | t">
+    <app-usage-list [rows]="deviceRows()" />
+  </app-dashboard-panel>
+</div>

@@ -1,0 +1,41 @@
+<app-dashboard-panel [heading]="heading()">
+  <p-button
+    panelAction
+    [label]="asTable() ? ('dashboard.trend.chart' | t) : ('dashboard.trend.table' | t)"
+    [icon]="asTable() ? 'pi pi-chart-line' : 'pi pi-table'"
+    severity="secondary"
+    [text]="true"
+    size="small"
+    (onClick)="asTable.set(!asTable())"
+  />
+  @if (asTable()) {
+    <div class="max-h-80 overflow-y-auto">
+      <table class="w-full text-sm">
+        <thead class="text-muted-color bg-(--layout-card-bg) sticky top-0 text-xs">
+          <tr>
+            <th class="py-2 text-left font-medium">{{ 'dashboard.trend.date' | t }}</th>
+            <th class="py-2 text-right font-medium">{{ 'dashboard.trend.activeUsers' | t }}</th>
+            <th class="py-2 text-right font-medium">{{ 'dashboard.trend.newUsers' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.key) {
+            <tr class="border-t border-(--sheet-line)">
+              <td class="py-2">{{ row.date }}</td>
+              <td class="py-2 text-right tabular-nums">{{ row.activeUsers }}</td>
+              <td class="py-2 text-right tabular-nums">{{ row.newUsers }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <app-chart
+      kind="line"
+      [labels]="labels()"
+      [series]="series()"
+      [titles]="titles()"
+      [ariaLabel]="heading()"
+    />
+  }
+</app-dashboard-panel>

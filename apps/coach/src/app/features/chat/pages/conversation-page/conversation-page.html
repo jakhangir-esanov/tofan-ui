@@ -37,19 +37,23 @@
         />
       }
       @for (row of rows(); track row.message.id) {
-        <div class="entry">
-          @if (row.day) {
-            <span class="day t-base5 font-medium tone-secondary">{{ row.day }}</span>
-          }
-          <coach-message-bubble
-            [message]="row.message"
-            [mine]="row.mine"
-            [read]="row.read"
-            [time]="row.time"
-            (imageOpened)="openImage(row.message, $event)"
-            (fileOpened)="store.openFile(row.message.id, $event)"
-            (mediaFailed)="store.mediaFailed(row.message.id)"
-          />
+        <div class="entry" animate.leave="is-leaving">
+          <div class="entry-body" [class.is-deleting]="deletion.deleting().has(row.message.id)">
+            @if (row.day) {
+              <span class="day t-base5 font-medium tone-secondary">{{ row.day }}</span>
+            }
+            <coach-message-bubble
+              coachMessagePress
+              [message]="row.message"
+              [mine]="row.mine"
+              [read]="row.read"
+              [time]="row.time"
+              (menuRequested)="openMenu($event, row.message, row.deletable)"
+              (imageOpened)="openImage(row.message, $event)"
+              (fileOpened)="store.openFile(row.message.id, $event)"
+              (mediaFailed)="store.mediaFailed(row.message.id)"
+            />
+          </div>
         </div>
       } @empty {
         @if (store.canWrite() && outbox.pending().length === 0) {
@@ -89,3 +93,4 @@
     (failed)="store.mediaFailed(gallery.message.id)"
   />
 }
+<coach-message-context-menu [label]="'coachApp.conversation.menuTitle' | t" />

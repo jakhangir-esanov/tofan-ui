@@ -8,6 +8,8 @@ export const ERRORS_UZ = {
       UserNotFound: 'Bunday foydalanuvchi topilmadi.',
     },
     Chat: {
+      ConversationNotFound: 'Suhbat topilmadi. Chatlar ro‘yxatini yangilab ko‘ring.',
+      MessageNotFound: 'Xabar topilmadi. U allaqachon o‘chirilgan bo‘lishi mumkin.',
       SubscriptionRequired: 'Chat faqat faol VIP obunali sportchilar uchun ochiq.',
     },
     NotificationTemplate: {

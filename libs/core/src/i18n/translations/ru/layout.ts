@@ -100,8 +100,4 @@ export const LAYOUT_RU: Dictionary['layout'] = {
     notFoundTitle: '404 — Страница не найдена',
     notFoundMessage: 'Такой страницы нет, или она перемещена.',
   },
-  dashboard: {
-    welcome: 'Добро пожаловать',
-    welcomeName: 'Добро пожаловать, {name}',
-  },
 };

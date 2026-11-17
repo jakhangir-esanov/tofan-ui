@@ -1,0 +1,34 @@
+<app-dashboard-panel
+  [heading]="'dashboard.retention.title' | t"
+  [hint]="'dashboard.retention.hint' | t"
+>
+  <div class="overflow-x-auto">
+    <table class="w-full border-separate border-spacing-1 text-sm">
+      <thead>
+        <tr class="text-muted-color text-xs">
+          <th class="px-2 py-1 text-left font-medium">{{ 'dashboard.retention.cohort' | t }}</th>
+          <th class="px-2 py-1 text-right font-medium">{{ 'dashboard.retention.users' | t }}</th>
+          @for (header of weekHeaders(); track $index) {
+            <th class="px-2 py-1 text-center font-medium whitespace-nowrap">{{ header }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (line of lines(); track line.key) {
+          <tr>
+            <td class="px-2 py-1 whitespace-nowrap">{{ line.week }}</td>
+            <td class="px-2 py-1 text-right tabular-nums">{{ line.users }}</td>
+            @for (cell of line.cells; track cell.week) {
+              <td class="relative overflow-hidden rounded-md px-2 py-1 text-center tabular-nums">
+                <span class="bg-primary absolute inset-0" [style.opacity]="cell.strength"></span>
+                <span class="relative" [class.text-primary-contrast]="cell.contrast">
+                  {{ cell.text }}
+                </span>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</app-dashboard-panel>

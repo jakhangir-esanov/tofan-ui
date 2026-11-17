@@ -1,7 +1,109 @@
-<h5>
-  @if (authStore.displayName(); as name) {
-    {{ 'layout.dashboard.welcomeName' | t: { name } }}
-  } @else {
-    {{ 'layout.dashboard.welcome' | t }}
-  }
-</h5>
+<p-tabs
+  [value]="section()"
+  (valueChange)="selectSection($event)"
+  class="[--p-tabs-tablist-background:transparent]"
+>
+  <header
+    class="sticky top-0 z-10 -mx-(--layout-content-padding) -mt-(--layout-content-padding) flex flex-col gap-3 bg-(--layout-card-bg) px-(--layout-content-padding) pt-4"
+  >
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div class="flex max-w-3xl flex-col gap-1">
+        <h1
+          class="text-surface-900 dark:text-surface-0 m-0 flex items-center gap-2 text-xl font-semibold"
+        >
+          {{ 'dashboard.title' | t }}
+          @if (store.loading()) {
+            <i class="pi pi-spin pi-spinner text-muted-color text-base" aria-hidden="true"></i>
+          }
+        </h1>
+        <span class="text-muted-color hidden text-sm md:block">{{ 'dashboard.subtitle' | t }}</span>
+        @if (range(); as text) {
+          <span class="text-muted-color text-xs">{{ text }}</span>
+        }
+      </div>
+      <app-dashboard-toolbar
+        [app]="store.app()"
+        [period]="store.period()"
+        (appChange)="store.selectApp($event)"
+        (periodChange)="store.selectPeriod($event)"
+      />
+    </div>
+    <p-tablist [attr.aria-label]="'dashboard.sections.label' | t">
+      @for (item of sections; track item) {
+        <p-tab [value]="item">{{ sectionLabels[item] | t }}</p-tab>
+      }
+    </p-tablist>
+  </header>
+
+  <div
+    class="flex flex-col gap-6 pt-6 transition-opacity"
+    [class.opacity-50]="store.loading()"
+    [attr.aria-busy]="store.loading()"
+  >
+    @if (store.failed()) {
+      <p-message severity="warn">
+        <div class="flex flex-wrap items-center gap-3">
+          <span>{{ 'dashboard.states.unavailable' | t }}</span>
+          <p-button
+            [label]="'common.actions.retry' | t"
+            icon="pi pi-refresh"
+            severity="secondary"
+            [outlined]="true"
+            size="small"
+            (onClick)="store.load()"
+          />
+        </div>
+      </p-message>
+    }
+    @if (store.empty()) {
+      <p-message severity="info">{{ 'dashboard.states.empty' | t }}</p-message>
+    }
+
+    @switch (section()) {
+      @case ('overview') {
+        <div class="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_20rem]">
+          @if (store.audience(); as audience) {
+            <div class="flex min-w-0 flex-col gap-4">
+              <app-audience-summary [audience]="audience" />
+              <app-activity-trend [days]="audience.days" />
+            </div>
+          } @else if (store.loading()) {
+            <div class="grid grid-cols-2 gap-4 xl:grid-cols-3">
+              @for (card of skeletonCards; track card) {
+                <p-skeleton height="7rem" borderRadius="0.75rem" />
+              }
+            </div>
+          }
+          @if (store.realtime(); as realtime) {
+            <app-realtime-panel [realtime]="realtime" [updatedAt]="store.realtimeAt()" />
+          } @else if (store.loading()) {
+            <p-skeleton height="16rem" borderRadius="0.75rem" />
+          } @else {
+            <app-dashboard-panel class="self-start" [heading]="'dashboard.realtime.title' | t">
+              <p class="text-muted-color m-0 text-sm">{{ 'dashboard.realtime.unavailable' | t }}</p>
+            </app-dashboard-panel>
+          }
+        </div>
+        @if (store.engagement(); as engagement) {
+          <app-key-events [events]="engagement.events" />
+        }
+      }
+      @case ('behaviour') {
+        @if (store.engagement(); as engagement) {
+          <app-engagement-panels [engagement]="engagement" />
+          <app-activity-panels [workouts]="engagement.workouts" [foods]="engagement.foods" />
+        }
+      }
+      @case ('technology') {
+        @if (store.reach(); as reach) {
+          <app-reach-panels [reach]="reach" />
+        }
+      }
+      @case ('retention') {
+        @if (store.cohorts(); as cohorts) {
+          <app-retention-table [cohorts]="cohorts" />
+        }
+      }
+    }
+  </div>
+</p-tabs>

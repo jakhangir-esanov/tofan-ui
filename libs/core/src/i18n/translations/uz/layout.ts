@@ -99,8 +99,4 @@ export const LAYOUT_UZ = {
     notFoundTitle: '404 — Sahifa topilmadi',
     notFoundMessage: "So'ralgan sahifa mavjud emas yoki ko'chirilgan.",
   },
-  dashboard: {
-    welcome: 'Xush kelibsiz',
-    welcomeName: 'Xush kelibsiz, {name}',
-  },
 };

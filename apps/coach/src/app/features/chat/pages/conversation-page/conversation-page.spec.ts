@@ -5,7 +5,9 @@ import { ErrorMessage } from '@core/feedback/error-message';
 import { NotificationService } from '@core/feedback/notification.service';
 import { LocaleStore } from '@core/i18n/locale.store';
 import { FileUploadService } from '@shared/components/file-upload/file-upload.service';
+import { Sheets } from '@coach/core/ui/sheets/sheets.service';
 import { ChatComposerStore } from '../../chat-composer.store';
+import { ChatDeletionStore } from '../../chat-deletion.store';
 import { ChatOutboxStore } from '../../chat-outbox.store';
 import { ChatPlaybackStore } from '../../chat-playback.store';
 import { ConversationStore } from '../../conversation.store';
@@ -17,6 +19,7 @@ import { ChatService } from '../../services/chat.service';
 import { PreviewUrls } from '../../services/preview-urls.service';
 import { VoiceRecorder } from '../../services/voice-recorder.service';
 import { ConversationPage } from './conversation-page';
+import { MessageMenu } from './message-menu';
 
 const VIP_ONLY = 'Chat is open only to athletes with an active VIP subscription.';
 const NO_MESSAGES = 'No messages yet. Say hello!';
@@ -77,17 +80,26 @@ function createFakeStore() {
 }
 
 describe('ConversationPage', () => {
-  afterEach(() => vi.restoreAllMocks());
+  afterEach(() => {
+    vi.restoreAllMocks();
+    document.body.replaceChildren();
+  });
 
   let store: ReturnType<typeof createFakeStore>;
   let fixture: ComponentFixture<ConversationPage>;
   const service = { send: vi.fn() };
+  const deletion = { deleting: signal<ReadonlySet<string>>(new Set()), delete: vi.fn() };
 
   beforeEach(async () => {
     vi.resetAllMocks();
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      value: () => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() }),
+    });
     vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
     Element.prototype.scrollTo = vi.fn();
     store = createFakeStore();
+    deletion.deleting.set(new Set());
     TestBed.configureTestingModule({
       providers: [
         provideRouter([]),
@@ -109,6 +121,8 @@ describe('ConversationPage', () => {
           VoiceRecordingStore,
           ChatComposerStore,
           ChatPlaybackStore,
+          { provide: ChatDeletionStore, useValue: deletion },
+          MessageMenu,
         ],
       },
     });
@@ -336,5 +350,72 @@ describe('ConversationPage', () => {
     await submit();
 
     expect(Element.prototype.scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+  });
+
+  async function rightClick(text: string): Promise<string[]> {
+    const bubble = [...page().querySelectorAll('coach-message-bubble')].find((item) =>
+      item.textContent?.includes(text),
+    );
+    bubble?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+    return menuItems().map((item) => item.textContent?.trim() ?? '');
+  }
+
+  function menuItems(): HTMLElement[] {
+    return [...document.querySelectorAll<HTMLElement>('.p-contextmenu-item-content')];
+  }
+
+  it('should offer copy and delete next to the pointer when the coach right clicks an own message', async () => {
+    store.messages.set([{ ...message('m1', 'text', [], 'salom'), senderUserId: 'coach' }]);
+    fixture.detectChanges();
+
+    expect(await rightClick('salom')).toEqual(['Copy', 'Delete']);
+  });
+
+  it('should offer only copy when the coach right clicks a message of the athlete', async () => {
+    store.messages.set([message('m1', 'text', [], 'salom')]);
+    fixture.detectChanges();
+
+    expect(await rightClick('salom')).toEqual(['Copy']);
+  });
+
+  it('should open no menu when the message has no action', async () => {
+    store.messages.set([message('m1', 'voice', [attachment('f1')])]);
+    fixture.detectChanges();
+    const bubble = page().querySelector('coach-message-bubble');
+
+    bubble?.dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, cancelable: true }));
+    fixture.detectChanges();
+    await fixture.whenStable();
+
+    expect(menuItems()).toEqual([]);
+  });
+
+  it('should delete the message only after the coach confirms it', async () => {
+    store.messages.set([{ ...message('m1', 'text', [], 'salom'), senderUserId: 'coach' }]);
+    fixture.detectChanges();
+    await rightClick('salom');
+
+    menuItems()[1].click();
+    const sheets = TestBed.inject(Sheets);
+    const confirm = sheets.request();
+    expect(confirm?.kind === 'confirm' ? confirm.sheet.title : null).toBe('Delete this message?');
+    expect(deletion.delete).not.toHaveBeenCalled();
+
+    if (confirm?.kind === 'confirm') {
+      confirm.resolve(true);
+    }
+    await fixture.whenStable();
+
+    expect(deletion.delete).toHaveBeenCalledWith('m1');
+  });
+
+  it('should dim the message while it is being deleted', async () => {
+    store.messages.set([{ ...message('m1', 'text', [], 'salom'), senderUserId: 'coach' }]);
+    deletion.deleting.set(new Set(['m1']));
+    fixture.detectChanges();
+
+    expect(page().querySelector('.entry-body.is-deleting')).not.toBeNull();
   });
 });

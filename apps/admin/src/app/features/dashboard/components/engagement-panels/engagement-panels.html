@@ -1,0 +1,22 @@
+<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+  <app-dashboard-panel [heading]="'dashboard.engagement.screens' | t">
+    <app-usage-list [rows]="screenRows()" />
+  </app-dashboard-panel>
+  <app-dashboard-panel [heading]="'dashboard.engagement.events' | t">
+    <app-usage-list [rows]="eventRows()" />
+    @if (hiddenEvents()) {
+      <p-button
+        [label]="
+          allEvents()
+            ? ('dashboard.engagement.showLess' | t)
+            : ('dashboard.engagement.showAll' | t: { count: eventCount() })
+        "
+        [icon]="allEvents() ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
+        severity="secondary"
+        [text]="true"
+        size="small"
+        (onClick)="allEvents.set(!allEvents())"
+      />
+    }
+  </app-dashboard-panel>
+</div>

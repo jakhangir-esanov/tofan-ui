@@ -1,0 +1,36 @@
+<div class="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+  @if (workouts()) {
+    <app-dashboard-panel [heading]="'dashboard.workouts.title' | t">
+      <dl class="m-0 grid grid-cols-2 gap-4">
+        @for (fact of workoutFacts(); track fact.label) {
+          <div class="flex flex-col gap-1">
+            <dt class="text-muted-color text-xs">{{ fact.label | t }}</dt>
+            <dd class="m-0 text-lg font-semibold tabular-nums">{{ fact.value }}</dd>
+          </div>
+        }
+      </dl>
+      @if (workoutSources().length > 1) {
+        <h3 class="m-0 text-sm font-medium">{{ 'dashboard.workouts.bySource' | t }}</h3>
+        <app-usage-list [rows]="workoutSources()" />
+      }
+    </app-dashboard-panel>
+  }
+  @if (foods()) {
+    <app-dashboard-panel [heading]="'dashboard.foods.title' | t">
+      <div class="flex flex-col gap-1">
+        <span class="text-muted-color text-xs">{{ 'dashboard.foods.logged' | t }}</span>
+        <strong class="text-lg font-semibold tabular-nums">{{ foodLogged() }}</strong>
+      </div>
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col gap-3">
+          <h3 class="m-0 text-sm font-medium">{{ 'dashboard.foods.bySource' | t }}</h3>
+          <app-usage-list [rows]="foodSources()" />
+        </div>
+        <div class="flex flex-col gap-3">
+          <h3 class="m-0 text-sm font-medium">{{ 'dashboard.foods.byMealType' | t }}</h3>
+          <app-usage-list [rows]="foodMeals()" />
+        </div>
+      </div>
+    </app-dashboard-panel>
+  }
+</div>
