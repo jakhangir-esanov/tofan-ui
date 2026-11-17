@@ -12,7 +12,6 @@ which returns Keycloak tokens. Backend: separate .NET 10 modular monolith.
 - `npm start` — dev server; `/api` is proxied to the local backend (no mock backend)
 - `npm run start:staging` - dev server; `/api` is proxied to the stage API `https://api.stage.peaktofan.com` (`proxy.staging.conf.json`, `ws: true`); new backend work is tested there and reaches production only on the release day
 - `npm run start:prod` — dev server; `/api` is proxied to `https://api.peaktofan.com` (`proxy.prod.conf.json`, API v9.1, `ws: true`); it is production after the release, so never create test data there
-- The admin dev server loads `scripts/dev-proxy/admin.<env>.mjs`, which answers `GET /api/admin/analytics/ga4-credentials` from the local key `~/.config/tofan/ga4-key.json` (dashboard, `docs/modules/dashboard.md`) and passes it to the backend when that file is missing
 - `npm run start:coach` / `npm run start:coach:staging` / `npm run start:coach:prod` — coach dev server
 - Contract source: `https://api.peaktofan.com/swagger/v1/swagger.json`; for work not released yet, `https://api.stage.peaktofan.com/swagger/v1/swagger.json`
 - `npm run build:coach` — coach production build
@@ -77,8 +76,8 @@ identity operations (users, roles, permissions, activation, deletion, role assig
 Tokens and claims are read only in `libs/core/src/auth`. Admin requires the `admin` role; coach requires
 the `trainer` role and an existing trainer card. Never expose Keycloak Admin API credentials,
 service-account credentials or client secrets to Angular. The backend authorizes; hiding UI is only UX.
-One exception, the owner's decision of 2026-11-16: the admin dashboard receives the read-only GA4 service account key
-from `GET /admin/analytics/ga4-credentials` at runtime and keeps it in memory (`docs/modules/dashboard.md`).
+The admin dashboard reads GA4 through the backend (`POST /admin/analytics/reports/{kind}`); the GA4 service account
+key stays on the server (`docs/modules/dashboard.md`).
 
 ## UI library
 Optimus UI 2 (`@openng/optimus-ui`), MIT fork of PrimeNG 21 with the same API. Settled decision:

@@ -25,7 +25,7 @@ export const DASHBOARD_UZ = {
   },
   states: {
     unavailable:
-      "Analitikaning bir qismi yoki hammasi yuklanmadi. GA4 kaliti backend'dan kelmagan yoki Google kvotasi vaqtincha tugagan.",
+      "Analitikaning bir qismi yoki hammasi yuklanmadi. Backend'da analitika hali sozlanmagan yoki Google kvotasi vaqtincha tugagan.",
     empty: "Bu davrda faol foydalanuvchi yo'q.",
     noData: "Ma'lumot yo'q",
     unknown: 'Aniqlanmagan',

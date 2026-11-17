@@ -48,9 +48,6 @@ npx ng g component apps/admin/src/app/features/<feature>/components/<name>
 ```
 
 After every task: run `lint`, `test`, `test:coach`, `test:landing`, `build`, `build:coach` and `build:landing`. Fix what you broke. Never disable a rule to make it pass.
-The admin dev server loads `scripts/dev-proxy/admin.<env>.mjs`: it answers `GET /api/admin/analytics/ga4-credentials`
-from the local key `~/.config/tofan/ga4-key.json` (dashboard, `docs/modules/dashboard.md`) in front of the backend
-proxy below, and passes it to the backend when that file is missing.
 There is no mock backend: the dev server needs a running backend. `proxy.conf.json` forwards `/api` to
 `http://localhost:5179` (prefix stripped); `npm run start:staging` uses `proxy.staging.conf.json`, which
 forwards to the stage API `https://api.stage.peaktofan.com` (with `ws: true` for SignalR; the old
@@ -261,9 +258,8 @@ infrastructure concern behind backend abstractions.
   If the backend endpoint does not exist yet, stop and say so; do not work around it from Angular.
 - Never put Keycloak Admin API credentials, service-account credentials, client secrets or privileged
   realm configuration in the panel (environment files, code, docs).
-  One exception, the owner's decision of 2026-11-16: the dashboard receives the read-only GA4 service account key
-  from `GET /admin/analytics/ga4-credentials` at runtime and keeps it in memory (`docs/modules/dashboard.md`).
-  It is never committed or put in an environment file.
+  The dashboard reads GA4 through the backend (`POST /admin/analytics/reports/{kind}`); the GA4 service
+  account key stays on the server (`docs/modules/dashboard.md`).
 - The backend is the security boundary: it validates tokens and authorizes every admin endpoint.
 - Backend side (for reference when proposing endpoints): the Application layer depends on an identity
   abstraction (existing: `IIdentityProviderClient` in `Tofan.Modules.Auth.Application`), Keycloak code

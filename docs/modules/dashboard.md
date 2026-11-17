@@ -14,32 +14,31 @@ Four tabs split the content:
 
 ## Backend
 
-The panel talks to GA4 itself; the backend only hands over the key (owner decision, 2026-11-16).
+The panel builds the GA4 report requests and the backend runs them (owner decision, 2026-11-17, replacing the 2026-11-16 one that handed the key to the browser).
 
-- `GET /admin/analytics/ga4-credentials` (`Policies.Admin`) returns `{ clientEmail, privateKey, propertyId }` read from the backend `.env`.
-  This endpoint does not exist yet on stage or production; until it does, the deployed dashboard shows the "could not load" message.
-- `services/ga4-client.service.ts` keeps the credentials in memory only (never in storage), signs an RS256 JWT with WebCrypto (`services/ga4-jwt.ts`), trades it at `https://oauth2.googleapis.com/token` for a read-only access token and reuses that token until 5 minutes before it expires; parallel reports share one token request.
-- Reports go straight to `https://analyticsdata.googleapis.com/v1beta/properties/<id>:<method>` (`batchRunReports` for the audience, reach and engagement blocks, `runReport` for retention, `runRealtimeReport` twice for realtime).
-- Google calls use an `HttpClient` built on `HttpBackend`, so the app interceptors never see them: the Keycloak token is not sent to Google, and a Google `401` or `403` cannot renew the session or open the access denied page.
-  A `401` from Google drops the token and retries once; any other failure becomes `ServiceUnavailableError` with code `Analytics.Unavailable`.
+- `POST /admin/analytics/reports/{kind}` (`Policies.Admin`, backend module `Analytics`) takes a GA4 Data API request body and returns the GA4 answer unchanged inside the usual `Result` envelope.
+  `kind` is `RunReport`, `BatchRunReports` or `RunRealtimeReport` (case-sensitive): `batchRunReports` serves the audience, reach and engagement blocks, `runReport` retention and `runRealtimeReport` (twice) realtime.
+- `services/ga4-client.service.ts` maps the GA4 method name to that path and calls `ApiClient`; there is no Google host, token or key in the panel.
+- The backend holds the service account key `tofan-analytics-reader@tofan-68065.iam.gserviceaccount.com` (Viewer on property `553445328`) and the property id, and adds them to every call.
+- The backend caches each distinct request for 15 minutes (realtime for 1 minute), so reloading the page or several admins at once do not spend GA4 quota again.
+- Failures arrive as `400` problems with these codes (`BusinessRuleError` in the panel); the store shows the "could not load" notice, and a realtime failure only hides the realtime panel until the next refresh:
 
-Known trade-offs of this choice:
+| Code                       | Meaning                                                                    |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `Analytics.NotConfigured`  | no property id or key on the server, or Google refused the key             |
+| `Analytics.ReportRejected` | GA4 rejected the request (`400`/`404`): a request built wrong by the panel |
+| `Analytics.Unavailable`    | GA4 did not answer, failed or its quota is used up (`429`)                 |
+| `Analytics.RequestInvalid` | the body is not a JSON object or `kind` is unknown                         |
 
-- Every admin browser receives the service account private key. It stays valid until the key is deleted in Google Cloud, so rotate it when an admin leaves or a browser is compromised. The account only has the Viewer role on property `553445328`.
-- There is no shared cache: every page load spends GA4 quota (about 5 requests, plus 2 realtime requests every 2 minutes while the tab is visible). Realtime has its own hourly project quota; when it runs out (`429`), only the realtime panel hides until the next refresh.
-- The two Google hosts are hard-coded in `services/`, an exception to the `API_BASE_URL` rule.
+### Server setup
+
+The backend reads the `Analytics` section: `PropertyId` (default `553445328` in `appsettings.json`) and the key from `Analytics__CredentialsFilePath` (a mounted JSON file) or `Analytics__ServiceAccountJson`.
+Without a key every report answers `Analytics.NotConfigured`; the rest of the API is not affected.
 
 ### Local development
 
-`npm start`, `npm run start:staging` and `npm run start:prod` load `scripts/dev-proxy/admin.<env>.mjs`.
-It answers `GET /api/admin/analytics/ga4-credentials` from a local key file, and passes the request to the backend when the file is missing.
-
-| Env variable            | Default                        | Purpose                  |
-| ----------------------- | ------------------------------ | ------------------------ |
-| `TOFAN_GA4_KEY_FILE`    | `~/.config/tofan/ga4-key.json` | service account JSON key |
-| `TOFAN_GA4_PROPERTY_ID` | `553445328`                    | GA4 property             |
-
-The service account is `tofan-analytics-reader@tofan-68065.iam.gserviceaccount.com`. Never commit the key.
+The dev server only proxies `/api` (`proxy*.conf.json`).
+Against stage or production the dashboard works once those servers have the key; against a local backend set `Analytics__CredentialsFilePath` to a local copy of the key. Never commit the key.
 
 ## GA4 facts the code depends on
 
@@ -55,9 +54,9 @@ The service account is `tofan-analytics-reader@tofan-68065.iam.gserviceaccount.c
 
 ## Screens
 
-| Route | Page                                         | Access                   |
-| ----- | -------------------------------------------- | ------------------------ |
-| `/`   | `pages/dashboard-page` (`DashboardStore`)    | `authGuard` (admin role) |
+| Route | Page                                      | Access                   |
+| ----- | ----------------------------------------- | ------------------------ |
+| `/`   | `pages/dashboard-page` (`DashboardStore`) | `authGuard` (admin role) |
 
 ## Structure notes
 

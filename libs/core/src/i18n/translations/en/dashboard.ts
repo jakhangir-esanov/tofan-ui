@@ -27,7 +27,7 @@ export const DASHBOARD_EN: Dictionary['dashboard'] = {
   },
   states: {
     unavailable:
-      'Some or all analytics did not load. The GA4 key did not come from the backend or the Google quota is used up for now.',
+      'Some or all analytics did not load. Analytics may not be set up on the backend yet, or the Google quota is used up for now.',
     empty: 'No active users in this period.',
     noData: 'No data',
     unknown: 'Not set',
