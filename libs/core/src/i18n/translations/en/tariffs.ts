@@ -30,6 +30,7 @@ export const TARIFFS_EN: Dictionary['tariffs'] = {
       unlimited: 'Unlimited',
       closed: 'Scan closed',
       some: '{count} per month',
+      somePerDay: '{count} per day',
     },
     workoutVideo: {
       label: 'Workout videos',
@@ -68,7 +69,12 @@ export const TARIFFS_EN: Dictionary['tariffs'] = {
     foodScan: {
       label: 'Food scan limit',
       unlimited: 'Unlimited',
-      value: 'Scans per month',
+      value: 'Number of scans',
+      period: 'Counted per',
+      periods: {
+        day: 'Day (24 hours from the first scan)',
+        month: 'Month',
+      },
       hint: 'A value of 0 closes scanning.',
     },
     workoutVideo: {

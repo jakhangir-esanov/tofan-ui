@@ -30,6 +30,7 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
       unlimited: 'Без ограничений',
       closed: 'Сканирование закрыто',
       some: '{count} в месяц',
+      somePerDay: '{count} в день',
     },
     workoutVideo: {
       label: 'Видео тренировок',
@@ -68,7 +69,12 @@ export const TARIFFS_RU: Dictionary['tariffs'] = {
     foodScan: {
       label: 'Лимит сканирования еды',
       unlimited: 'Без ограничений',
-      value: 'Сканирований в месяц',
+      value: 'Количество сканирований',
+      period: 'Период',
+      periods: {
+        day: 'День (24 часа с первого сканирования)',
+        month: 'Месяц',
+      },
       hint: 'При значении 0 сканирование закрыто.',
     },
     workoutVideo: {

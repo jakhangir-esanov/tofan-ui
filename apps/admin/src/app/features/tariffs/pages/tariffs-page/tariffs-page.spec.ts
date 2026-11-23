@@ -15,6 +15,7 @@ function tariff(overrides: Partial<Tariff>): Tariff {
     monthlyPrice: 49000,
     totalPrice: 99000,
     foodScanLimit: 15,
+    foodScanPeriod: 'month',
     workoutVideoLimit: null,
     dietMealTypes: null,
     workoutChangeMonths: null,
@@ -120,7 +121,7 @@ describe('TariffsPage', () => {
     );
   });
 
-  it('should send all seven fields and reload when the Standard tariff is edited and saved', async () => {
+  it('should send all eight fields and reload when the Standard tariff is edited and saved', async () => {
     const fixture = await render();
 
     buttons('Tahrirlash')[1]?.click();
@@ -131,6 +132,7 @@ describe('TariffsPage', () => {
     expect(service.change).toHaveBeenCalledWith('standard', {
       monthlyPrice: 49000,
       foodScanLimit: 15,
+      foodScanPeriod: 'month',
       workoutVideoLimit: null,
       dietMealTypes: null,
       workoutChangeMonths: null,

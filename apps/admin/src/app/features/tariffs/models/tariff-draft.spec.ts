@@ -4,6 +4,7 @@ import { TariffDraft, createTariffDraft } from './tariff-draft';
 const draft: TariffDraft = {
   monthlyPrice: 49000,
   foodScanLimit: 15,
+  foodScanPeriod: 'month',
   workoutVideoLimit: 30,
   dietMealTypes: ['lunch'],
   workoutChangeMonths: 3,
@@ -30,6 +31,7 @@ describe('createTariffDraft', () => {
     const open: TariffDraft = {
       ...draft,
       foodScanLimit: null,
+      foodScanPeriod: 'month',
       workoutVideoLimit: null,
       dietMealTypes: null,
       workoutChangeMonths: null,
@@ -72,6 +74,7 @@ describe('createTariffDraft', () => {
         createTariffDraft('standard', {
           ...draft,
           foodScanLimit: -1,
+          foodScanPeriod: 'month',
           workoutVideoLimit: -1,
           workoutChangeMonths: 0,
           dietChangeDays: 0,

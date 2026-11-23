@@ -1,5 +1,6 @@
 import { ValidationError, ValidationIssue } from '@shared/models/errors/validation.error';
 import { MealType } from '@shared/models/meal-type';
+import { FoodScanPeriod } from './food-scan-period';
 import { TariffType, isFreeTariff } from './tariff-type';
 
 export const MIN_FOOD_SCAN_LIMIT = 0;
@@ -10,6 +11,7 @@ export const MIN_DIET_CHANGE_DAYS = 1;
 export interface TariffDraft {
   readonly monthlyPrice: number;
   readonly foodScanLimit: number | null;
+  readonly foodScanPeriod: FoodScanPeriod;
   readonly workoutVideoLimit: number | null;
   readonly dietMealTypes: readonly MealType[] | null;
   readonly workoutChangeMonths: number | null;

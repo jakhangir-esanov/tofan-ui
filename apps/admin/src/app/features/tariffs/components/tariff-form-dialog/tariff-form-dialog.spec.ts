@@ -9,6 +9,7 @@ const limited: Tariff = {
   monthlyPrice: 49000,
   totalPrice: 99000,
   foodScanLimit: 15,
+  foodScanPeriod: 'month',
   workoutVideoLimit: 30,
   dietMealTypes: ['lunch'],
   workoutChangeMonths: 3,
@@ -20,6 +21,7 @@ const limited: Tariff = {
 const open: Tariff = {
   ...limited,
   foodScanLimit: null,
+  foodScanPeriod: 'month',
   workoutVideoLimit: null,
   dietMealTypes: null,
   workoutChangeMonths: null,
@@ -138,6 +140,7 @@ describe('TariffFormDialog', () => {
       {
         monthlyPrice: 49000,
         foodScanLimit: 15,
+        foodScanPeriod: 'month',
         workoutVideoLimit: 30,
         dietMealTypes: ['lunch'],
         workoutChangeMonths: 3,
@@ -156,6 +159,7 @@ describe('TariffFormDialog', () => {
       {
         monthlyPrice: 49000,
         foodScanLimit: null,
+        foodScanPeriod: 'month',
         workoutVideoLimit: null,
         dietMealTypes: null,
         workoutChangeMonths: null,
