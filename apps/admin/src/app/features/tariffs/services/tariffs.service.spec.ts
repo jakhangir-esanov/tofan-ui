@@ -10,7 +10,6 @@ const flushTariff = {
   monthlyPrice: 0,
   totalPrice: 0,
   foodScanLimit: null,
-  foodScanPeriod: 2,
   workoutVideoLimit: null,
   dietMealTypes: null,
   workoutChangeMonths: null,
@@ -58,7 +57,6 @@ describe('TariffsService', () => {
     const draft: TariffDraft = {
       monthlyPrice: 49000,
       foodScanLimit: null,
-      foodScanPeriod: 'month',
       workoutVideoLimit: null,
       dietMealTypes: null,
       workoutChangeMonths: null,
@@ -73,14 +71,13 @@ describe('TariffsService', () => {
     expect(request.request.body).toEqual({
       monthlyPrice: 49000,
       foodScanLimit: null,
-      foodScanPeriod: 2,
       workoutVideoLimit: null,
       dietMealTypes: null,
       workoutChangeMonths: null,
       dietChangeDays: null,
       hasAiTrainerChat: false,
     });
-    expect(Object.keys(request.request.body as object)).toHaveLength(8);
+    expect(Object.keys(request.request.body as object)).toHaveLength(7);
     request.flush({ isSuccess: true });
     await done;
   });
@@ -89,7 +86,6 @@ describe('TariffsService', () => {
     const draft: TariffDraft = {
       monthlyPrice: 99000,
       foodScanLimit: 0,
-      foodScanPeriod: 'month',
       workoutVideoLimit: 10,
       dietMealTypes: ['breakfast', 'postWorkout'],
       workoutChangeMonths: 1,
@@ -103,7 +99,6 @@ describe('TariffsService', () => {
     expect(request.request.body).toEqual({
       monthlyPrice: 99000,
       foodScanLimit: 0,
-      foodScanPeriod: 2,
       workoutVideoLimit: 10,
       dietMealTypes: [1, 6],
       workoutChangeMonths: 1,

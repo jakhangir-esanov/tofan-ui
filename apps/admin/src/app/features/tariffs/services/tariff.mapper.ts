@@ -1,21 +1,18 @@
 import { Benefit } from '@shared/models/benefit';
 import { mealTypes } from '@shared/models/meal-type.dto';
 import { enumMap } from '@shared/utils/enum-map';
-import { FoodScanPeriod } from '../models/food-scan-period';
 import { Tariff } from '../models/tariff';
 import { TariffDraft } from '../models/tariff-draft';
 import { TariffType, compareTariffTypes } from '../models/tariff-type';
 import {
   ChangeTariffBenefitsRequest,
   ChangeTariffRequest,
-  FoodScanPeriod as ApiFoodScanPeriod,
   TariffBenefitResponse,
   TariffResponse,
   TariffType as ApiTariffType,
 } from './tariff.dto';
 
 export const tariffTypes = enumMap<TariffType, ApiTariffType>(ApiTariffType);
-export const foodScanPeriods = enumMap<FoodScanPeriod, ApiFoodScanPeriod>(ApiFoodScanPeriod);
 
 export function toTariff(response: TariffResponse): Tariff {
   return {
@@ -24,7 +21,6 @@ export function toTariff(response: TariffResponse): Tariff {
     monthlyPrice: response.monthlyPrice,
     totalPrice: response.totalPrice,
     foodScanLimit: response.foodScanLimit,
-    foodScanPeriod: foodScanPeriods.toDomain(response.foodScanPeriod),
     workoutVideoLimit: response.workoutVideoLimit,
     dietMealTypes: response.dietMealTypes?.map((type) => mealTypes.toDomain(type)) ?? null,
     workoutChangeMonths: response.workoutChangeMonths,
@@ -42,7 +38,6 @@ export function toChangeTariffRequest(draft: TariffDraft): ChangeTariffRequest {
   return {
     monthlyPrice: draft.monthlyPrice,
     foodScanLimit: draft.foodScanLimit,
-    foodScanPeriod: foodScanPeriods.toApi(draft.foodScanPeriod),
     workoutVideoLimit: draft.workoutVideoLimit,
     dietMealTypes: draft.dietMealTypes?.map((type) => mealTypes.toApi(type)) ?? null,
     workoutChangeMonths: draft.workoutChangeMonths,

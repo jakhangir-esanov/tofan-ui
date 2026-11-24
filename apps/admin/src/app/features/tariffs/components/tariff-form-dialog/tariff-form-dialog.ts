@@ -16,10 +16,8 @@ import { FieldError } from '@shared/components/field-error/field-error';
 import { FormDialog } from '@shared/components/form-dialog/form-dialog';
 import { MultiselectField } from '@shared/components/multiselect-field/multiselect-field';
 import { NumberField } from '@shared/components/number-field/number-field';
-import { SelectField } from '@shared/components/select-field/select-field';
 import { ToggleField } from '@shared/components/toggle-field/toggle-field';
 import { MEAL_TYPE_OPTIONS } from '@shared/models/meal-type-labels';
-import { FOOD_SCAN_PERIOD_OPTIONS } from '../../models/food-scan-period';
 import { Tariff } from '../../models/tariff';
 import { TariffDraft } from '../../models/tariff-draft';
 import { TARIFF_TYPE_LABELS } from '../../models/tariff-labels';
@@ -40,7 +38,6 @@ import {
     FieldError,
     MultiselectField,
     NumberField,
-    SelectField,
     ToggleField,
     TranslatePipe,
   ],
@@ -64,9 +61,6 @@ export class TariffFormDialog {
     }),
   );
   protected readonly mealTypeOptions = computed(() => this.translator.options(MEAL_TYPE_OPTIONS));
-  protected readonly foodScanPeriodOptions = computed(() =>
-    this.translator.options(FOOD_SCAN_PERIOD_OPTIONS),
-  );
   protected readonly value = signal<TariffFormValue>(emptyTariffFormValue());
   protected readonly form = form(
     this.value,

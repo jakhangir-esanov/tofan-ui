@@ -16,7 +16,6 @@ const tariff: Tariff = {
   monthlyPrice: 49000,
   totalPrice: 99000,
   foodScanLimit: 15,
-  foodScanPeriod: 'month',
   workoutVideoLimit: 30,
   dietMealTypes: ['lunch', 'dinner'],
   workoutChangeMonths: 3,
@@ -28,7 +27,6 @@ const tariff: Tariff = {
 const open: Tariff = {
   ...tariff,
   foodScanLimit: null,
-  foodScanPeriod: 'month',
   workoutVideoLimit: null,
   dietMealTypes: null,
   workoutChangeMonths: null,
@@ -52,7 +50,6 @@ describe('tariffFormValue', () => {
       monthlyPrice: 49000,
       foodScanUnlimited: true,
       foodScanLimit: null,
-      foodScanPeriod: 'month',
       workoutVideoUnlimited: true,
       workoutVideoLimit: null,
       allMealTypes: true,
@@ -70,7 +67,6 @@ describe('tariffFormValue', () => {
       monthlyPrice: 49000,
       foodScanUnlimited: false,
       foodScanLimit: 15,
-      foodScanPeriod: 'month',
       workoutVideoUnlimited: false,
       workoutVideoLimit: 30,
       allMealTypes: false,
@@ -89,7 +85,6 @@ describe('toTariffDraft', () => {
     expect(toTariffDraft(tariffFormValue(tariff), 'standard')).toEqual({
       monthlyPrice: 49000,
       foodScanLimit: 15,
-      foodScanPeriod: 'month',
       workoutVideoLimit: 30,
       dietMealTypes: ['lunch', 'dinner'],
       workoutChangeMonths: 3,
@@ -102,7 +97,6 @@ describe('toTariffDraft', () => {
     expect(toTariffDraft(tariffFormValue(open), 'standard')).toEqual({
       monthlyPrice: 49000,
       foodScanLimit: null,
-      foodScanPeriod: 'month',
       workoutVideoLimit: null,
       dietMealTypes: null,
       workoutChangeMonths: null,
@@ -116,7 +110,6 @@ describe('toTariffDraft', () => {
       ...tariffFormValue(tariff),
       foodScanUnlimited: true,
       foodScanLimit: 15,
-      foodScanPeriod: 'month',
       allMealTypes: true,
     };
 

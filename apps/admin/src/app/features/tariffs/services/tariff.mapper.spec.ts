@@ -1,10 +1,6 @@
 import { MealTypeDto } from '@shared/models/meal-type.dto';
 import { TariffDraft } from '../models/tariff-draft';
-import {
-  FoodScanPeriod as ApiFoodScanPeriod,
-  TariffResponse,
-  TariffType as ApiTariffType,
-} from './tariff.dto';
+import { TariffResponse, TariffType as ApiTariffType } from './tariff.dto';
 import {
   tariffTypes,
   toChangeTariffBenefitsRequest,
@@ -20,7 +16,6 @@ function response(overrides: Partial<TariffResponse> = {}): TariffResponse {
     monthlyPrice: 49000,
     totalPrice: 99000,
     foodScanLimit: 15,
-    foodScanPeriod: ApiFoodScanPeriod.Day,
     workoutVideoLimit: 30,
     dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
     workoutChangeMonths: 3,
@@ -39,7 +34,6 @@ describe('toTariff', () => {
       monthlyPrice: 49000,
       totalPrice: 99000,
       foodScanLimit: 15,
-      foodScanPeriod: 'day',
       workoutVideoLimit: 30,
       dietMealTypes: ['lunch', 'secondBreakfast'],
       workoutChangeMonths: 3,
@@ -92,7 +86,6 @@ describe('toChangeTariffRequest', () => {
   const draft: TariffDraft = {
     monthlyPrice: 49000,
     foodScanLimit: 15,
-    foodScanPeriod: 'day',
     workoutVideoLimit: 30,
     dietMealTypes: ['lunch', 'secondBreakfast'],
     workoutChangeMonths: 3,
@@ -100,11 +93,10 @@ describe('toChangeTariffRequest', () => {
     hasAiTrainerChat: true,
   };
 
-  it('should send all eight fields with the meal types as integers when mapping a draft', () => {
+  it('should send all seven fields with the meal types as integers when mapping a draft', () => {
     expect(toChangeTariffRequest(draft)).toEqual({
       monthlyPrice: 49000,
       foodScanLimit: 15,
-      foodScanPeriod: ApiFoodScanPeriod.Day,
       workoutVideoLimit: 30,
       dietMealTypes: [MealTypeDto.Lunch, MealTypeDto.SecondBreakfast],
       workoutChangeMonths: 3,
@@ -127,7 +119,6 @@ describe('toChangeTariffRequest', () => {
       'dietChangeDays',
       'dietMealTypes',
       'foodScanLimit',
-      'foodScanPeriod',
       'hasAiTrainerChat',
       'monthlyPrice',
       'workoutChangeMonths',
@@ -170,14 +161,5 @@ describe('tariffTypes', () => {
       tariffTypes.toApi('standard'),
       tariffTypes.toApi('vip'),
     ]).toEqual([1, 2, 3]);
-  });
-});
-
-describe('foodScanPeriods', () => {
-  it('should map the month period both ways when the backend sends 2', () => {
-    const tariff = toTariff(response({ foodScanPeriod: ApiFoodScanPeriod.Month }));
-
-    expect(tariff.foodScanPeriod).toBe('month');
-    expect(toChangeTariffRequest(tariff).foodScanPeriod).toBe(ApiFoodScanPeriod.Month);
   });
 });

@@ -6,11 +6,6 @@ export enum TariffType {
   Vip = 3,
 }
 
-export enum FoodScanPeriod {
-  Day = 1,
-  Month = 2,
-}
-
 export interface TariffBenefitResponse {
   name: string;
   nameRu: string;
@@ -23,7 +18,6 @@ export interface TariffResponse {
   monthlyPrice: number;
   totalPrice: number;
   foodScanLimit: number | null;
-  foodScanPeriod: FoodScanPeriod;
   workoutVideoLimit: number | null;
   dietMealTypes: MealTypeDto[] | null;
   workoutChangeMonths: number | null;
@@ -35,7 +29,6 @@ export interface TariffResponse {
 export interface ChangeTariffRequest {
   monthlyPrice: number;
   foodScanLimit: number | null;
-  foodScanPeriod: FoodScanPeriod;
   workoutVideoLimit: number | null;
   dietMealTypes: MealTypeDto[] | null;
   workoutChangeMonths: number | null;

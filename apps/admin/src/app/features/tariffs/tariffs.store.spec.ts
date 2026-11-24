@@ -15,7 +15,6 @@ const standard: Tariff = {
   monthlyPrice: 49000,
   totalPrice: 99000,
   foodScanLimit: 15,
-  foodScanPeriod: 'month',
   workoutVideoLimit: null,
   dietMealTypes: null,
   workoutChangeMonths: null,
@@ -27,7 +26,6 @@ const standard: Tariff = {
 const draft: TariffDraft = {
   monthlyPrice: 59000,
   foodScanLimit: null,
-  foodScanPeriod: 'month',
   workoutVideoLimit: null,
   dietMealTypes: null,
   workoutChangeMonths: null,

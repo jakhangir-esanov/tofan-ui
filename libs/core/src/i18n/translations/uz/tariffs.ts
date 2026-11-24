@@ -28,7 +28,6 @@ export const TARIFFS_UZ = {
       unlimited: 'Cheksiz',
       closed: 'Scan yopiq',
       some: 'Oyiga {count} ta',
-      somePerDay: 'Kuniga {count} ta',
     },
     workoutVideo: {
       label: 'Mashq videolari',
@@ -67,12 +66,7 @@ export const TARIFFS_UZ = {
     foodScan: {
       label: 'Ovqat scan limiti',
       unlimited: 'Cheksiz',
-      value: 'Nechta scan',
-      period: 'Davr',
-      periods: {
-        day: "Kun (birinchi scan'dan 24 soat)",
-        month: 'Oy',
-      },
+      value: 'Oyiga nechta scan',
       hint: "0 kiritilsa scan yopiq bo'ladi.",
     },
     workoutVideo: {

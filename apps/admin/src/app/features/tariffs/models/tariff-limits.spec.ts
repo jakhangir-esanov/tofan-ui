@@ -7,7 +7,6 @@ const tariff: Tariff = {
   monthlyPrice: 49000,
   totalPrice: 99000,
   foodScanLimit: 15,
-  foodScanPeriod: 'month',
   workoutVideoLimit: 30,
   dietMealTypes: ['lunch', 'dinner'],
   workoutChangeMonths: 3,
@@ -40,15 +39,6 @@ describe('tariffLimitLines', () => {
     expect(line(tariff, 'tariffs.limits.foodScan.label')).toMatchObject({
       value: 'tariffs.limits.foodScan.some',
       params: { count: 15 },
-    });
-  });
-
-  it('should count the scans per day when the scan period is a day', () => {
-    expect(
-      line({ ...tariff, foodScanLimit: 3, foodScanPeriod: 'day' }, 'tariffs.limits.foodScan.label'),
-    ).toMatchObject({
-      value: 'tariffs.limits.foodScan.somePerDay',
-      params: { count: 3 },
     });
   });
 

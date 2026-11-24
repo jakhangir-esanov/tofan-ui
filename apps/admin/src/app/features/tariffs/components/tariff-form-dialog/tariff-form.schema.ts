@@ -12,7 +12,6 @@ import {
   validate,
 } from '@angular/forms/signals';
 import { MEAL_TYPES, MealType } from '@shared/models/meal-type';
-import { FoodScanPeriod } from '../../models/food-scan-period';
 import { Tariff } from '../../models/tariff';
 import {
   MIN_DIET_CHANGE_DAYS,
@@ -79,7 +78,6 @@ export interface TariffFormValue {
   monthlyPrice: number | null;
   foodScanUnlimited: boolean;
   foodScanLimit: number | null;
-  foodScanPeriod: FoodScanPeriod;
   workoutVideoUnlimited: boolean;
   workoutVideoLimit: number | null;
   allMealTypes: boolean;
@@ -96,7 +94,6 @@ export function emptyTariffFormValue(): TariffFormValue {
     monthlyPrice: null,
     foodScanUnlimited: true,
     foodScanLimit: null,
-    foodScanPeriod: 'month',
     workoutVideoUnlimited: true,
     workoutVideoLimit: null,
     allMealTypes: true,
@@ -114,7 +111,6 @@ export function tariffFormValue(tariff: Tariff): TariffFormValue {
     monthlyPrice: tariff.monthlyPrice,
     foodScanUnlimited: tariff.foodScanLimit === null,
     foodScanLimit: tariff.foodScanLimit,
-    foodScanPeriod: tariff.foodScanPeriod,
     workoutVideoUnlimited: tariff.workoutVideoLimit === null,
     workoutVideoLimit: tariff.workoutVideoLimit,
     allMealTypes: tariff.dietMealTypes === null,
@@ -134,7 +130,6 @@ export function toTariffDraft(value: TariffFormValue, type: TariffType): TariffD
   return {
     monthlyPrice: isFreeTariff(type) ? FREE_PRICE : (value.monthlyPrice ?? FREE_PRICE),
     foodScanLimit: limitOf(value.foodScanUnlimited, value.foodScanLimit),
-    foodScanPeriod: value.foodScanPeriod,
     workoutVideoLimit: limitOf(value.workoutVideoUnlimited, value.workoutVideoLimit),
     dietMealTypes: value.allMealTypes
       ? null
@@ -156,8 +151,6 @@ export function tariffFormSchema(typeOf: () => TariffType): Schema<TariffFormVal
     for (const field of LIMIT_FIELDS) {
       limitRules(path[field.limit], path[field.switchedOn], field);
     }
-
-    disabled(path.foodScanPeriod, { when: ({ valueOf }) => valueOf(path.foodScanUnlimited) });
 
     disabled(path.mealTypes, { when: ({ valueOf }) => valueOf(path.allMealTypes) });
     minLength(path.mealTypes, 1, { message: ERRORS.mealTypes });

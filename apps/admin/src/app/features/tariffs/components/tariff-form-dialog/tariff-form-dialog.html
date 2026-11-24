@@ -37,13 +37,6 @@
       [fluid]="true"
     />
     <app-field-error [field]="form.foodScanLimit()" />
-    <label for="tariffFoodScanPeriod" class="text-sm">{{ 'tariffs.form.foodScan.period' | t }}</label>
-    <app-select-field
-      inputId="tariffFoodScanPeriod"
-      [formField]="form.foodScanPeriod"
-      [options]="foodScanPeriodOptions()"
-      [fluid]="true"
-    />
     <small class="text-muted-color">{{ 'tariffs.form.foodScan.hint' | t }}</small>
   </div>
 

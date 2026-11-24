@@ -1,6 +1,5 @@
 import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
 import { MealType } from '@shared/models/meal-type';
-import { FoodScanPeriod } from './food-scan-period';
 import { Tariff } from './tariff';
 
 export interface TariffLimitLine {
@@ -12,7 +11,7 @@ export interface TariffLimitLine {
 
 export function tariffLimitLines(tariff: Tariff): readonly TariffLimitLine[] {
   return [
-    foodScanLine(tariff.foodScanLimit, tariff.foodScanPeriod),
+    foodScanLine(tariff.foodScanLimit),
     workoutVideoLine(tariff.workoutVideoLimit),
     mealTypesLine(tariff.dietMealTypes),
     workoutChangeLine(tariff.workoutChangeMonths),
@@ -30,7 +29,7 @@ function line(
   return { label, value, params, mealTypes };
 }
 
-function foodScanLine(limit: number | null, period: FoodScanPeriod): TariffLimitLine {
+function foodScanLine(limit: number | null): TariffLimitLine {
   const label = 'tariffs.limits.foodScan.label';
   if (limit === null) {
     return line(label, 'tariffs.limits.foodScan.unlimited');
@@ -38,9 +37,7 @@ function foodScanLine(limit: number | null, period: FoodScanPeriod): TariffLimit
   if (limit === 0) {
     return line(label, 'tariffs.limits.foodScan.closed');
   }
-  const value =
-    period === 'day' ? 'tariffs.limits.foodScan.somePerDay' : 'tariffs.limits.foodScan.some';
-  return line(label, value, { count: limit });
+  return line(label, 'tariffs.limits.foodScan.some', { count: limit });
 }
 
 function workoutVideoLine(limit: number | null): TariffLimitLine {
