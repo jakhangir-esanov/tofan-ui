@@ -68,6 +68,11 @@ export const routes: Routes = [
           import('@features/platform-fee/platform-fee.routes').then((m) => m.PLATFORM_FEE_ROUTES),
       },
       {
+        path: 'discounts',
+        loadChildren: () =>
+          import('@features/discounts/discounts.routes').then((m) => m.DISCOUNT_ROUTES),
+      },
+      {
         path: 'payment-orders',
         loadChildren: () =>
           import('@features/payment-orders/payment-orders.routes').then(

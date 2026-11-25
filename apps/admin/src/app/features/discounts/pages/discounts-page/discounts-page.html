@@ -1,0 +1,83 @@
+<app-catalog-header [title]="texts().title | t" [subtitle]="texts().subtitle | t" />
+
+@if (store.loadError(); as error) {
+  <p-message severity="error">
+    <div class="flex flex-wrap items-center gap-3">
+      <span>{{ error | message }}</span>
+      <p-button
+        [label]="'common.actions.retry' | t"
+        icon="pi pi-refresh"
+        severity="secondary"
+        [outlined]="true"
+        size="small"
+        (onClick)="store.load()"
+      />
+    </div>
+  </p-message>
+} @else if (store.loading() && store.timer() === null) {
+  <p class="text-muted-color m-0">
+    <i class="pi pi-spin pi-spinner mr-2"></i>{{ 'discounts.page.loading' | t }}
+  </p>
+} @else {
+  <div class="flex flex-col gap-8">
+    <p-message severity="info" icon="pi pi-info-circle">{{
+      'discounts.page.priority' | t
+    }}</p-message>
+
+    <section class="flex flex-col gap-4">
+      <header class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-col gap-1">
+          <h2 class="m-0 text-lg font-semibold">{{ 'discounts.campaigns.title' | t }}</h2>
+          <span class="text-muted-color text-sm">{{ 'discounts.campaigns.subtitle' | t }}</span>
+        </div>
+        <p-button
+          [label]="'discounts.campaigns.create' | t"
+          icon="pi pi-plus"
+          (onClick)="create()"
+        />
+      </header>
+
+      @if (store.campaigns().length === 0) {
+        <p class="text-muted-color m-0">{{ 'discounts.campaigns.empty' | t }}</p>
+      }
+
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        @for (campaign of store.campaigns(); track campaign.id) {
+          <app-campaign-card
+            [campaign]="campaign"
+            [choosesTrainers]="texts().choosesTrainers"
+            [trainers]="store.trainers()"
+            (edit)="edit(campaign)"
+            (remove)="remove(campaign)"
+          />
+        }
+      </div>
+    </section>
+
+    @if (store.timer(); as timer) {
+      <section class="flex flex-col gap-4">
+        <div class="flex flex-col gap-1">
+          <h2 class="m-0 text-lg font-semibold">{{ 'discounts.timer.title' | t }}</h2>
+          <span class="text-muted-color text-sm">{{ 'discounts.timer.subtitle' | t }}</span>
+        </div>
+        <app-timer-form
+          [timer]="timer"
+          [choosesTrainers]="texts().choosesTrainers"
+          [trainers]="store.trainers()"
+          [saving]="store.saving()"
+          (save)="saveTimer($event)"
+        />
+      </section>
+    }
+  </div>
+}
+
+<app-campaign-form-dialog
+  [(visible)]="formVisible"
+  [campaign]="editing()"
+  [choosesTrainers]="texts().choosesTrainers"
+  [trainers]="store.trainers()"
+  [header]="formHeader()"
+  [saving]="store.saving()"
+  (save)="saveCampaign($event)"
+/>

@@ -1,0 +1,100 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="header()"
+  [saving]="saving()"
+  width="36rem"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-1">
+    <label for="campaignName" class="font-medium">{{ 'discounts.form.name' | t }}</label>
+    <app-text-field
+      inputId="campaignName"
+      [formField]="form.name"
+      [placeholder]="'discounts.form.namePlaceholder' | t"
+    />
+    <app-field-error [field]="form.name()" />
+    <small class="text-muted-color">{{ 'discounts.form.nameHint' | t }}</small>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label for="campaignStartsOn" class="font-medium">{{ 'discounts.form.startsOn' | t }}</label>
+      <app-date-field
+        inputId="campaignStartsOn"
+        [formField]="form.startsOn"
+        [showTime]="true"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.startsOn()" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="campaignEndsOn" class="font-medium">{{ 'discounts.form.endsOn' | t }}</label>
+      <app-date-field
+        inputId="campaignEndsOn"
+        [formField]="form.endsOn"
+        [showTime]="true"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.endsOn()" />
+    </div>
+  </div>
+  <small class="text-muted-color">{{ 'discounts.form.timeHint' | t }}</small>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label for="campaignStandardPercent" class="font-medium">{{
+        'discounts.form.standardPercent' | t
+      }}</label>
+      <app-number-field
+        inputId="campaignStandardPercent"
+        [formField]="form.standardPercent"
+        [suffix]="'discounts.form.percentSuffix' | t"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.standardPercent()" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="campaignVipPercent" class="font-medium">{{
+        'discounts.form.vipPercent' | t
+      }}</label>
+      <app-number-field
+        inputId="campaignVipPercent"
+        [formField]="form.vipPercent"
+        [suffix]="'discounts.form.percentSuffix' | t"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.vipPercent()" />
+    </div>
+  </div>
+  <small class="text-muted-color">{{ 'discounts.form.percentHint' | t }}</small>
+
+  <div class="flex items-center gap-2">
+    <app-toggle-field inputId="campaignNewBuyersOnly" [formField]="form.newBuyersOnly" />
+    <label for="campaignNewBuyersOnly">{{
+      (choosesTrainers() ? 'discounts.form.newBuyersOnlyTrainer' : 'discounts.form.newBuyersOnly')
+        | t
+    }}</label>
+  </div>
+
+  @if (choosesTrainers()) {
+    <div class="flex flex-col gap-2">
+      <span class="font-medium">{{ 'discounts.form.trainers' | t }}</span>
+      <div class="flex items-center gap-2">
+        <app-toggle-field inputId="campaignAllTrainers" [formField]="form.allTrainers" />
+        <label for="campaignAllTrainers">{{ 'discounts.form.allTrainers' | t }}</label>
+      </div>
+      <app-multiselect-field
+        inputId="campaignTrainers"
+        [formField]="form.trainerIds"
+        [options]="trainerOptions()"
+        [placeholder]="'discounts.form.trainersPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.trainerIds()" />
+    </div>
+  }
+</app-form-dialog>

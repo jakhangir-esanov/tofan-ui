@@ -4,6 +4,7 @@ import { FormValueControl } from '@angular/forms/signals';
 import { DatePicker } from '@openng/optimus-ui/datepicker';
 
 const DATE_FORMAT = 'dd.mm.yy';
+const HOUR_FORMAT = '24';
 
 @Component({
   selector: 'app-date-field',
@@ -16,6 +17,8 @@ const DATE_FORMAT = 'dd.mm.yy';
       [maxDate]="max() ?? null"
       [dateFormat]="dateFormat"
       [showIcon]="true"
+      [showTime]="showTime()"
+      [hourFormat]="hourFormat"
       [fluid]="fluid()"
       [disabled]="disabled()"
       [invalid]="invalid() && touched()"
@@ -35,6 +38,8 @@ export class DateField implements FormValueControl<Date | null> {
 
   readonly inputId = input<string>();
   readonly fluid = input(false);
+  readonly showTime = input(false);
 
   protected readonly dateFormat = DATE_FORMAT;
+  protected readonly hourFormat = HOUR_FORMAT;
 }

@@ -48,7 +48,7 @@ libs/shared/src/ reusable components, models and utilities
 ```
 
 Admin features: `dashboard`, `auth`, `exercises`, `foods`, `media`, `soldiers`, `accounts`, `trainers`,
-`garments`, `tariffs`, `user-sessions`, `notifications`, `platform-fee`, `payment-orders`, `not-found`. Every feature keeps routed components in `pages/`
+`garments`, `tariffs`, `user-sessions`, `notifications`, `platform-fee`, `discounts`, `payment-orders`, `not-found`. Every feature keeps routed components in `pages/`
 and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only uses `loadChildren`. Reference feature:
 `features/exercises`.
 

@@ -1,0 +1,117 @@
+<form class="flex max-w-2xl flex-col gap-5" [formRoot]="form">
+  <div class="flex items-center gap-2">
+    <app-toggle-field inputId="timerEnabled" [formField]="form.isEnabled" />
+    <label for="timerEnabled" class="font-medium">{{ 'discounts.timer.enabled' | t }}</label>
+  </div>
+
+  @if (choosesTrainers()) {
+    <div class="flex flex-col gap-1">
+      <span id="timerTriggerLabel" class="font-medium">{{
+        'discounts.timer.trigger.label' | t
+      }}</span>
+      <app-choice-field
+        ariaLabelledBy="timerTriggerLabel"
+        [formField]="form.trigger"
+        [options]="triggerOptions()"
+      />
+      <small class="text-muted-color">{{ 'discounts.timer.trigger.hint' | t }}</small>
+    </div>
+  }
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label for="timerStartsOnVisit" class="font-medium">{{
+        (choosesTrainers()
+          ? 'discounts.timer.startsOnVisitTrainer'
+          : 'discounts.timer.startsOnVisit'
+        ) | t
+      }}</label>
+      <app-number-field
+        inputId="timerStartsOnVisit"
+        [formField]="form.startsOnVisit"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.startsOnVisit()" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="timerDuration" class="font-medium">{{ 'discounts.timer.duration' | t }}</label>
+      <app-number-field
+        inputId="timerDuration"
+        [formField]="form.durationMinutes"
+        [suffix]="'discounts.timer.minutesSuffix' | t"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.durationMinutes()" />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <div class="flex flex-col gap-1">
+      <label for="timerStandardPercent" class="font-medium">{{
+        'discounts.form.standardPercent' | t
+      }}</label>
+      <app-number-field
+        inputId="timerStandardPercent"
+        [formField]="form.standardPercent"
+        [suffix]="'discounts.form.percentSuffix' | t"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.standardPercent()" />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="timerVipPercent" class="font-medium">{{ 'discounts.form.vipPercent' | t }}</label>
+      <app-number-field
+        inputId="timerVipPercent"
+        [formField]="form.vipPercent"
+        [suffix]="'discounts.form.percentSuffix' | t"
+        [useGrouping]="false"
+        [maxFractionDigits]="0"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.vipPercent()" />
+    </div>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <app-toggle-field inputId="timerNewBuyersOnly" [formField]="form.newBuyersOnly" />
+    <label for="timerNewBuyersOnly">{{
+      (choosesTrainers() ? 'discounts.form.newBuyersOnlyTrainer' : 'discounts.form.newBuyersOnly')
+        | t
+    }}</label>
+  </div>
+
+  @if (choosesTrainers()) {
+    <div class="flex flex-col gap-2">
+      <span class="font-medium">{{ 'discounts.form.trainers' | t }}</span>
+      <div class="flex items-center gap-2">
+        <app-toggle-field inputId="timerAllTrainers" [formField]="form.allTrainers" />
+        <label for="timerAllTrainers">{{ 'discounts.form.allTrainers' | t }}</label>
+      </div>
+      <app-multiselect-field
+        inputId="timerTrainers"
+        [formField]="form.trainerIds"
+        [options]="trainerOptions()"
+        [placeholder]="'discounts.form.trainersPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.trainerIds()" />
+    </div>
+  }
+
+  <small class="text-muted-color">{{ 'discounts.timer.liveHint' | t }}</small>
+
+  <div>
+    <p-button
+      type="submit"
+      [label]="'common.actions.save' | t"
+      icon="pi pi-check"
+      [loading]="saving()"
+    />
+  </div>
+</form>

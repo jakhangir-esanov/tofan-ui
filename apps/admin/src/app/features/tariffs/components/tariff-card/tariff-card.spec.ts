@@ -54,13 +54,13 @@ function valueOf(fixture: ComponentFixture<TariffCard>, label: string): string {
 describe('TariffCard', () => {
   afterEach(() => localStorage.clear());
 
-  it('should show the tariff name and only the price the user pays when the card is rendered', () => {
+  it('should show the tariff name and the monthly price, not a discounted one, when the card is rendered', () => {
     const fixture = render(limited);
     const text = textOf(fixture);
 
     expect(text).toContain('Standard');
-    expect(valueOf(fixture, "O'quvchi oyiga to'laydi")).toBe("99 000 so'm");
-    expect(text).not.toContain("49 000 so'm");
+    expect(valueOf(fixture, "O'quvchi oyiga to'laydi")).toBe("49 000 so'm");
+    expect(text).not.toContain("99 000 so'm");
     expect(text).toContain("Komissiya, soliq va provayder foizi qo'shilmaydi.");
   });
 

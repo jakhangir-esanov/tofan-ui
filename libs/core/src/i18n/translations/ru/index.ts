@@ -8,6 +8,7 @@ import { GARMENTS_RU } from './garments';
 import { TARIFFS_RU } from './tariffs';
 import { TRAINERS_RU } from './trainers';
 import { PLATFORM_FEE_RU } from './platform-fee';
+import { DISCOUNTS_RU } from './discounts';
 import { PAYMENT_ORDERS_RU } from './payment-orders';
 import { SOLDIERS_RU } from './soldiers';
 import { ACCOUNTS_RU } from './accounts';
@@ -29,6 +30,7 @@ export const DICTIONARY_RU: Dictionary = {
   tariffs: TARIFFS_RU,
   trainers: TRAINERS_RU,
   platformFee: PLATFORM_FEE_RU,
+  discounts: DISCOUNTS_RU,
   paymentOrders: PAYMENT_ORDERS_RU,
   soldiers: SOLDIERS_RU,
   accounts: ACCOUNTS_RU,

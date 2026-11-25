@@ -16,6 +16,8 @@ export const AppPaths = {
   platformFee: '/platform-fee',
   tariffs: '/tariffs',
   paymentOrders: '/payment-orders',
+  tariffDiscounts: '/discounts/tariffs',
+  trainerDiscounts: '/discounts/trainers',
   login: '/auth/login',
   accessDenied: '/auth/access-denied',
   error: '/auth/error',

@@ -1,0 +1,63 @@
+<article
+  class="border-surface-200 dark:border-surface-700 flex h-full flex-col gap-4 rounded-xl border p-4"
+>
+  <header class="flex flex-wrap items-start justify-between gap-3">
+    <div class="flex flex-col gap-1">
+      <h3 class="m-0 text-base font-semibold">{{ campaign().name }}</h3>
+      <span class="text-muted-color text-sm">{{ startsOn() }} — {{ endsOn() }}</span>
+    </div>
+    @if (campaign().isRunning) {
+      <p-tag severity="success" [value]="'discounts.card.running' | t" />
+    }
+  </header>
+
+  <dl class="m-0 flex flex-col gap-2">
+    <div class="flex items-baseline justify-between gap-3">
+      <dt class="text-muted-color text-sm">{{ 'discounts.form.standardPercent' | t }}</dt>
+      <dd class="m-0 font-semibold">{{ campaign().standardPercent }}%</dd>
+    </div>
+    <div class="flex items-baseline justify-between gap-3">
+      <dt class="text-muted-color text-sm">{{ 'discounts.form.vipPercent' | t }}</dt>
+      <dd class="m-0 font-semibold">{{ campaign().vipPercent }}%</dd>
+    </div>
+    <div class="flex items-baseline justify-between gap-3">
+      <dt class="text-muted-color text-sm">{{ 'discounts.card.audience' | t }}</dt>
+      <dd class="m-0 text-right">
+        {{
+          (campaign().newBuyersOnly ? 'discounts.card.newBuyers' : 'discounts.card.everyone') | t
+        }}
+      </dd>
+    </div>
+    @if (choosesTrainers()) {
+      <div class="flex flex-col gap-1">
+        <dt class="text-muted-color text-sm">{{ 'discounts.form.trainers' | t }}</dt>
+        <dd class="m-0 text-sm">
+          @if (trainerNames(); as names) {
+            {{ names.join(', ') }}
+          } @else {
+            {{ 'discounts.form.allTrainers' | t }}
+          }
+        </dd>
+      </div>
+    }
+  </dl>
+
+  <footer class="mt-auto flex flex-wrap gap-2">
+    <p-button
+      [label]="'common.actions.edit' | t"
+      icon="pi pi-pencil"
+      severity="secondary"
+      [outlined]="true"
+      size="small"
+      (onClick)="edit.emit()"
+    />
+    <p-button
+      [label]="'common.actions.delete' | t"
+      icon="pi pi-trash"
+      severity="danger"
+      [outlined]="true"
+      size="small"
+      (onClick)="remove.emit()"
+    />
+  </footer>
+</article>

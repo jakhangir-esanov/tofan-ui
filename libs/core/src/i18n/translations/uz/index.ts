@@ -7,6 +7,7 @@ import { GARMENTS_UZ } from './garments';
 import { TARIFFS_UZ } from './tariffs';
 import { TRAINERS_UZ } from './trainers';
 import { PLATFORM_FEE_UZ } from './platform-fee';
+import { DISCOUNTS_UZ } from './discounts';
 import { PAYMENT_ORDERS_UZ } from './payment-orders';
 import { SOLDIERS_UZ } from './soldiers';
 import { ACCOUNTS_UZ } from './accounts';
@@ -28,6 +29,7 @@ export const DICTIONARY_UZ = {
   tariffs: TARIFFS_UZ,
   trainers: TRAINERS_UZ,
   platformFee: PLATFORM_FEE_UZ,
+  discounts: DISCOUNTS_UZ,
   paymentOrders: PAYMENT_ORDERS_UZ,
   soldiers: SOLDIERS_UZ,
   accounts: ACCOUNTS_UZ,

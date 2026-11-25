@@ -32,7 +32,7 @@ export class TariffCard {
   protected readonly title = computed(() =>
     this.translator.translate(TARIFF_TYPE_LABELS[this.tariff().type]),
   );
-  protected readonly totalPrice = computed(() => this.priceLabel(this.tariff().totalPrice));
+  protected readonly totalPrice = computed(() => this.priceLabel(this.tariff().monthlyPrice));
   protected readonly rows = computed<readonly TariffLimitRow[]>(() =>
     tariffLimitLines(this.tariff()).map((line) => ({
       ...line,

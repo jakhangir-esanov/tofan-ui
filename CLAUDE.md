@@ -126,7 +126,7 @@ libs/shared/src/           # shared components, models and utilities
 ```
 
 Current features: `dashboard`, `auth` (login, access denied, error pages), `exercises`, `foods`,
-`media`, `soldiers`, `accounts`, `trainers`, `garments`, `tariffs`, `user-sessions`, `notifications`, `platform-fee`, `payment-orders`, `not-found`. Every feature, even a single-page one, keeps
+`media`, `soldiers`, `accounts`, `trainers`, `garments`, `tariffs`, `user-sessions`, `notifications`, `platform-fee`, `discounts`, `payment-orders`, `not-found`. Every feature, even a single-page one, keeps
 its routed components in `pages/` and has its own `<feature>.routes.ts`; `routes/app.routes.ts` only
 uses `loadChildren`.
 
