@@ -3,7 +3,7 @@ import { Dictionary } from '../../dictionary';
 export const TARIFFS_RU: Dictionary['tariffs'] = {
   page: {
     title: 'Тарифы Tofan',
-    subtitle: 'Цена, лимиты и преимущества тарифов Free, Standard и VIP',
+    subtitle: 'Цена, лимиты и преимущества тарифов Free и Standard',
     empty: 'Тарифы не найдены.',
     loading: 'Загрузка тарифов...',
   },

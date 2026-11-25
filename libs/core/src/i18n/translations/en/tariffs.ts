@@ -3,7 +3,7 @@ import { Dictionary } from '../../dictionary';
 export const TARIFFS_EN: Dictionary['tariffs'] = {
   page: {
     title: 'Tofan tariffs',
-    subtitle: 'Price, limits and benefits of the Free, Standard and VIP tariffs',
+    subtitle: 'Price, limits and benefits of the Free and Standard tariffs',
     empty: 'No tariffs found.',
     loading: 'Loading tariffs...',
   },

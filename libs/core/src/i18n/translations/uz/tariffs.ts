@@ -1,7 +1,7 @@
 export const TARIFFS_UZ = {
   page: {
     title: 'Tofan tariflari',
-    subtitle: 'Free, Standard va VIP tariflarining narxi, limitlari va imtiyozlari',
+    subtitle: 'Free va Standard tariflarining narxi, limitlari va imtiyozlari',
     empty: 'Tariflar topilmadi.',
     loading: 'Tariflar yuklanmoqda...',
   },
