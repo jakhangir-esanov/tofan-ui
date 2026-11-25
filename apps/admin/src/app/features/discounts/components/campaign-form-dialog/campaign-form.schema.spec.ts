@@ -15,20 +15,24 @@ const campaign: DiscountCampaign = {
 
 describe('campaign form', () => {
   it('should not build a draft when the dates are missing', () => {
-    expect(toCampaignDraft(emptyCampaignFormValue(), true)).toBeNull();
+    expect(toCampaignDraft(emptyCampaignFormValue(), true, true)).toBeNull();
   });
 
   it('should keep the chosen coaches when the page chooses coaches', () => {
-    expect(toCampaignDraft(campaignFormValue(campaign), true)?.trainerIds).toEqual(['t1']);
+    expect(toCampaignDraft(campaignFormValue(campaign), true, true)?.trainerIds).toEqual(['t1']);
   });
 
   it('should cover every coach when all coaches is switched on', () => {
     const value = { ...campaignFormValue(campaign), allTrainers: true };
 
-    expect(toCampaignDraft(value, true)?.trainerIds).toBeNull();
+    expect(toCampaignDraft(value, true, true)?.trainerIds).toBeNull();
   });
 
   it('should send no coaches when the page is for Tofan tariffs', () => {
-    expect(toCampaignDraft(campaignFormValue(campaign), false)?.trainerIds).toBeNull();
+    expect(toCampaignDraft(campaignFormValue(campaign), false, true)?.trainerIds).toBeNull();
+  });
+
+  it('should send a zero VIP percent when the page offers no VIP', () => {
+    expect(toCampaignDraft(campaignFormValue(campaign), false, false)?.vipPercent).toBe(0);
   });
 });

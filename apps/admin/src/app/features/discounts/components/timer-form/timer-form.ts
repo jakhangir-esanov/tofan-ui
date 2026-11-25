@@ -35,6 +35,7 @@ export class TimerForm {
 
   readonly timer = input.required<DiscountTimer>();
   readonly choosesTrainers = input(false);
+  readonly offersVip = input(true);
   readonly trainers = input<readonly DiscountTrainer[]>([]);
   readonly saving = input(false);
 
@@ -49,14 +50,17 @@ export class TimerForm {
   protected readonly value = linkedSignal(() => timerFormValue(this.timer()));
   protected readonly form = form(
     this.value,
-    timerFormSchema(() => this.choosesTrainers()),
+    timerFormSchema(
+      () => this.choosesTrainers(),
+      () => this.offersVip(),
+    ),
     {
       submission: { action: () => this.submit() },
     },
   );
 
   private async submit(): Promise<undefined> {
-    const draft = toTimerDraft(this.value(), this.choosesTrainers());
+    const draft = toTimerDraft(this.value(), this.choosesTrainers(), this.offersVip());
     if (draft !== null) {
       this.save.emit(draft);
     }

@@ -14,14 +14,20 @@ const timer: DiscountTimer = {
 
 describe('timer form', () => {
   it('should give back the same timer when nothing was changed', () => {
-    expect(toTimerDraft(timerFormValue(timer), true)).toEqual(timer);
+    expect(toTimerDraft(timerFormValue(timer), true, true)).toEqual(timer);
   });
 
   it('should not build a draft when the duration is empty', () => {
-    expect(toTimerDraft({ ...timerFormValue(timer), durationMinutes: null }, true)).toBeNull();
+    expect(
+      toTimerDraft({ ...timerFormValue(timer), durationMinutes: null }, true, true),
+    ).toBeNull();
   });
 
   it('should send no coaches when the page is for Tofan tariffs', () => {
-    expect(toTimerDraft(timerFormValue(timer), false)?.trainerIds).toBeNull();
+    expect(toTimerDraft(timerFormValue(timer), false, true)?.trainerIds).toBeNull();
+  });
+
+  it('should send a zero VIP percent when the page offers no VIP', () => {
+    expect(toTimerDraft(timerFormValue(timer), false, false)?.vipPercent).toBe(0);
   });
 });

@@ -46,6 +46,7 @@
           <app-campaign-card
             [campaign]="campaign"
             [choosesTrainers]="texts().choosesTrainers"
+            [offersVip]="texts().offersVip"
             [trainers]="store.trainers()"
             (edit)="edit(campaign)"
             (remove)="remove(campaign)"
@@ -63,6 +64,7 @@
         <app-timer-form
           [timer]="timer"
           [choosesTrainers]="texts().choosesTrainers"
+          [offersVip]="texts().offersVip"
           [trainers]="store.trainers()"
           [saving]="store.saving()"
           (save)="saveTimer($event)"
@@ -76,6 +78,7 @@
   [(visible)]="formVisible"
   [campaign]="editing()"
   [choosesTrainers]="texts().choosesTrainers"
+  [offersVip]="texts().offersVip"
   [trainers]="store.trainers()"
   [header]="formHeader()"
   [saving]="store.saving()"

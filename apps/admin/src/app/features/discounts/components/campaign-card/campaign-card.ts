@@ -17,6 +17,7 @@ export class CampaignCard {
 
   readonly campaign = input.required<DiscountCampaign>();
   readonly choosesTrainers = input(false);
+  readonly offersVip = input(true);
   readonly trainers = input<readonly DiscountTrainer[]>([]);
 
   readonly edit = output<void>();

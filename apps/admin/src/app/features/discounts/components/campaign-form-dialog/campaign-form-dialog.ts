@@ -48,6 +48,7 @@ export class CampaignFormDialog {
   readonly visible = model.required<boolean>();
   readonly campaign = input<DiscountCampaign | null>(null);
   readonly choosesTrainers = input(false);
+  readonly offersVip = input(true);
   readonly trainers = input<readonly DiscountTrainer[]>([]);
   readonly header = input.required<string>();
   readonly saving = input(false);
@@ -60,7 +61,10 @@ export class CampaignFormDialog {
   protected readonly value = signal<CampaignFormValue>(emptyCampaignFormValue());
   protected readonly form = form(
     this.value,
-    campaignFormSchema(() => this.choosesTrainers()),
+    campaignFormSchema(
+      () => this.choosesTrainers(),
+      () => this.offersVip(),
+    ),
   );
 
   constructor() {
@@ -76,7 +80,7 @@ export class CampaignFormDialog {
     if (this.form().invalid()) {
       return;
     }
-    const draft = toCampaignDraft(this.value(), this.choosesTrainers());
+    const draft = toCampaignDraft(this.value(), this.choosesTrainers(), this.offersVip());
     if (draft !== null) {
       this.save.emit(draft);
     }

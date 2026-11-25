@@ -57,6 +57,7 @@ export function timerFormValue(timer: DiscountTimer): TimerFormValue {
 export function toTimerDraft(
   value: TimerFormValue,
   choosesTrainers: boolean,
+  offersVip: boolean,
 ): DiscountTimerDraft | null {
   const { trigger, startsOnVisit, durationMinutes, standardPercent, vipPercent } = value;
   if (
@@ -74,13 +75,16 @@ export function toTimerDraft(
     startsOnVisit,
     durationMinutes,
     standardPercent,
-    vipPercent,
+    vipPercent: offersVip ? vipPercent : PERCENT_MIN,
     newBuyersOnly: value.newBuyersOnly,
     trainerIds: !choosesTrainers || value.allTrainers ? null : [...value.trainerIds],
   };
 }
 
-export function timerFormSchema(choosesTrainers: () => boolean): Schema<TimerFormValue> {
+export function timerFormSchema(
+  choosesTrainers: () => boolean,
+  offersVip: () => boolean,
+): Schema<TimerFormValue> {
   return schema<TimerFormValue>((path) => {
     required(path.trigger);
     required(path.startsOnVisit, { message: ERRORS.startsOnVisit });
@@ -93,9 +97,12 @@ export function timerFormSchema(choosesTrainers: () => boolean): Schema<TimerFor
       min(percent, PERCENT_MIN, { message: ERRORS.percent });
       max(percent, PERCENT_MAX, { message: ERRORS.percent });
     }
-    validate(path.vipPercent, ({ value, valueOf }) =>
+    validate(path.standardPercent, ({ value, valueOf }) =>
       !valueOf(path.isEnabled) ||
-      givesDiscount(valueOf(path.standardPercent) ?? PERCENT_MIN, value() ?? PERCENT_MIN)
+      givesDiscount(
+        value() ?? PERCENT_MIN,
+        offersVip() ? (valueOf(path.vipPercent) ?? PERCENT_MIN) : PERCENT_MIN,
+      )
         ? null
         : { kind: 'noDiscount', message: ERRORS.noDiscount },
     );

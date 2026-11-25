@@ -64,18 +64,22 @@
       />
       <app-field-error [field]="form.standardPercent()" />
     </div>
-    <div class="flex flex-col gap-1">
-      <label for="timerVipPercent" class="font-medium">{{ 'discounts.form.vipPercent' | t }}</label>
-      <app-number-field
-        inputId="timerVipPercent"
-        [formField]="form.vipPercent"
-        [suffix]="'discounts.form.percentSuffix' | t"
-        [useGrouping]="false"
-        [maxFractionDigits]="0"
-        [fluid]="true"
-      />
-      <app-field-error [field]="form.vipPercent()" />
-    </div>
+    @if (offersVip()) {
+      <div class="flex flex-col gap-1">
+        <label for="timerVipPercent" class="font-medium">{{
+          'discounts.form.vipPercent' | t
+        }}</label>
+        <app-number-field
+          inputId="timerVipPercent"
+          [formField]="form.vipPercent"
+          [suffix]="'discounts.form.percentSuffix' | t"
+          [useGrouping]="false"
+          [maxFractionDigits]="0"
+          [fluid]="true"
+        />
+        <app-field-error [field]="form.vipPercent()" />
+      </div>
+    }
   </div>
 
   <div class="flex items-center gap-2">

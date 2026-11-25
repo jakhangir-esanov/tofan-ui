@@ -68,6 +68,7 @@ export function campaignFormValue(campaign: DiscountCampaign): CampaignFormValue
 export function toCampaignDraft(
   value: CampaignFormValue,
   choosesTrainers: boolean,
+  offersVip: boolean,
 ): DiscountCampaignDraft | null {
   const { startsOn, endsOn, standardPercent, vipPercent } = value;
   if (startsOn === null || endsOn === null || standardPercent === null || vipPercent === null) {
@@ -78,13 +79,16 @@ export function toCampaignDraft(
     startsOn,
     endsOn,
     standardPercent,
-    vipPercent,
+    vipPercent: offersVip ? vipPercent : PERCENT_MIN,
     newBuyersOnly: value.newBuyersOnly,
     trainerIds: !choosesTrainers || value.allTrainers ? null : [...value.trainerIds],
   };
 }
 
-export function campaignFormSchema(choosesTrainers: () => boolean): Schema<CampaignFormValue> {
+export function campaignFormSchema(
+  choosesTrainers: () => boolean,
+  offersVip: () => boolean,
+): Schema<CampaignFormValue> {
   return schema<CampaignFormValue>((path) => {
     required(path.name, { message: ERRORS.name });
     maxLength(path.name, CAMPAIGN_NAME_MAX_LENGTH, { message: ERRORS.name });
@@ -102,8 +106,11 @@ export function campaignFormSchema(choosesTrainers: () => boolean): Schema<Campa
       min(percent, PERCENT_MIN, { message: ERRORS.percent });
       max(percent, PERCENT_MAX, { message: ERRORS.percent });
     }
-    validate(path.vipPercent, ({ value, valueOf }) =>
-      givesDiscount(valueOf(path.standardPercent) ?? PERCENT_MIN, value() ?? PERCENT_MIN)
+    validate(path.standardPercent, ({ value, valueOf }) =>
+      givesDiscount(
+        value() ?? PERCENT_MIN,
+        offersVip() ? (valueOf(path.vipPercent) ?? PERCENT_MIN) : PERCENT_MIN,
+      )
         ? null
         : { kind: 'noDiscount', message: ERRORS.noDiscount },
     );

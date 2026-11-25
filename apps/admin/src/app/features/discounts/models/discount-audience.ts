@@ -7,6 +7,7 @@ export interface DiscountAudienceTexts {
   readonly title: TranslationKey;
   readonly subtitle: TranslationKey;
   readonly choosesTrainers: boolean;
+  readonly offersVip: boolean;
 }
 
 export const DISCOUNT_AUDIENCE_TEXTS: Record<DiscountAudience, DiscountAudienceTexts> = {
@@ -14,10 +15,12 @@ export const DISCOUNT_AUDIENCE_TEXTS: Record<DiscountAudience, DiscountAudienceT
     title: 'discounts.page.tariffsTitle',
     subtitle: 'discounts.page.tariffsSubtitle',
     choosesTrainers: false,
+    offersVip: false,
   },
   trainers: {
     title: 'discounts.page.trainersTitle',
     subtitle: 'discounts.page.trainersSubtitle',
     choosesTrainers: true,
+    offersVip: true,
   },
 };

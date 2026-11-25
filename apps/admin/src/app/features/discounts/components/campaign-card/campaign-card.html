@@ -16,10 +16,12 @@
       <dt class="text-muted-color text-sm">{{ 'discounts.form.standardPercent' | t }}</dt>
       <dd class="m-0 font-semibold">{{ campaign().standardPercent }}%</dd>
     </div>
-    <div class="flex items-baseline justify-between gap-3">
-      <dt class="text-muted-color text-sm">{{ 'discounts.form.vipPercent' | t }}</dt>
-      <dd class="m-0 font-semibold">{{ campaign().vipPercent }}%</dd>
-    </div>
+    @if (offersVip()) {
+      <div class="flex items-baseline justify-between gap-3">
+        <dt class="text-muted-color text-sm">{{ 'discounts.form.vipPercent' | t }}</dt>
+        <dd class="m-0 font-semibold">{{ campaign().vipPercent }}%</dd>
+      </div>
+    }
     <div class="flex items-baseline justify-between gap-3">
       <dt class="text-muted-color text-sm">{{ 'discounts.card.audience' | t }}</dt>
       <dd class="m-0 text-right">
