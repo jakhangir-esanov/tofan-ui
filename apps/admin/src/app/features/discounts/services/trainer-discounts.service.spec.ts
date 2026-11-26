@@ -2,6 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { API_BASE_URL } from '@core/http/api-base-url';
+import { DiscountPeriodDraft } from '../models/discount-period-draft';
 import { DiscountTimerDraft } from '../models/discount-timer-draft';
 import { TariffDiscountsService } from './tariff-discounts.service';
 import { TrainerDiscountsService } from './trainer-discounts.service';
@@ -14,6 +15,15 @@ const timerDraft: DiscountTimerDraft = {
   standardPercent: 10,
   vipPercent: 10,
   newBuyersOnly: false,
+  trainerIds: ['t1'],
+};
+
+const periodDraft: DiscountPeriodDraft = {
+  months: 12,
+  standardPercent: 20,
+  vipPercent: 25,
+  appliesTimer: false,
+  appliesCampaign: false,
   trainerIds: ['t1'],
 };
 
@@ -74,5 +84,36 @@ describe('discount services', () => {
     http.expectOne('/api/admin/tariff-campaigns').flush({ isSuccess: true, data: [] });
 
     expect(await done).toEqual([]);
+  });
+
+  it('should post the coaches when a coach period is created', async () => {
+    const done = TestBed.inject(TrainerDiscountsService).createPeriod(periodDraft);
+
+    const request = http.expectOne('/api/admin/trainer-periods');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ ...periodDraft, trainerIds: ['t1'] });
+    request.flush({ isSuccess: true, data: 'p12' });
+    await done;
+  });
+
+  it('should put no coaches when a tariff period is changed', async () => {
+    const done = TestBed.inject(TariffDiscountsService).changePeriod('p12', periodDraft);
+
+    const request = http.expectOne('/api/admin/tariff-periods/p12');
+    expect(request.request.method).toBe('PUT');
+    expect(request.request.body).not.toHaveProperty('trainerIds');
+    request.flush({ isSuccess: true });
+    await done;
+  });
+
+  it('should read the coach periods with their coaches', async () => {
+    const done = TestBed.inject(TrainerDiscountsService).listPeriods();
+
+    http.expectOne('/api/admin/trainer-periods').flush({
+      isSuccess: true,
+      data: [{ id: 'p12', ...periodDraft }],
+    });
+
+    expect(await done).toEqual([{ id: 'p12', ...periodDraft }]);
   });
 });

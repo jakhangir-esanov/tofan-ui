@@ -7,6 +7,8 @@ import {
   DiscountCampaignDraft,
   createDiscountCampaignDraft,
 } from './models/discount-campaign-draft';
+import { DiscountPeriod } from './models/discount-period';
+import { DiscountPeriodDraft, createDiscountPeriodDraft } from './models/discount-period-draft';
 import { DiscountTimer } from './models/discount-timer';
 import { DiscountTimerDraft, createDiscountTimerDraft } from './models/discount-timer-draft';
 import { DiscountTrainer } from './models/discount-trainer';
@@ -19,6 +21,7 @@ export class DiscountsStore {
 
   readonly campaigns = signal<readonly DiscountCampaign[]>([]);
   readonly timer = signal<DiscountTimer | null>(null);
+  readonly periods = signal<readonly DiscountPeriod[]>([]);
   readonly trainers = signal<readonly DiscountTrainer[]>([]);
   readonly loading = signal(false);
   readonly loadError = signal<ErrorMessage | null>(null);
@@ -28,17 +31,20 @@ export class DiscountsStore {
     this.loading.set(true);
     this.loadError.set(null);
     try {
-      const [campaigns, timer, trainers] = await Promise.all([
+      const [campaigns, timer, periods, trainers] = await Promise.all([
         this.discountApi.listCampaigns(),
         this.discountApi.getTimer(),
+        this.discountApi.listPeriods(),
         this.discountApi.listTrainers(),
       ]);
       this.campaigns.set(campaigns);
       this.timer.set(timer);
+      this.periods.set(periods);
       this.trainers.set(trainers);
     } catch (error) {
       this.campaigns.set([]);
       this.timer.set(null);
+      this.periods.set([]);
       this.loadError.set(toErrorMessage(error));
     } finally {
       this.loading.set(false);
@@ -70,6 +76,27 @@ export class DiscountsStore {
     return this.write(
       () => this.discountApi.changeTimer(createDiscountTimerDraft(draft)),
       'discounts.toast.timerSaved',
+    );
+  }
+
+  createPeriod(draft: DiscountPeriodDraft): Promise<boolean> {
+    return this.write(
+      () => this.discountApi.createPeriod(createDiscountPeriodDraft(draft)),
+      'discounts.toast.periodCreated',
+    );
+  }
+
+  changePeriod(id: string, draft: DiscountPeriodDraft): Promise<boolean> {
+    return this.write(
+      () => this.discountApi.changePeriod(id, createDiscountPeriodDraft(draft)),
+      'discounts.toast.periodSaved',
+    );
+  }
+
+  removePeriod(period: DiscountPeriod): Promise<boolean> {
+    return this.write(
+      () => this.discountApi.removePeriod(period.id),
+      'discounts.toast.periodRemoved',
     );
   }
 

@@ -1,0 +1,101 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="header()"
+  [saving]="saving()"
+  width="36rem"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-1">
+    <label for="periodMonths" class="font-medium">{{ 'discounts.periods.form.months' | t }}</label>
+    <app-number-field
+      inputId="periodMonths"
+      [formField]="form.months"
+      [suffix]="'discounts.periods.form.monthsSuffix' | t"
+      [useGrouping]="false"
+      [maxFractionDigits]="0"
+      [fluid]="true"
+    />
+    <app-field-error [field]="form.months()" />
+    <small class="text-muted-color">{{
+      (editsBase() ? 'discounts.periods.form.baseHint' : 'discounts.periods.form.monthsHint') | t
+    }}</small>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <span id="periodModeLabel" class="font-medium">{{ 'discounts.periods.form.mode' | t }}</span>
+    <app-choice-field
+      ariaLabelledBy="periodModeLabel"
+      [formField]="form.mode"
+      [options]="modeOptions()"
+    />
+    <small class="text-muted-color">{{ 'discounts.periods.form.modeHint' | t }}</small>
+  </div>
+
+  @if (value().mode === 'own') {
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="flex flex-col gap-1">
+        <label for="periodStandardPercent" class="font-medium">{{
+          'discounts.form.standardPercent' | t
+        }}</label>
+        <app-number-field
+          inputId="periodStandardPercent"
+          [formField]="form.standardPercent"
+          [suffix]="'discounts.form.percentSuffix' | t"
+          [useGrouping]="false"
+          [maxFractionDigits]="0"
+          [fluid]="true"
+        />
+        <app-field-error [field]="form.standardPercent()" />
+      </div>
+      @if (offersVip()) {
+        <div class="flex flex-col gap-1">
+          <label for="periodVipPercent" class="font-medium">{{
+            'discounts.form.vipPercent' | t
+          }}</label>
+          <app-number-field
+            inputId="periodVipPercent"
+            [formField]="form.vipPercent"
+            [suffix]="'discounts.form.percentSuffix' | t"
+            [useGrouping]="false"
+            [maxFractionDigits]="0"
+            [fluid]="true"
+          />
+          <app-field-error [field]="form.vipPercent()" />
+        </div>
+      }
+    </div>
+    <small class="text-muted-color">{{ 'discounts.form.percentHint' | t }}</small>
+  } @else {
+    <div class="flex flex-col gap-3">
+      <div class="flex items-center gap-2">
+        <app-toggle-field inputId="periodAppliesTimer" [formField]="form.appliesTimer" />
+        <label for="periodAppliesTimer">{{ 'discounts.periods.form.appliesTimer' | t }}</label>
+      </div>
+      <div class="flex items-center gap-2">
+        <app-toggle-field inputId="periodAppliesCampaign" [formField]="form.appliesCampaign" />
+        <label for="periodAppliesCampaign">{{
+          'discounts.periods.form.appliesCampaign' | t
+        }}</label>
+      </div>
+    </div>
+  }
+
+  @if (choosesTrainers()) {
+    <div class="flex flex-col gap-2">
+      <span class="font-medium">{{ 'discounts.form.trainers' | t }}</span>
+      <div class="flex items-center gap-2">
+        <app-toggle-field inputId="periodAllTrainers" [formField]="form.allTrainers" />
+        <label for="periodAllTrainers">{{ 'discounts.form.allTrainers' | t }}</label>
+      </div>
+      <app-multiselect-field
+        inputId="periodTrainers"
+        [formField]="form.trainerIds"
+        [options]="trainerOptions()"
+        [placeholder]="'discounts.form.trainersPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.trainerIds()" />
+      <small class="text-muted-color">{{ 'discounts.periods.form.trainersHint' | t }}</small>
+    </div>
+  }
+</app-form-dialog>

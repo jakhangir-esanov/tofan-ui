@@ -72,10 +72,51 @@ export const DISCOUNTS_UZ = {
       noDiscount: 'Yoqilgan taymer kamida bitta darajaga chegirma berishi kerak.',
     },
   },
+  periods: {
+    title: 'Davrlar',
+    subtitle:
+      "Bir martada necha oyga sotib olish mumkin. Har davrga yo o'z chegirmasi qo'yiladi, yo taymer va kampaniyalar yoqiladi.",
+    create: "Davr qo'shish",
+    card: {
+      months: '{months} oy',
+      base: 'Asosiy',
+      timer: 'Taymer',
+      campaign: 'Kampaniyalar',
+      on: 'Ishlaydi',
+      off: 'Ishlamaydi',
+      noPromotions: "Taymer va kampaniyalar bu davrga ta'sir qilmaydi.",
+    },
+    form: {
+      createHeader: 'Yangi davr',
+      editHeader: 'Davrni tahrirlash',
+      months: 'Oylar soni',
+      monthsSuffix: ' oy',
+      monthsHint: '1 dan 36 gacha. Narx = oylik narx × oylar soni.',
+      baseHint:
+        "1 oylik davr doim bor: eski ilova versiyalari faqat shuni sotib oladi. Uning oyini o'zgartirib, o'chirib bo'lmaydi.",
+      mode: 'Chegirma',
+      modeHint:
+        "O'z chegirmasi — doimiy foiz (masalan, yillikka 20%), taymer va kampaniyalar ishlamaydi. Taymer va kampaniyalar — davrning o'z foizi yo'q, quyida yoqilganlari ishlaydi.",
+      appliesTimer: 'Taymer chegirmasi shu davrga ham ishlasin',
+      appliesCampaign: 'Kampaniya chegirmasi shu davrga ham ishlasin',
+      trainersHint:
+        "Tanlangan coach'lar uchun qo'yilgan davr shu oy sonli \"Hamma coach'lar\" davridan ustun turadi.",
+      errors: {
+        months: '1 dan 36 gacha butun son kiriting.',
+      },
+    },
+    mode: {
+      own: "O'z chegirmasi",
+      promotions: 'Taymer va kampaniyalar',
+    },
+  },
   toast: {
     campaignCreated: "Kampaniya qo'shildi.",
     campaignSaved: 'Kampaniya saqlandi.',
     campaignRemoved: "Kampaniya o'chirildi.",
     timerSaved: 'Taymer saqlandi.',
+    periodCreated: "Davr qo'shildi.",
+    periodSaved: 'Davr saqlandi.',
+    periodRemoved: "Davr o'chirildi.",
   },
 };

@@ -49,6 +49,31 @@ export type TariffTimerRequest = TariffTimerResponse;
 
 export type TrainerTimerRequest = TrainerTimerResponse;
 
+export interface TariffPeriodResponse {
+  id: string;
+  months: number;
+  standardPercent: number;
+  vipPercent: number;
+  appliesTimer: boolean;
+  appliesCampaign: boolean;
+}
+
+export interface TrainerPeriodResponse extends TariffPeriodResponse {
+  trainerIds: string[] | null;
+}
+
+export interface TariffPeriodRequest {
+  months: number;
+  standardPercent: number;
+  vipPercent: number;
+  appliesTimer: boolean;
+  appliesCampaign: boolean;
+}
+
+export interface TrainerPeriodRequest extends TariffPeriodRequest {
+  trainerIds: string[] | null;
+}
+
 export interface DiscountTrainerResponse {
   id: string;
   displayName: string;
