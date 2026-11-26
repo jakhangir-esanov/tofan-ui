@@ -4,7 +4,7 @@ export const DISCOUNTS_RU: Dictionary['discounts'] = {
   page: {
     tariffsTitle: 'Скидки на тарифы Tofan',
     tariffsSubtitle:
-      'Праздничные акции и таймер «купи за N минут» для Standard и VIP. На Free скидки нет.',
+      'Праздничные акции и таймер «купи за N минут» для Standard. На Free скидки нет.',
     trainersTitle: 'Скидки на тренеров',
     trainersSubtitle:
       'Акции и таймер для подписок на тренеров. Скидку оплачивает Tofan: тренер получает свою цену полностью, процент снимается с итоговой суммы пользователя.',

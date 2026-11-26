@@ -2,7 +2,7 @@ export const DISCOUNTS_UZ = {
   page: {
     tariffsTitle: 'Tofan tarif chegirmalari',
     tariffsSubtitle:
-      'Standard va VIP tariflariga bayram kampaniyalari va "N daqiqada oling" taymeri. Free\'ga chegirma bo\'lmaydi.',
+      'Standard tarifiga bayram kampaniyalari va "N daqiqada oling" taymeri. Free\'ga chegirma bo\'lmaydi.',
     trainersTitle: 'Coach chegirmalari',
     trainersSubtitle:
       "Coach obunalariga kampaniya va taymer. Chegirmani Tofan to'laydi: coach o'z narxini to'liq oladi, foiz foydalanuvchi to'laydigan jami summadan olinadi.",

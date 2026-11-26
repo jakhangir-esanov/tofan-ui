@@ -4,7 +4,7 @@ export const DISCOUNTS_EN: Dictionary['discounts'] = {
   page: {
     tariffsTitle: 'Tofan tariff discounts',
     tariffsSubtitle:
-      'Holiday campaigns and a "buy within N minutes" timer for Standard and VIP. Free is never discounted.',
+      'Holiday campaigns and a "buy within N minutes" timer for Standard. Free is never discounted.',
     trainersTitle: 'Coach discounts',
     trainersSubtitle:
       'Campaigns and a timer for coach subscriptions. Tofan pays the discount: the coach keeps the full price, the percent comes off the total the user pays.',
