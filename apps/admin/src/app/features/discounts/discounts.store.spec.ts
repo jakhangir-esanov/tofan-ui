@@ -5,6 +5,8 @@ import { ValidationError } from '@shared/models/errors/validation.error';
 import { DiscountsStore } from './discounts.store';
 import { DiscountCampaign } from './models/discount-campaign';
 import { DiscountCampaignDraft } from './models/discount-campaign-draft';
+import { DiscountPeriod } from './models/discount-period';
+import { DiscountPeriodDraft } from './models/discount-period-draft';
 import { DiscountTimer } from './models/discount-timer';
 import { DISCOUNT_API, DiscountApi } from './services/discount-api';
 
@@ -41,6 +43,25 @@ const draft: DiscountCampaignDraft = {
   trainerIds: null,
 };
 
+const yearly: DiscountPeriod = {
+  id: 'p12',
+  months: 12,
+  standardPercent: 20,
+  vipPercent: 0,
+  appliesTimer: false,
+  appliesCampaign: false,
+  trainerIds: null,
+};
+
+const yearlyDraft: DiscountPeriodDraft = {
+  months: 12,
+  standardPercent: 20,
+  vipPercent: 0,
+  appliesTimer: false,
+  appliesCampaign: false,
+  trainerIds: null,
+};
+
 describe('DiscountsStore', () => {
   let api: DiscountApi;
   let notifications: Pick<NotificationService, 'success' | 'error'>;
@@ -64,6 +85,10 @@ describe('DiscountsStore', () => {
       removeCampaign: vi.fn().mockResolvedValue(undefined),
       getTimer: vi.fn().mockResolvedValue(timer),
       changeTimer: vi.fn().mockResolvedValue(undefined),
+      listPeriods: vi.fn().mockResolvedValue([yearly]),
+      createPeriod: vi.fn().mockResolvedValue(undefined),
+      changePeriod: vi.fn().mockResolvedValue(undefined),
+      removePeriod: vi.fn().mockResolvedValue(undefined),
       listTrainers: vi.fn().mockResolvedValue([{ id: 't1', displayName: 'Aziz' }]),
     };
     notifications = { success: vi.fn(), error: vi.fn() };
@@ -76,6 +101,7 @@ describe('DiscountsStore', () => {
 
     expect(store.campaigns()).toEqual([campaign]);
     expect(store.timer()).toEqual(timer);
+    expect(store.periods()).toEqual([yearly]);
     expect(store.trainers()).toEqual([{ id: 't1', displayName: 'Aziz' }]);
     expect(store.loadError()).toBeNull();
   });
@@ -129,5 +155,32 @@ describe('DiscountsStore', () => {
     expect(saved).toBe(true);
     expect(api.changeTimer).toHaveBeenCalledWith({ ...timer, isEnabled: true });
     expect(notifications.success).toHaveBeenCalledWith('discounts.toast.timerSaved');
+  });
+
+  it('should create the period, toast and reload when a new period is saved', async () => {
+    const store = createStore();
+    const saved = await store.createPeriod(yearlyDraft);
+
+    expect(saved).toBe(true);
+    expect(api.createPeriod).toHaveBeenCalledWith(yearlyDraft);
+    expect(notifications.success).toHaveBeenCalledWith('discounts.toast.periodCreated');
+  });
+
+  it('should not call the backend when a period mixes its own discount and a promotion', async () => {
+    const store = createStore();
+    const saved = await store.changePeriod('p12', { ...yearlyDraft, appliesTimer: true });
+
+    expect(saved).toBe(false);
+    expect(api.changePeriod).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalledWith(expect.any(ValidationError));
+  });
+
+  it('should remove the period by its id when it is deleted', async () => {
+    const store = createStore();
+
+    await store.removePeriod(yearly);
+
+    expect(api.removePeriod).toHaveBeenCalledWith('p12');
+    expect(notifications.success).toHaveBeenCalledWith('discounts.toast.periodRemoved');
   });
 });

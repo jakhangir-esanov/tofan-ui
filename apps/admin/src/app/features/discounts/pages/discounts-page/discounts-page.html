@@ -55,6 +55,33 @@
       </div>
     </section>
 
+    <section class="flex flex-col gap-4">
+      <header class="flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-col gap-1">
+          <h2 class="m-0 text-lg font-semibold">{{ 'discounts.periods.title' | t }}</h2>
+          <span class="text-muted-color text-sm">{{ 'discounts.periods.subtitle' | t }}</span>
+        </div>
+        <p-button
+          [label]="'discounts.periods.create' | t"
+          icon="pi pi-plus"
+          (onClick)="createPeriod()"
+        />
+      </header>
+
+      <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        @for (period of store.periods(); track period.id) {
+          <app-period-card
+            [period]="period"
+            [choosesTrainers]="texts().choosesTrainers"
+            [offersVip]="texts().offersVip"
+            [trainers]="store.trainers()"
+            (edit)="editPeriod(period)"
+            (remove)="removePeriod(period)"
+          />
+        }
+      </div>
+    </section>
+
     @if (store.timer(); as timer) {
       <section class="flex flex-col gap-4">
         <div class="flex flex-col gap-1">
@@ -73,6 +100,17 @@
     }
   </div>
 }
+
+<app-period-form-dialog
+  [(visible)]="periodFormVisible"
+  [period]="editingPeriod()"
+  [choosesTrainers]="texts().choosesTrainers"
+  [offersVip]="texts().offersVip"
+  [trainers]="store.trainers()"
+  [header]="periodFormHeader()"
+  [saving]="store.saving()"
+  (save)="savePeriod($event)"
+/>
 
 <app-campaign-form-dialog
   [(visible)]="formVisible"

@@ -74,10 +74,51 @@ export const DISCOUNTS_EN: Dictionary['discounts'] = {
       noDiscount: 'An enabled timer must discount at least one tier.',
     },
   },
+  periods: {
+    title: 'Periods',
+    subtitle:
+      'How many months can be bought at once. A period either has its own discount or takes the timer and campaigns.',
+    create: 'Add period',
+    card: {
+      months: '{months, plural, one{{months} month} other{{months} months}}',
+      base: 'Base',
+      timer: 'Timer',
+      campaign: 'Campaigns',
+      on: 'Applies',
+      off: 'Does not apply',
+      noPromotions: 'The timer and campaigns do not apply to this period.',
+    },
+    form: {
+      createHeader: 'New period',
+      editHeader: 'Edit period',
+      months: 'Months',
+      monthsSuffix: ' mo',
+      monthsHint: 'From 1 to 36. Price = monthly price × months.',
+      baseHint:
+        'The one-month period always exists: older app versions buy only this one. It cannot be removed or made longer.',
+      mode: 'Discount',
+      modeHint:
+        'Own discount — a fixed percent (for example 20% off a year), no timer or campaigns. Timer and campaigns — no own percent, whatever is switched on below applies.',
+      appliesTimer: 'The timer discount applies to this period too',
+      appliesCampaign: 'The campaign discount applies to this period too',
+      trainersHint:
+        'A period for chosen coaches wins over the "All coaches" period with the same months.',
+      errors: {
+        months: 'Enter a whole number from 1 to 36.',
+      },
+    },
+    mode: {
+      own: 'Own discount',
+      promotions: 'Timer and campaigns',
+    },
+  },
   toast: {
     campaignCreated: 'Campaign added.',
     campaignSaved: 'Campaign saved.',
     campaignRemoved: 'Campaign deleted.',
     timerSaved: 'Timer saved.',
+    periodCreated: 'Period added.',
+    periodSaved: 'Period saved.',
+    periodRemoved: 'Period removed.',
   },
 };

@@ -5,6 +5,8 @@ import { toPagedQuery } from '@core/http/paging.mapper';
 import { firstPage } from '@shared/models/page';
 import { DiscountCampaign } from '../models/discount-campaign';
 import { DiscountCampaignDraft } from '../models/discount-campaign-draft';
+import { DiscountPeriod } from '../models/discount-period';
+import { DiscountPeriodDraft } from '../models/discount-period-draft';
 import { DiscountTimer } from '../models/discount-timer';
 import { DiscountTimerDraft } from '../models/discount-timer-draft';
 import { DISCOUNT_TRAINERS_LIMIT, DiscountTrainer } from '../models/discount-trainer';
@@ -12,17 +14,21 @@ import { DiscountApi } from './discount-api';
 import {
   DiscountTrainerResponse,
   TrainerCampaignResponse,
+  TrainerPeriodResponse,
   TrainerTimerResponse,
 } from './discount.dto';
 import {
   toDiscountTrainer,
   toTrainerCampaign,
   toTrainerCampaignRequest,
+  toTrainerPeriod,
+  toTrainerPeriodRequest,
   toTrainerTimer,
   toTrainerTimerRequest,
 } from './discount.mapper';
 
 const CAMPAIGNS = '/admin/trainer-campaigns';
+const PERIODS = '/admin/trainer-periods';
 const TIMER = '/admin/trainer-timer';
 const TRAINERS = '/admin/trainers';
 
@@ -55,6 +61,23 @@ export class TrainerDiscountsService implements DiscountApi {
     await this.apiClient.put(TIMER, toTrainerTimerRequest(draft));
   }
 
+  async listPeriods(): Promise<readonly DiscountPeriod[]> {
+    const periods = await this.apiClient.get<TrainerPeriodResponse[]>(PERIODS);
+    return periods.map(toTrainerPeriod);
+  }
+
+  async createPeriod(draft: DiscountPeriodDraft): Promise<void> {
+    await this.apiClient.post<string>(PERIODS, toTrainerPeriodRequest(draft));
+  }
+
+  async changePeriod(id: string, draft: DiscountPeriodDraft): Promise<void> {
+    await this.apiClient.put(periodPath(id), toTrainerPeriodRequest(draft));
+  }
+
+  async removePeriod(id: string): Promise<void> {
+    await this.apiClient.delete(periodPath(id));
+  }
+
   async listTrainers(): Promise<readonly DiscountTrainer[]> {
     const list = await this.apiClient.get<PagedList<DiscountTrainerResponse>>(
       TRAINERS,
@@ -66,4 +89,8 @@ export class TrainerDiscountsService implements DiscountApi {
 
 function campaignPath(id: string): string {
   return `${CAMPAIGNS}/${encodeURIComponent(id)}`;
+}
+
+function periodPath(id: string): string {
+  return `${PERIODS}/${encodeURIComponent(id)}`;
 }

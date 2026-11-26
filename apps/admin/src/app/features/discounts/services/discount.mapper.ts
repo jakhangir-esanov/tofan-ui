@@ -1,6 +1,8 @@
 import { enumMap } from '@shared/utils/enum-map';
 import { DiscountCampaign } from '../models/discount-campaign';
 import { DiscountCampaignDraft } from '../models/discount-campaign-draft';
+import { DiscountPeriod } from '../models/discount-period';
+import { DiscountPeriodDraft } from '../models/discount-period-draft';
 import {
   DEFAULT_TIMER_TRIGGER,
   DiscountTimer,
@@ -12,11 +14,15 @@ import {
   CampaignResponse,
   DiscountTrainerResponse,
   TariffCampaignRequest,
+  TariffPeriodRequest,
+  TariffPeriodResponse,
   TariffTimerRequest,
   TariffTimerResponse,
   TimerTrigger,
   TrainerCampaignRequest,
   TrainerCampaignResponse,
+  TrainerPeriodRequest,
+  TrainerPeriodResponse,
   TrainerTimerRequest,
   TrainerTimerResponse,
 } from './discount.dto';
@@ -94,6 +100,36 @@ export function toTrainerTimerRequest(draft: DiscountTimerDraft): TrainerTimerRe
     trigger: TIMER_TRIGGERS.toApi(draft.trigger),
     trainerIds: copyOf(draft.trainerIds),
   };
+}
+
+export function toTariffPeriod(response: TariffPeriodResponse): DiscountPeriod {
+  return {
+    id: response.id,
+    months: response.months,
+    standardPercent: response.standardPercent,
+    vipPercent: response.vipPercent,
+    appliesTimer: response.appliesTimer,
+    appliesCampaign: response.appliesCampaign,
+    trainerIds: null,
+  };
+}
+
+export function toTrainerPeriod(response: TrainerPeriodResponse): DiscountPeriod {
+  return { ...toTariffPeriod(response), trainerIds: response.trainerIds };
+}
+
+export function toTariffPeriodRequest(draft: DiscountPeriodDraft): TariffPeriodRequest {
+  return {
+    months: draft.months,
+    standardPercent: draft.standardPercent,
+    vipPercent: draft.vipPercent,
+    appliesTimer: draft.appliesTimer,
+    appliesCampaign: draft.appliesCampaign,
+  };
+}
+
+export function toTrainerPeriodRequest(draft: DiscountPeriodDraft): TrainerPeriodRequest {
+  return { ...toTariffPeriodRequest(draft), trainerIds: copyOf(draft.trainerIds) };
 }
 
 export function toDiscountTrainer(response: DiscountTrainerResponse): DiscountTrainer {
