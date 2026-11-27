@@ -57,6 +57,7 @@ export const COACH_APP_EN: Dictionary['coachApp'] = {
   },
   payments: {
     refunded: 'Refunded',
+    months: '{months, plural, one{for {months} month} other{for {months} months}}',
     emptyTitle: 'No payments yet',
   },
   dashboard: {

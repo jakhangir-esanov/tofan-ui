@@ -3,5 +3,6 @@ export interface Payment {
   readonly name: string | null;
   readonly paidOn: Date | null;
   readonly netAmount: number;
+  readonly months: number;
   readonly refunded: boolean;
 }

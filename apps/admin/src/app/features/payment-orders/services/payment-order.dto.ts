@@ -27,6 +27,8 @@ export interface PaymentOrderResponse {
   taxAmount: number;
   providerFeePercent: number;
   providerFeeAmount: number;
+  discountPercent: number;
+  discountAmount: number;
   amount: number;
   status: PaymentOrderStatusDto;
   paidWith: PaymentProviderDto | null;
@@ -34,6 +36,7 @@ export interface PaymentOrderResponse {
   paidOnUtc: string | null;
   refundedOnUtc: string | null;
   tier: TierDto | null;
+  months: number;
   userFullName: string | null;
   userName: string | null;
   referenceName: string | null;

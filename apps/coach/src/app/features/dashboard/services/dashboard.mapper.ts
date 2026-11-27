@@ -50,6 +50,7 @@ function toDashboardPayment(response: DashboardPaymentResponse, index: number): 
     name: fullNameOf(response.firstName, response.lastName) || null,
     paidOn: toDateOrNull(response.paidOnUtc),
     netAmount: response.netAmount,
+    months: response.months,
     refunded: response.status === PaymentOrderStatusDto.Refunded,
   };
 }

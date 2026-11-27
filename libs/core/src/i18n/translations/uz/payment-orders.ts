@@ -9,6 +9,8 @@ export const PAYMENT_ORDERS_UZ = {
   paidAt: "To'langan: {date}",
   paidWith: "To'langan: {date}, {provider}",
   refundedAt: 'Qaytarilgan: {date}',
+  months: '{months} oy',
+  discount: 'Chegirma −{percent}%: {amount}',
   columns: {
     created: 'Yaratilgan',
     user: 'Foydalanuvchi',

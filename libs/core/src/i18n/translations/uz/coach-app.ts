@@ -54,6 +54,7 @@ export const COACH_APP_UZ = {
   },
   payments: {
     refunded: 'Qaytarilgan',
+    months: '{months} oylik',
     emptyTitle: 'Hali to‘lovlar yo‘q',
   },
   dashboard: {

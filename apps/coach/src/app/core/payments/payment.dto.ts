@@ -11,4 +11,5 @@ export interface EarningPaymentResponse {
   paidOnUtc: string | null;
   refundedOnUtc: string | null;
   netAmount: number;
+  months: number;
 }

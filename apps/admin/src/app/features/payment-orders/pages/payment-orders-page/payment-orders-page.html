@@ -52,6 +52,7 @@
               {{ reference.text }}
             </div>
           }
+          <div class="text-muted-color text-xs">{{ order.months }}</div>
         </td>
         <td class="whitespace-nowrap tabular-nums">{{ order.price }}</td>
         <td class="whitespace-nowrap tabular-nums">{{ order.commission }}</td>
@@ -63,7 +64,12 @@
           <div>{{ order.providerFee }}</div>
           <div class="text-muted-color text-xs">{{ order.providerFeePercent }}</div>
         </td>
-        <td class="font-semibold whitespace-nowrap tabular-nums">{{ order.amount }}</td>
+        <td class="whitespace-nowrap tabular-nums">
+          <div class="font-semibold">{{ order.amount }}</div>
+          @if (order.discount; as discount) {
+            <div class="text-muted-color text-xs">{{ discount }}</div>
+          }
+        </td>
         <td>
           <p-tag [value]="order.statusLabel" [severity]="order.statusSeverity" />
           @if (order.statusHint; as hint) {
