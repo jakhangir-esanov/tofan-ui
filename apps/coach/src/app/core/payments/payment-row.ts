@@ -20,9 +20,16 @@ import { Payment } from './payment';
         <span class="c-tag c-tag--warning refund">{{ 'coachApp.payments.refunded' | t }}</span>
       }
     </div>
-    <span class="amount t-base2 font-semibold" [class.is-refunded]="payment().refunded">
-      {{ payment().netAmount | money: currencyCode() }}
-    </span>
+    <div class="sum">
+      <span class="amount t-base2 font-semibold" [class.is-refunded]="payment().refunded">
+        {{ payment().netAmount | money: currencyCode() }}
+      </span>
+      @if (payment().months > 1) {
+        <span class="t-base5 tone-secondary">{{
+          'coachApp.payments.months' | t: { months: payment().months }
+        }}</span>
+      }
+    </div>
   `,
   styleUrl: './payment-row.css',
 })

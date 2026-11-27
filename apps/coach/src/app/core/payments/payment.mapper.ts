@@ -7,6 +7,7 @@ export function toPayment(response: EarningPaymentResponse): Payment {
     name: null,
     paidOn: toDateOrNull(response.paidOnUtc),
     netAmount: response.netAmount,
+    months: response.months,
     refunded: response.status === PaymentOrderStatusDto.Refunded,
   };
 }

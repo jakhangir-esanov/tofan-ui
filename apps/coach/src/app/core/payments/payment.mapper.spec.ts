@@ -11,12 +11,14 @@ describe('toPayment', () => {
         paidOnUtc: '2026-10-01T10:00:00Z',
         refundedOnUtc: '2026-10-02T10:00:00Z',
         netAmount: 450000,
+        months: 1,
       }),
     ).toEqual({
       id: 'p1',
       name: null,
       paidOn: new Date('2026-10-01T10:00:00Z'),
       netAmount: 450000,
+      months: 1,
       refunded: true,
     });
   });
@@ -29,6 +31,7 @@ describe('toPayment', () => {
       paidOnUtc: null,
       refundedOnUtc: null,
       netAmount: 0,
+      months: 1,
     });
 
     expect(payment.paidOn).toBeNull();

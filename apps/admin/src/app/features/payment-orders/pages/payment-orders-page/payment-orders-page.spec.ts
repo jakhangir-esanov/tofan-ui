@@ -22,6 +22,9 @@ const paidSubscription: PaymentOrder = {
   taxAmount: 30000,
   providerFeePercent: 2.5,
   providerFeeAmount: 7000,
+  discountPercent: 0,
+  discountAmount: 0,
+  months: 1,
   amount: 287000,
   status: 'paid',
   paidWith: 'click',
@@ -40,13 +43,16 @@ const pendingTariff: PaymentOrder = {
   referenceId: '5f6c1a10-7d1e-4a51-9c11-000000000002',
   referenceName: 'Standard',
   tier: 'standard',
-  price: 120000,
+  price: 1440000,
   commissionAmount: 0,
   taxPercent: 0,
   taxAmount: 0,
   providerFeePercent: 0,
   providerFeeAmount: 0,
-  amount: 120000,
+  discountPercent: 20,
+  discountAmount: 288000,
+  months: 12,
+  amount: 1152000,
   status: 'pending',
   paidWith: null,
   paidAt: null,
@@ -118,7 +124,7 @@ describe('PaymentOrdersPage', () => {
     const [row] = cells(await render());
 
     expect(row.slice(2)).toEqual([
-      'Trener obunasi · VIP Stage Coach',
+      'Trener obunasi · VIP Stage Coach 1 oy',
       "200 000 so'm",
       "50 000 so'm",
       "30 000 so'm 12%",
@@ -131,8 +137,14 @@ describe('PaymentOrdersPage', () => {
   it('should show the tariff kind and no paid date when the order is a pending tariff', async () => {
     const [, row] = cells(await render());
 
-    expect(row[2]).toBe('Tofan tarifi · Standard');
+    expect(row[2]).toBe('Tofan tarifi · Standard 12 oy');
     expect(row[8]).toBe('Kutilmoqda');
+  });
+
+  it('should show the discount under the total when the order was discounted', async () => {
+    const [, row] = cells(await render());
+
+    expect(row[7]).toBe("1 152 000 so'm Chegirma −20%: 288 000 so'm");
   });
 
   it('should show the order id under the created date when the table is shown', async () => {

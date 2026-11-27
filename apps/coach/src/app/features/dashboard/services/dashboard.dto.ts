@@ -46,6 +46,7 @@ export interface DashboardPaymentResponse {
   status: PaymentOrderStatusDto;
   paidOnUtc: string | null;
   netAmount: number;
+  months: number;
 }
 
 export interface DashboardResponse {

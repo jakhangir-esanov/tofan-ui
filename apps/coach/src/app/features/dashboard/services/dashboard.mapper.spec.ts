@@ -33,6 +33,7 @@ const response: DashboardResponse = {
       status: PaymentOrderStatusDto.Refunded,
       paidOnUtc: '2026-10-20T10:00:00Z',
       netAmount: 450000,
+      months: 1,
     },
   ],
 };
@@ -55,6 +56,7 @@ describe('toDashboard', () => {
       name: 'Lola',
       refunded: true,
       netAmount: 450000,
+      months: 1,
     });
   });
 

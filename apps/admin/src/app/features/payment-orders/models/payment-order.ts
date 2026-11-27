@@ -24,6 +24,9 @@ export interface PaymentOrder {
   readonly taxAmount: number;
   readonly providerFeePercent: number;
   readonly providerFeeAmount: number;
+  readonly discountPercent: number;
+  readonly discountAmount: number;
+  readonly months: number;
   readonly amount: number;
   readonly status: PaymentOrderStatus;
   readonly paidWith: PaymentProvider | null;

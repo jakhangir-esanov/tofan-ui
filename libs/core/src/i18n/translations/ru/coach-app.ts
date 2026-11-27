@@ -57,6 +57,8 @@ export const COACH_APP_RU: Dictionary['coachApp'] = {
   },
   payments: {
     refunded: 'Возврат',
+    months:
+      '{months, plural, one{за {months} месяц} few{за {months} месяца} many{за {months} месяцев} other{за {months} месяца}}',
     emptyTitle: 'Платежей пока нет',
   },
   dashboard: {

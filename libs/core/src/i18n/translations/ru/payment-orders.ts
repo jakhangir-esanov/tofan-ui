@@ -11,6 +11,9 @@ export const PAYMENT_ORDERS_RU: Dictionary['paymentOrders'] = {
   paidAt: 'Оплачен: {date}',
   paidWith: 'Оплачен: {date}, {provider}',
   refundedAt: 'Возвращён: {date}',
+  months:
+    '{months, plural, one{{months} месяц} few{{months} месяца} many{{months} месяцев} other{{months} месяца}}',
+  discount: 'Скидка −{percent}%: {amount}',
   columns: {
     created: 'Создан',
     user: 'Пользователь',

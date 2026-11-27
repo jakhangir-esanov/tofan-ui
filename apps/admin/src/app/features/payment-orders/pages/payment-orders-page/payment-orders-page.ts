@@ -42,6 +42,7 @@ interface PaymentOrderRow {
   readonly createdAt: string;
   readonly purpose: string;
   readonly reference: PaymentOrderReference | null;
+  readonly months: string;
   readonly price: string;
   readonly commission: string;
   readonly tax: string;
@@ -49,6 +50,7 @@ interface PaymentOrderRow {
   readonly providerFee: string;
   readonly providerFeePercent: string;
   readonly amount: string;
+  readonly discount: string | null;
   readonly statusLabel: string;
   readonly statusSeverity: PaymentOrderTagSeverity;
   readonly statusHint: string | null;
@@ -135,6 +137,7 @@ export class PaymentOrdersPage {
       createdAt: this.date(order.createdAt),
       purpose: this.purposeLabel(order),
       reference: toPaymentOrderReference(order),
+      months: this.translate('paymentOrders.months', { months: order.months }),
       price: this.money(order.price),
       commission: this.money(order.commissionAmount),
       tax: this.money(order.taxAmount),
@@ -142,6 +145,7 @@ export class PaymentOrdersPage {
       providerFee: this.money(order.providerFeeAmount),
       providerFeePercent: this.percent(order.providerFeePercent),
       amount: this.money(order.amount),
+      discount: this.discount(order),
       statusLabel: this.text(PAYMENT_ORDER_STATUS_LABELS[order.status]),
       statusSeverity: PAYMENT_ORDER_STATUS_SEVERITIES[order.status],
       statusHint: this.statusHint(order),
@@ -156,6 +160,15 @@ export class PaymentOrdersPage {
           purpose,
           tier: this.text(TIER_LABELS[order.tier]),
         });
+  }
+
+  private discount(order: PaymentOrder): string | null {
+    return order.discountPercent > 0
+      ? this.translate('paymentOrders.discount', {
+          percent: order.discountPercent,
+          amount: this.money(order.discountAmount),
+        })
+      : null;
   }
 
   private statusHint(order: PaymentOrder): string | null {
