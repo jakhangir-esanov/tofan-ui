@@ -15,7 +15,7 @@ import {
   toTrainerSubscription,
 } from './trainer-subscription.mapper';
 
-const TRAINERS = '/admin/trainers';
+const GRANT_ACCESS = '/admin/payment-orders/grant';
 const SUBSCRIPTIONS = '/admin/trainer-subscriptions';
 
 @Injectable({ providedIn: 'root' })
@@ -31,10 +31,7 @@ export class TrainerSubscriptionsService {
   }
 
   grant(trainerId: string, grant: SubscriptionGrant): Promise<string> {
-    return this.apiClient.post<string>(
-      `${TRAINERS}/${encodeURIComponent(trainerId)}/subscriptions`,
-      toGrantRequest(grant),
-    );
+    return this.apiClient.post<string>(GRANT_ACCESS, toGrantRequest(trainerId, grant));
   }
 
   async end(id: string): Promise<void> {

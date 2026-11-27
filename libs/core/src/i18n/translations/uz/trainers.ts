@@ -135,10 +135,12 @@ export const TRAINERS_UZ = {
     soldierFailed: "Qidirib bo'lmadi. Qayta urinib ko'ring.",
     months: 'Muddat',
     suffix: ' oy',
-    hint: "1 dan 12 oygacha. Shu trenerga faol obuna bo'lsa muddat uzayadi.",
-    tierHint:
-      'Obuna doim Standard darajasi bilan ochiladi. VIP berish uchun obunani jadvaldagi "VIP qilish" tugmasi bilan o\'zgartiring.',
+    hint: "Admin yaratgan davrlardan biri bo'lishi kerak (1 oy har doim bor). Shu trenerga faol obuna bo'lsa muddat uzayadi.",
+    kind: 'Turi',
+    kindPlaceholder: "Karta, sovg'a yoki test",
+    tier: 'Daraja',
     errors: {
+      kind: 'Turini tanlang.',
       trainer: 'Trenerni tanlang.',
       userId: 'Foydalanuvchini tanlang.',
       required: 'Necha oyga berishni kiriting.',

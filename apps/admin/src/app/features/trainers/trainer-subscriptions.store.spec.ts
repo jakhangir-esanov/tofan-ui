@@ -166,9 +166,16 @@ describe('TrainerSubscriptionsStore', () => {
     const store = createStore();
     await store.loadTrainers();
 
-    await expect(store.grant('t1', { userId: ` ${USER_ID} `, months: 2 })).resolves.toBe(true);
+    await expect(
+      store.grant('t1', { userId: ` ${USER_ID} `, months: 2, tier: 'standard', kind: 'gift' }),
+    ).resolves.toBe(true);
 
-    expect(subscriptions.grant).toHaveBeenCalledWith('t1', { userId: USER_ID, months: 2 });
+    expect(subscriptions.grant).toHaveBeenCalledWith('t1', {
+      userId: USER_ID,
+      months: 2,
+      tier: 'standard',
+      kind: 'gift',
+    });
     expect(notifications.success).toHaveBeenCalledWith('trainers.toast.granted', {
       name: 'Jasur Karimov',
     });
@@ -179,7 +186,9 @@ describe('TrainerSubscriptionsStore', () => {
   it('should not call the backend when the months are out of range', async () => {
     const store = createStore();
 
-    await expect(store.grant('t1', { userId: USER_ID, months: 0 })).resolves.toBe(false);
+    await expect(
+      store.grant('t1', { userId: USER_ID, months: 0, tier: 'standard', kind: 'gift' }),
+    ).resolves.toBe(false);
 
     expect(subscriptions.grant).not.toHaveBeenCalled();
     expect(notifications.error).toHaveBeenCalled();
@@ -190,7 +199,9 @@ describe('TrainerSubscriptionsStore', () => {
     vi.mocked(subscriptions.grant).mockRejectedValue(refusal);
     const store = createStore();
 
-    await expect(store.grant('t1', { userId: USER_ID, months: 1 })).resolves.toBe(false);
+    await expect(
+      store.grant('t1', { userId: USER_ID, months: 1, tier: 'standard', kind: 'gift' }),
+    ).resolves.toBe(false);
 
     expect(notifications.error).toHaveBeenCalledWith(refusal);
     expect(subscriptions.list).not.toHaveBeenCalled();

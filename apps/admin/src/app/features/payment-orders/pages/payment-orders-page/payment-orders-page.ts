@@ -1,6 +1,7 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { AppPaths } from '@core/config/app-paths';
+import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { formatDateTime } from '@core/i18n/date-format';
 import { TranslationKey, TranslationParams } from '@core/i18n/dictionary';
 import { formatNumber } from '@core/i18n/number-format';
@@ -15,9 +16,11 @@ import { SoldierSearchStore } from '@shared/components/soldier-field/soldier-sea
 import { PageRequest } from '@shared/models/page';
 import { PersonName, toPersonName } from '@shared/models/person-name';
 import { TIER_LABELS } from '@shared/models/tier-labels';
+import { AccessGrantDialog } from '../../components/access-grant-dialog/access-grant-dialog';
 import { PaymentOrderCreateDialog } from '../../components/payment-order-create-dialog/payment-order-create-dialog';
 import { PaymentOrderFilters } from '../../components/payment-order-filters/payment-order-filters';
-import { PaymentOrder } from '../../models/payment-order';
+import { AccessGrantDraft } from '../../models/access-grant-draft';
+import { PaymentOrder, canRefundCardPayment } from '../../models/payment-order';
 import { PaymentOrderDraft } from '../../models/payment-order-draft';
 import { PaymentOrderFilter } from '../../models/payment-order-filter';
 import {
@@ -54,11 +57,14 @@ interface PaymentOrderRow {
   readonly statusLabel: string;
   readonly statusSeverity: PaymentOrderTagSeverity;
   readonly statusHint: string | null;
+  readonly canRefund: boolean;
+  readonly order: PaymentOrder;
 }
 
 @Component({
   selector: 'app-payment-orders-page',
   imports: [
+    AccessGrantDialog,
     Button,
     CatalogHeader,
     DataTable,
@@ -74,14 +80,17 @@ interface PaymentOrderRow {
 export class PaymentOrdersPage {
   private readonly translator = inject(Translator);
   private readonly localeStore = inject(LocaleStore);
+  private readonly confirmations = inject(ConfirmDialogService);
 
   protected readonly store = inject(PaymentOrdersStore);
   protected readonly soldierSearch = inject(SoldierSearchStore);
   protected readonly soldiersPath = AppPaths.soldiers;
   protected readonly createVisible = signal(false);
+  protected readonly grantVisible = signal(false);
 
   constructor() {
     void this.store.loadTrainers();
+    void this.store.loadTariffs();
   }
 
   protected readonly columns = computed<readonly DataTableColumn[]>(() => [
@@ -102,6 +111,7 @@ export class PaymentOrdersPage {
     },
     { field: 'amount', header: this.text('paymentOrders.columns.amount'), sortable: true },
     { field: 'status', header: this.text('paymentOrders.columns.status') },
+    { field: 'actions', header: '' },
   ]);
 
   protected readonly rows = computed<readonly PaymentOrderRow[]>(() =>
@@ -120,6 +130,35 @@ export class PaymentOrdersPage {
     this.createVisible.set(true);
     if (this.store.trainersFailed()) {
       void this.store.loadTrainers();
+    }
+  }
+
+  protected openGrant(): void {
+    this.grantVisible.set(true);
+    if (this.store.trainersFailed()) {
+      void this.store.loadTrainers();
+    }
+    if (this.store.tariffsFailed()) {
+      void this.store.loadTariffs();
+    }
+  }
+
+  protected async grant(draft: AccessGrantDraft): Promise<void> {
+    if (await this.store.grant(draft)) {
+      this.grantVisible.set(false);
+    }
+  }
+
+  protected async refund(order: PaymentOrder): Promise<void> {
+    const confirmed = await this.confirmations.confirm(
+      {
+        key: 'paymentOrders.refund.confirm',
+        params: { amount: this.money(order.amount), months: order.months },
+      },
+      'paymentOrders.refund.action',
+    );
+    if (confirmed) {
+      await this.store.refund(order);
     }
   }
 
@@ -149,6 +188,8 @@ export class PaymentOrdersPage {
       statusLabel: this.text(PAYMENT_ORDER_STATUS_LABELS[order.status]),
       statusSeverity: PAYMENT_ORDER_STATUS_SEVERITIES[order.status],
       statusHint: this.statusHint(order),
+      canRefund: canRefundCardPayment(order),
+      order,
     };
   }
 
@@ -172,6 +213,9 @@ export class PaymentOrdersPage {
   }
 
   private statusHint(order: PaymentOrder): string | null {
+    if (order.status === 'gifted' || order.status === 'test') {
+      return this.translate('paymentOrders.grantedAt', { date: this.date(order.createdAt) });
+    }
     if (order.refundedAt !== null) {
       return this.translate('paymentOrders.refundedAt', { date: this.date(order.refundedAt) });
     }

@@ -1,12 +1,12 @@
 import { Tier } from '@shared/models/tier';
 
-export const PAYMENT_ORDER_STATUSES = ['pending', 'paid', 'refunded'] as const;
+export const PAYMENT_ORDER_STATUSES = ['pending', 'paid', 'refunded', 'gifted', 'test'] as const;
 export type PaymentOrderStatus = (typeof PAYMENT_ORDER_STATUSES)[number];
 
 export const PAYMENT_PURPOSES = ['trainerSubscription', 'tariff'] as const;
 export type PaymentPurpose = (typeof PAYMENT_PURPOSES)[number];
 
-export const PAYMENT_PROVIDERS = ['payme', 'click'] as const;
+export const PAYMENT_PROVIDERS = ['payme', 'click', 'card'] as const;
 export type PaymentProvider = (typeof PAYMENT_PROVIDERS)[number];
 
 export interface PaymentOrder {
@@ -33,4 +33,9 @@ export interface PaymentOrder {
   readonly createdAt: Date;
   readonly paidAt: Date | null;
   readonly refundedAt: Date | null;
+  readonly grantedBy: string | null;
+}
+
+export function canRefundCardPayment(order: PaymentOrder): boolean {
+  return order.status === 'paid' && order.paidWith === 'card';
 }

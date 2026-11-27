@@ -6,9 +6,20 @@
   (save)="submit()"
 >
   <div class="flex flex-col gap-4">
-    <p-message severity="info" icon="pi pi-info-circle">{{
-      'trainers.grant.tierHint' | t
-    }}</p-message>
+    <div class="flex flex-col gap-1">
+      <label for="grantKind" class="font-medium">{{ 'trainers.grant.kind' | t }}</label>
+      <app-select-field
+        inputId="grantKind"
+        [formField]="form.kind"
+        [options]="kindOptions()"
+        [placeholder]="'trainers.grant.kindPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.kind()" />
+      @if (kindHint(); as hint) {
+        <p-message severity="info" icon="pi pi-info-circle">{{ hint | t }}</p-message>
+      }
+    </div>
 
     <div class="flex flex-col gap-1">
       <label for="grantTrainer" class="font-medium">{{ 'trainers.grant.trainer' | t }}</label>
@@ -42,6 +53,16 @@
         (searchChange)="soldierSearch.emit($event)"
       />
       <app-field-error [field]="form.userId()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="grantTier" class="font-medium">{{ 'trainers.grant.tier' | t }}</label>
+      <app-select-field
+        inputId="grantTier"
+        [formField]="form.tier"
+        [options]="tierOptions()"
+        [fluid]="true"
+      />
     </div>
 
     <div class="flex flex-col gap-1">

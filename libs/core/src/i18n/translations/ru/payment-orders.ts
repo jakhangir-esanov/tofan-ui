@@ -11,6 +11,7 @@ export const PAYMENT_ORDERS_RU: Dictionary['paymentOrders'] = {
   paidAt: 'Оплачен: {date}',
   paidWith: 'Оплачен: {date}, {provider}',
   refundedAt: 'Возвращён: {date}',
+  grantedAt: 'Выдано: {date}',
   months:
     '{months, plural, one{{months} месяц} few{{months} месяца} many{{months} месяцев} other{{months} месяца}}',
   discount: 'Скидка −{percent}%: {amount}',
@@ -33,10 +34,13 @@ export const PAYMENT_ORDERS_RU: Dictionary['paymentOrders'] = {
     pending: 'Ожидает оплаты',
     paid: 'Оплачен',
     refunded: 'Возвращён',
+    gifted: 'Подарок',
+    test: 'Тест',
   },
   provider: {
     payme: 'Payme',
     click: 'Click',
+    card: 'Карта',
   },
   filters: {
     search: 'Поиск',
@@ -71,5 +75,40 @@ export const PAYMENT_ORDERS_RU: Dictionary['paymentOrders'] = {
       trainer: 'Выберите тренера.',
       price: 'Введите цену в сумах целым числом больше 0.',
     },
+  },
+  grant: {
+    open: 'Выдать доступ',
+    header: 'Выдать доступ',
+    save: 'Выдать',
+    kind: 'Тип',
+    kindPlaceholder: 'Карта, подарок или тест',
+    user: 'Пользователь',
+    soldierPlaceholder: 'Поиск по имени или username',
+    soldierEmpty: 'Soldier не найден.',
+    soldierFailed: 'Не удалось выполнить поиск. Попробуйте ещё раз.',
+    purpose: 'За что',
+    trainer: 'Тренер',
+    tariff: 'Тариф',
+    referencePlaceholder: 'Выберите',
+    tariffOption: '{name} · {amount} сум/мес.',
+    listFailed: 'Список не загрузился. Закройте и снова откройте окно.',
+    tier: 'Уровень',
+    months: 'Срок',
+    monthsSuffix: ' мес.',
+    monthsHint:
+      'Должен совпадать с одним из периодов, созданных админом (1 месяц есть всегда). Активная подписка продлится.',
+    granted: 'Доступ выдан. ID заказа: {id}',
+    errors: {
+      kind: 'Выберите тип.',
+      userId: 'Выберите пользователя.',
+      reference: 'Выберите тренера или тариф.',
+      months: 'Укажите от 1 до 36 месяцев.',
+    },
+  },
+  refund: {
+    action: 'Вернуть оплату картой',
+    confirm:
+      'Вернуть оплату картой на {amount}? Купленные {months} мес. снимаются с подписки, а оплата в учёте станет возвратом.',
+    refunded: 'Оплата картой возвращена, месяцы сняты.',
   },
 };

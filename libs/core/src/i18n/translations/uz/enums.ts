@@ -1,4 +1,14 @@
 export const ENUMS_UZ = {
+  accessGrantKind: {
+    card: "Karta to'lovi",
+    gift: "Sovg'a",
+    test: 'Test',
+  },
+  accessGrantKindHint: {
+    card: "Foydalanuvchi kartaga pul o'tkazdi. Ilovadagi narx (davr va chegirmalar bilan) to'langan deb yoziladi va xisob-kitobga tushadi. Coach kursida komissiya va soliq olinadi, provayder haqi olinmaydi.",
+    gift: "Tekin access. Summa 0, xisob-kitobga tushmaydi, sovg'a deb belgilanadi.",
+    test: "Prod'da test qilish uchun. Summa 0, xisob-kitobga ham, sovg'alarga ham tushmaydi.",
+  },
   muscleGroup: {
     unknown: "Noma'lum",
     chest: "Ko'krak",

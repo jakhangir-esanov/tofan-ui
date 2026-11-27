@@ -9,12 +9,14 @@ import {
   PaymentPurpose,
 } from './payment-order';
 
-export type PaymentOrderTagSeverity = 'warn' | 'success' | 'secondary';
+export type PaymentOrderTagSeverity = 'warn' | 'success' | 'secondary' | 'info' | 'contrast';
 
 export const PAYMENT_ORDER_STATUS_LABELS: Record<PaymentOrderStatus, TranslationKey> = {
   pending: 'paymentOrders.status.pending',
   paid: 'paymentOrders.status.paid',
   refunded: 'paymentOrders.status.refunded',
+  gifted: 'paymentOrders.status.gifted',
+  test: 'paymentOrders.status.test',
 };
 
 export const PAYMENT_ORDER_STATUS_SEVERITIES: Record<PaymentOrderStatus, PaymentOrderTagSeverity> =
@@ -22,6 +24,8 @@ export const PAYMENT_ORDER_STATUS_SEVERITIES: Record<PaymentOrderStatus, Payment
     pending: 'warn',
     paid: 'success',
     refunded: 'secondary',
+    gifted: 'info',
+    test: 'contrast',
   };
 
 export const PAYMENT_PURPOSE_LABELS: Record<PaymentPurpose, TranslationKey> = {
@@ -32,6 +36,7 @@ export const PAYMENT_PURPOSE_LABELS: Record<PaymentPurpose, TranslationKey> = {
 export const PAYMENT_PROVIDER_LABELS: Record<PaymentProvider, TranslationKey> = {
   payme: 'paymentOrders.provider.payme',
   click: 'paymentOrders.provider.click',
+  card: 'paymentOrders.provider.card',
 };
 
 export const PAYMENT_ORDER_STATUS_OPTIONS = toSelectOptions(

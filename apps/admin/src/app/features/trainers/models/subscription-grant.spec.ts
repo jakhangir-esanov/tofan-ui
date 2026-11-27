@@ -20,39 +20,62 @@ function issueCodes(invalid: SubscriptionGrant): string[] {
 
 describe('createSubscriptionGrant', () => {
   it('should accept the grant when the months are at either edge of the range', () => {
-    expect(createSubscriptionGrant({ userId: USER_ID, months: MIN_SUBSCRIPTION_MONTHS })).toEqual({
+    expect(
+      createSubscriptionGrant({
+        userId: USER_ID,
+        months: MIN_SUBSCRIPTION_MONTHS,
+        tier: 'standard',
+        kind: 'gift',
+      }),
+    ).toEqual({
       userId: USER_ID,
       months: 1,
+      tier: 'standard',
+      kind: 'gift',
     });
-    expect(createSubscriptionGrant({ userId: USER_ID, months: MAX_SUBSCRIPTION_MONTHS })).toEqual({
+    expect(
+      createSubscriptionGrant({
+        userId: USER_ID,
+        months: MAX_SUBSCRIPTION_MONTHS,
+        tier: 'standard',
+        kind: 'gift',
+      }),
+    ).toEqual({
       userId: USER_ID,
-      months: 12,
+      months: 36,
+      tier: 'standard',
+      kind: 'gift',
     });
   });
 
   it('should trim the user id when the user typed spaces around it', () => {
-    expect(createSubscriptionGrant({ userId: ` ${USER_ID} `, months: 3 }).userId).toBe(USER_ID);
+    expect(
+      createSubscriptionGrant({ userId: ` ${USER_ID} `, months: 3, tier: 'standard', kind: 'gift' })
+        .userId,
+    ).toBe(USER_ID);
   });
 
   it('should refuse the grant when the months are below the minimum', () => {
-    expect(issueCodes({ userId: USER_ID, months: 0 })).toEqual([
+    expect(issueCodes({ userId: USER_ID, months: 0, tier: 'standard', kind: 'gift' })).toEqual([
       'TrainerSubscription.MonthsOutOfRange',
     ]);
   });
 
   it('should refuse the grant when the months are above the maximum', () => {
-    expect(issueCodes({ userId: USER_ID, months: 13 })).toEqual([
+    expect(issueCodes({ userId: USER_ID, months: 37, tier: 'standard', kind: 'gift' })).toEqual([
       'TrainerSubscription.MonthsOutOfRange',
     ]);
   });
 
   it('should refuse the grant when the months are not a whole number', () => {
-    expect(issueCodes({ userId: USER_ID, months: 1.5 })).toEqual([
+    expect(issueCodes({ userId: USER_ID, months: 1.5, tier: 'standard', kind: 'gift' })).toEqual([
       'TrainerSubscription.MonthsOutOfRange',
     ]);
   });
 
   it('should refuse the grant when the user id is not a UUID', () => {
-    expect(issueCodes({ userId: 'abc', months: 1 })).toEqual(['UserId.Invalid']);
+    expect(issueCodes({ userId: 'abc', months: 1, tier: 'standard', kind: 'gift' })).toEqual([
+      'UserId.Invalid',
+    ]);
   });
 });

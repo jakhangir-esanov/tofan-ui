@@ -1,5 +1,7 @@
+import { accessGrantKinds } from '@shared/models/access-grant-kind.dto';
 import { tiers } from '@shared/models/tier.dto';
 import { enumMap } from '@shared/utils/enum-map';
+import { AccessGrantDraft } from '../models/access-grant-draft';
 import { PaymentOrderDraft } from '../models/payment-order-draft';
 import {
   PaymentOrder,
@@ -9,6 +11,7 @@ import {
 } from '../models/payment-order';
 import {
   CreatePaymentOrderRequest,
+  GrantAccessRequest,
   PaymentOrderResponse,
   PaymentOrderStatusDto,
   PaymentProviderDto,
@@ -44,6 +47,7 @@ export function toPaymentOrder(response: PaymentOrderResponse): PaymentOrder {
     createdAt: new Date(response.createdOnUtc),
     paidAt: toDateOrNull(response.paidOnUtc),
     refundedAt: toDateOrNull(response.refundedOnUtc),
+    grantedBy: response.grantedBy ?? null,
   };
 }
 
@@ -65,6 +69,17 @@ export function toCreatePaymentOrderRequest(draft: PaymentOrderDraft): CreatePay
     purpose: PaymentPurposeDto.TrainerSubscription,
     referenceId: draft.trainerId,
     price: draft.price,
+  };
+}
+
+export function toGrantAccessRequest(draft: AccessGrantDraft): GrantAccessRequest {
+  return {
+    userId: draft.userId,
+    purpose: purposes.toApi(draft.purpose),
+    referenceId: draft.referenceId,
+    tier: tiers.toApi(draft.tier),
+    months: draft.months,
+    kind: accessGrantKinds.toApi(draft.kind),
   };
 }
 

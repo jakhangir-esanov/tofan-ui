@@ -9,6 +9,7 @@ export const PAYMENT_ORDERS_UZ = {
   paidAt: "To'langan: {date}",
   paidWith: "To'langan: {date}, {provider}",
   refundedAt: 'Qaytarilgan: {date}',
+  grantedAt: 'Berilgan: {date}',
   months: '{months} oy',
   discount: 'Chegirma −{percent}%: {amount}',
   columns: {
@@ -30,10 +31,13 @@ export const PAYMENT_ORDERS_UZ = {
     pending: 'Kutilmoqda',
     paid: "To'langan",
     refunded: 'Qaytarilgan',
+    gifted: "Sovg'a",
+    test: 'Test',
   },
   provider: {
     payme: 'Payme',
     click: 'Click',
+    card: 'Karta',
   },
   filters: {
     search: 'Qidirish',
@@ -68,5 +72,40 @@ export const PAYMENT_ORDERS_UZ = {
       trainer: 'Trenerni tanlang.',
       price: "Narxni so'mda, 0 dan katta butun son qilib kiriting.",
     },
+  },
+  grant: {
+    open: 'Access berish',
+    header: 'Access berish',
+    save: 'Berish',
+    kind: 'Turi',
+    kindPlaceholder: "Karta, sovg'a yoki test",
+    user: 'Foydalanuvchi',
+    soldierPlaceholder: "Ism yoki username bo'yicha qidiring",
+    soldierEmpty: 'Soldier topilmadi.',
+    soldierFailed: "Qidirib bo'lmadi. Qayta urinib ko'ring.",
+    purpose: 'Nima uchun',
+    trainer: 'Trener',
+    tariff: 'Tarif',
+    referencePlaceholder: 'Tanlang',
+    tariffOption: "{name} · {amount} so'm/oy",
+    listFailed: "Ro'yxat yuklanmadi. Oynani yopib, qayta oching.",
+    tier: 'Daraja',
+    months: 'Muddat',
+    monthsSuffix: ' oy',
+    monthsHint:
+      "Admin yaratgan davrlardan biri bo'lishi kerak (1 oy har doim bor). Faol obuna bo'lsa muddat uzayadi.",
+    granted: 'Access berildi. Buyurtma ID: {id}',
+    errors: {
+      kind: 'Turini tanlang.',
+      userId: 'Foydalanuvchini tanlang.',
+      reference: 'Trener yoki tarifni tanlang.',
+      months: '1 dan 36 gacha oy kiriting.',
+    },
+  },
+  refund: {
+    action: "Karta to'lovini qaytarish",
+    confirm:
+      "{amount} karta to'lovi qaytarilsinmi? Sotib olingan {months} oy obunadan olib tashlanadi va to'lov xisob-kitobda qaytarilgan deb ko'rinadi.",
+    refunded: "Karta to'lovi qaytarildi, oylar olib tashlandi.",
   },
 };
