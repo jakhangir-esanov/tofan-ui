@@ -104,7 +104,9 @@ Still missing: apparel shop, Telegram channel, Instagram, YouTube, privacy polic
   To regenerate the QR (for example for another address), run the `qrcode` npm package once outside the project with `errorCorrectionLevel: 'M'`, `margin: 0` and a transparent light color; it is not a project dependency.
 - Hashed JS and CSS are cached for a year (`immutable`), other public files for a day, pages are `no-cache`.
 - Security headers match the panels: `nosniff`, `X-Frame-Options: DENY`, `strict-origin-when-cross-origin`.
-- `security.allowedHosts` in `angular.json` lists `peaktofan.com`, `www.peaktofan.com` and localhost; SSR rejects any other `Host`, so add a staging host there before deploying one.
+- `security.allowedHosts` in `angular.json` lists `peaktofan.com`, `www.peaktofan.com` and localhost; SSR rejects any other `Host` with 400. Another host is allowed at run time with `NG_ALLOWED_HOSTS` (comma-separated), which replaces that list.
+- `API_ORIGIN` (environment) picks the API the server reads, default `https://api.peaktofan.com`. The server hands it to the browser through `TransferState` (`core/config/api-origin.server.ts`), so the browser uses the same API as the server.
+- Stage runs the same image at `stage.peaktofan.com` with `API_ORIGIN=https://api.stage.peaktofan.com` and `NG_ALLOWED_HOSTS=stage.peaktofan.com,localhost,127.0.0.1`; its nginx adds `X-Robots-Tag: noindex, nofollow`. Canonical and share links still point at `peaktofan.com` (`SITE_ORIGIN`).
 
 ## Traps
 
@@ -115,7 +117,7 @@ Still missing: apparel shop, Telegram channel, Instagram, YouTube, privacy polic
 
 ## Trainer page
 
-- The page is rendered on the server for every request: the SSR server calls `api.peaktofan.com`, and the HTTP transfer
+- The page is rendered on the server for every request: the SSR server calls `API_ORIGIN` (`api.peaktofan.com` on prod), and the HTTP transfer
   cache of `provideClientHydration` hands the response to the browser, so the browser does not call the API on the first load.
 - The API's CORS list does not contain `https://peaktofan.com`. That is fine today because no in-app link navigates to a
   trainer page (the language switcher goes to the home page of the language). A future in-app link to `/t/<slug>`, or a
