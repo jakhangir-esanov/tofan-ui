@@ -1,0 +1,56 @@
+.follow {
+  padding-block-start: 0;
+}
+
+.bio {
+  max-width: 42em;
+  margin-top: 24px;
+  color: var(--landing-muted);
+  font-size: var(--landing-lead-size);
+  line-height: var(--landing-lead-line);
+  white-space: pre-line;
+}
+
+.programs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.locked {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: var(--landing-muted);
+  font-size: 14px;
+  line-height: 20px;
+  --icon-size: 18px;
+}
+
+.missing {
+  display: grid;
+  justify-items: start;
+  align-content: center;
+  gap: 20px;
+  min-height: 60vh;
+}
+
+.status {
+  color: var(--landing-gold);
+  font-size: clamp(120px, calc(64.29px + 14.29vw), 270px);
+  line-height: 0.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .programs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -1,0 +1,47 @@
+@let current = trainer();
+@if (current) {
+  <landing-trainer-hero [trainer]="current" />
+  @if (current.bio; as bio) {
+    <section class="section follow">
+      <div class="container">
+        <h2 class="display section-title">{{ 'trainer.about' | t }}</h2>
+        <p class="bio">{{ bio }}</p>
+      </div>
+    </section>
+  }
+  <section class="section follow">
+    <div class="container">
+      <div class="programs">
+        <landing-program-list
+          title="trainer.workoutPrograms"
+          icon="dumbbell"
+          [programs]="current.workoutPrograms"
+        />
+        <landing-program-list
+          title="trainer.mealPrograms"
+          icon="utensils"
+          [programs]="current.mealPrograms"
+        />
+      </div>
+      <p class="locked">
+        <landing-icon name="shield" />
+        {{ 'trainer.programsLocked' | t }}
+      </p>
+    </div>
+  </section>
+  @if (current.videos.length > 0) {
+    <landing-preview-videos [videos]="current.videos" />
+  }
+} @else {
+  <section class="section">
+    <div class="container missing">
+      <p class="display status" aria-hidden="true">{{ status }}</p>
+      <h1 class="display section-title">{{ 'trainer.notFound' | t }}</h1>
+      <p class="section-text">{{ 'trainer.notFoundText' | t }}</p>
+      <div class="actions">
+        <a class="btn btn-primary" [href]="downloadUrl">{{ 'trainer.download' | t }}</a>
+        <a class="btn btn-outline" [routerLink]="homeUrl()">{{ 'trainer.home' | t }}</a>
+      </div>
+    </div>
+  </section>
+}

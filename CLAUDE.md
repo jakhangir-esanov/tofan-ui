@@ -62,7 +62,8 @@ stage Swagger (`https://api.stage.peaktofan.com/swagger/v1/swagger.json`).
 
 Admin features live in `apps/admin/src/app/features`; Coach features live in `apps/coach/src/app/features`
 (same `pages/`, `components/`, `models/`, `services/` layout; coach-only shared code in `apps/coach/src/app/core`).
-The landing lives in `apps/landing`: SSR with prerendered `/`, `/ru`, `/en`, no backend calls, no Optimus UI, and its own
+The landing lives in `apps/landing`: SSR with prerendered `/`, `/ru`, `/en`, one public backend call (the trainer page
+`/t/<slug>`, server-rendered), no Optimus UI, and its own
 typed dictionary in `apps/landing/src/app/core/i18n` (the panel dictionary is too heavy for a public page). Details and
 traps: `docs/modules/landing.md`.
 Shared auth, HTTP, feedback and i18n live in `libs/core`; shared UI, models and utilities live in
@@ -119,7 +120,7 @@ apps/coach/src/app/
 apps/landing/src/app/
   core/                    # links, landing dictionary and locale routes, shell, SEO head
   shared/                  # icon sprite and icon component
-  features/                # home, not-found (lazy loaded)
+  features/                # home, trainer, not-found (lazy loaded)
   routes/                  # landing app.routes.ts and app.routes.server.ts
 libs/core/src/             # shared auth, HTTP, feedback and i18n
 libs/shared/src/           # shared components, models and utilities

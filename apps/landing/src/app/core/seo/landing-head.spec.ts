@@ -37,6 +37,39 @@ describe('LandingHead', () => {
     expect(document.head.querySelectorAll('link[rel="canonical"]')).toHaveLength(1);
   });
 
+  it('should describe a localized trainer page with its image when a trainer page is shown', () => {
+    TestBed.inject(LocaleStore).setLocale('ru');
+
+    head.showPage({
+      path: 't/aziz-karimov',
+      title: 'Aziz Karimov - тренер Tofan',
+      description: '8 лет опыта',
+      type: 'profile',
+      imageUrl: 'https://api.peaktofan.com/files/photo-1/content',
+    });
+
+    expect(TestBed.inject(Title).getTitle()).toBe('Aziz Karimov - тренер Tofan');
+    expect(hrefOf('link[rel="canonical"]')).toBe('https://peaktofan.com/ru/t/aziz-karimov');
+    expect(hrefOf('link[hreflang="uz"]')).toBe('https://peaktofan.com/t/aziz-karimov');
+    expect(document.head.querySelector('meta[property="og:image"]')?.getAttribute('content')).toBe(
+      'https://api.peaktofan.com/files/photo-1/content',
+    );
+  });
+
+  it('should drop the trainer image when the home page is shown after a trainer page', () => {
+    head.showPage({
+      path: 't/aziz-karimov',
+      title: 'Aziz Karimov',
+      description: '',
+      type: 'profile',
+      imageUrl: 'https://api.peaktofan.com/files/photo-1/content',
+    });
+
+    head.showHome();
+
+    expect(document.head.querySelector('meta[property="og:image"]')).toBeNull();
+  });
+
   it('should hide the page from search engines when the not found page is shown', () => {
     head.showHome();
 

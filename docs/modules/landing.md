@@ -9,7 +9,9 @@ Direction: black and gold, an oversized condensed display face (Alumni Sans) for
 
 ## Backend
 
-- No endpoint is called. Every text and price is static content in the landing dictionary.
+- One endpoint: `GET https://api.peaktofan.com/public/trainers/{slug}` (no token) for the trainer page. Contract:
+  backend `docs/trainer-public-profile-v1.md`, section 3. Only published trainers are returned; anything else is `404`.
+- Every other text and price is static content in the landing dictionary.
 - Access: public, no sign-in.
 
 ## Screens
@@ -19,6 +21,7 @@ Direction: black and gold, an oversized condensed display face (Alumni Sans) for
 | `/` | Home, Uzbek | prerendered at build time |
 | `/ru` | Home, Russian | prerendered at build time |
 | `/en` | Home, English | prerendered at build time |
+| `/t/:slug`, `/ru/t/:slug`, `/en/t/:slug` | Public trainer page (photo, bio, price, program names and goals, preview videos, "subscribe in the app") | server-rendered on every request; HTTP 404 and "Coach not found" when the backend answers 404 |
 | `/**`, `/ru/**`, `/en/**` | Not found in that language | server-rendered, HTTP 404, `noindex` |
 
 ## Structure notes
@@ -28,14 +31,15 @@ apps/landing/src/
   main.ts, main.server.ts, server.ts   browser entry, server entry, Express server (healthz, static, SSR)
   styles.css, fonts.css                 design tokens (--landing-*), base styles, shared .btn/.section/.display classes, Inter and Alumni Sans
   app/
-    core/config/      EXTERNAL_LINKS, SITE_SECTIONS + NAV_LINKS, footer columns and socials
+    core/config/      EXTERNAL_LINKS, SITE_SECTIONS + NAV_LINKS, footer columns and socials, API_ORIGIN, the trainer page route
     core/i18n/        landing dictionary (uz source, ru, en), translateLanding, the `t` pipe, locale paths and routes
     core/layout/      shell (skip link, icon sprite, nav, footer), brand logo, language switcher
     core/seo/         LandingHead (title, description, Open Graph, canonical, hreflang, robots) and route resolvers
     shared/icon/      inline SVG sprite from the Figma icons and the <landing-icon> component
     features/home/    the seven home sections, the framed app screen, their models, the home page
+    features/trainer/ public trainer page: resolver (fetch, head, 404 status), service, DTO and mapper, hero, program list, preview videos
     features/not-found/
-    routes/           app.routes.ts (locale routes) and app.routes.server.ts (prerender and 404)
+    routes/           app.routes.ts (locale routes) and app.routes.server.ts (prerender, trainer SSR and 404)
 public/
   fonts/              self-hosted Inter and Alumni Sans subsets (latin, latin-ext, cyrillic, cyrillic-ext)
   images/app/         app screens: home, workouts, nutrition, profile (WebP, 720 px wide, transparent rounded corners)
@@ -108,3 +112,22 @@ Still missing: apparel shop, Telegram channel, Instagram, YouTube, privacy polic
 - Do not format numbers with `Intl` for Uzbek: Chrome ships no Uzbek locale data and falls back to English, so the browser would rewrite "4,9" to "4.9" after hydration. Keep such text in the dictionary or format it with a pure function.
 - A class on a child component's host element also matches the parent's styles (emulated encapsulation); the brand logo uses `footer-logo`, not `footer`, for that reason.
 - If the mobile app uses `peaktofan.com` for universal links (`/t/<slug>`), `/.well-known/apple-app-site-association` and `/.well-known/assetlinks.json` must be served by this server.
+
+## Trainer page
+
+- The page is rendered on the server for every request: the SSR server calls `api.peaktofan.com`, and the HTTP transfer
+  cache of `provideClientHydration` hands the response to the browser, so the browser does not call the API on the first load.
+- The API's CORS list does not contain `https://peaktofan.com`. That is fine today because no in-app link navigates to a
+  trainer page (the language switcher goes to the home page of the language). A future in-app link to `/t/<slug>`, or a
+  language switch that stays on the trainer page, makes the browser call the API and needs `https://peaktofan.com` in
+  the backend `Cors__AllowedOrigins`.
+- The route is one segment pair, `t/:slug`, in `routes/app.routes.ts`, so `/t` without a slug falls through to the 404 page.
+  The server route list (`app.routes.server.ts`) mirrors it for each locale.
+- A backend 404 sets the response status to 404 through `RESPONSE_INIT` and shows "Coach not found" with a download button.
+  Any other API failure is not hidden: the request fails like any SSR error.
+- Videos use `<source>` HLS first (Safari, Android Chrome and current desktop Chromium play it natively) and the signed MP4
+  as fallback; `preload="none"` and the HLS poster keep the page light. Signed links live at least 6 hours and the page is
+  `no-cache`, so a stale link only appears in a tab left open longer than that.
+- The price is the trainer's monthly price from the API. The amount the user pays in the app adds the platform fee and the
+  provider fee, so the page says the app shows the final price before payment.
+- Photo, video and poster URLs are built from `API_ORIGIN` (`core/config/api-origin.ts`); tests override that token.
