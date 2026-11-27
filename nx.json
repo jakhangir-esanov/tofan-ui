@@ -20,5 +20,8 @@
       "inputs": ["default", "^production"]
     }
   },
-  "analytics": false
+  "analytics": false,
+  "affected": {
+    "legacy": true
+  }
 }
