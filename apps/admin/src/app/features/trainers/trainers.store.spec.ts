@@ -357,10 +357,20 @@ describe('TrainersStore', () => {
     const store = createStore();
 
     await expect(
-      store.grantSubscription(trainer, { userId: ` ${USER_ID} `, months: 3 }),
+      store.grantSubscription(trainer, {
+        userId: ` ${USER_ID} `,
+        months: 3,
+        tier: 'standard',
+        kind: 'gift',
+      }),
     ).resolves.toBe(true);
 
-    expect(subscriptions.grant).toHaveBeenCalledWith('t1', { userId: USER_ID, months: 3 });
+    expect(subscriptions.grant).toHaveBeenCalledWith('t1', {
+      userId: USER_ID,
+      months: 3,
+      tier: 'standard',
+      kind: 'gift',
+    });
     expect(notifications.success).toHaveBeenCalledWith('trainers.toast.granted', {
       name: 'Jasur Karimov',
     });
@@ -370,9 +380,14 @@ describe('TrainersStore', () => {
   it('should not call the backend when the months are out of range', async () => {
     const store = createStore();
 
-    await expect(store.grantSubscription(trainer, { userId: USER_ID, months: 13 })).resolves.toBe(
-      false,
-    );
+    await expect(
+      store.grantSubscription(trainer, {
+        userId: USER_ID,
+        months: 37,
+        tier: 'standard',
+        kind: 'gift',
+      }),
+    ).resolves.toBe(false);
 
     expect(subscriptions.grant).not.toHaveBeenCalled();
     expect(notifications.error).toHaveBeenCalled();
@@ -383,9 +398,14 @@ describe('TrainersStore', () => {
     vi.mocked(subscriptions.grant).mockRejectedValue(refusal);
     const store = createStore();
 
-    await expect(store.grantSubscription(trainer, { userId: USER_ID, months: 1 })).resolves.toBe(
-      false,
-    );
+    await expect(
+      store.grantSubscription(trainer, {
+        userId: USER_ID,
+        months: 1,
+        tier: 'standard',
+        kind: 'gift',
+      }),
+    ).resolves.toBe(false);
 
     expect(notifications.error).toHaveBeenCalledWith(refusal);
   });

@@ -135,10 +135,12 @@ export const TRAINERS_EN = {
     soldierFailed: 'The search failed. Please try again.',
     months: 'Length',
     suffix: ' mo',
-    hint: 'From 1 to 12 months. If the user already has an active subscription to this trainer, it is extended.',
-    tierHint:
-      'A subscription is always opened as Standard. To give VIP, change the subscription with the "Make VIP" button in the table.',
+    hint: 'Must match one of the periods the admin created (1 month always exists). If the user already has an active subscription to this trainer, it is extended.',
+    kind: 'Kind',
+    kindPlaceholder: 'Card, gift or test',
+    tier: 'Tier',
     errors: {
+      kind: 'Choose the kind.',
       trainer: 'Choose a trainer.',
       userId: 'Choose a user.',
       required: 'Enter the length in months.',

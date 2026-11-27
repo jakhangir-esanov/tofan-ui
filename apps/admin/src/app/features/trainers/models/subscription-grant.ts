@@ -1,12 +1,16 @@
+import { AccessGrantKind } from '@shared/models/access-grant-kind';
 import { ValidationError } from '@shared/models/errors/validation.error';
+import { Tier } from '@shared/models/tier';
 import { isUuid } from '@shared/utils/identifiers';
 
 export const MIN_SUBSCRIPTION_MONTHS = 1;
-export const MAX_SUBSCRIPTION_MONTHS = 12;
+export const MAX_SUBSCRIPTION_MONTHS = 36;
 
 export interface SubscriptionGrant {
   readonly userId: string;
   readonly months: number;
+  readonly tier: Tier;
+  readonly kind: AccessGrantKind;
 }
 
 export function createSubscriptionGrant(grant: SubscriptionGrant): SubscriptionGrant {
@@ -28,5 +32,5 @@ export function createSubscriptionGrant(grant: SubscriptionGrant): SubscriptionG
       },
     ]);
   }
-  return { userId, months: grant.months };
+  return { userId, months: grant.months, tier: grant.tier, kind: grant.kind };
 }

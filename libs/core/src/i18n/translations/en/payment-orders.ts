@@ -11,6 +11,7 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
   paidAt: 'Paid: {date}',
   paidWith: 'Paid: {date}, {provider}',
   refundedAt: 'Refunded: {date}',
+  grantedAt: 'Granted: {date}',
   months: '{months, plural, one{{months} month} other{{months} months}}',
   discount: 'Discount −{percent}%: {amount}',
   columns: {
@@ -32,10 +33,13 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
     pending: 'Pending',
     paid: 'Paid',
     refunded: 'Refunded',
+    gifted: 'Gift',
+    test: 'Test',
   },
   provider: {
     payme: 'Payme',
     click: 'Click',
+    card: 'Card',
   },
   filters: {
     search: 'Search',
@@ -70,5 +74,40 @@ export const PAYMENT_ORDERS_EN: Dictionary['paymentOrders'] = {
       trainer: 'Choose a trainer.',
       price: 'Enter the price in UZS as a whole number above 0.',
     },
+  },
+  grant: {
+    open: 'Grant access',
+    header: 'Grant access',
+    save: 'Grant',
+    kind: 'Kind',
+    kindPlaceholder: 'Card, gift or test',
+    user: 'User',
+    soldierPlaceholder: 'Search by name or username',
+    soldierEmpty: 'No soldier found.',
+    soldierFailed: 'The search failed. Please try again.',
+    purpose: 'For',
+    trainer: 'Trainer',
+    tariff: 'Tariff',
+    referencePlaceholder: 'Choose',
+    tariffOption: '{name} · {amount} UZS/month',
+    listFailed: 'The list did not load. Close the window and open it again.',
+    tier: 'Tier',
+    months: 'Length',
+    monthsSuffix: ' mo',
+    monthsHint:
+      'Must match one of the periods the admin created (1 month always exists). An active subscription is extended.',
+    granted: 'Access granted. Order ID: {id}',
+    errors: {
+      kind: 'Choose the kind.',
+      userId: 'Choose a user.',
+      reference: 'Choose a trainer or a tariff.',
+      months: 'Enter 1 to 36 months.',
+    },
+  },
+  refund: {
+    action: 'Refund card payment',
+    confirm:
+      'Refund the card payment of {amount}? The {months} months bought are taken off the subscription and the payment shows as refunded in the accounts.',
+    refunded: 'The card payment was refunded and the months were taken back.',
   },
 };

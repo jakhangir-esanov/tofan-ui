@@ -1,6 +1,16 @@
 import { Dictionary } from '../../dictionary';
 
 export const ENUMS_EN: Dictionary['enums'] = {
+  accessGrantKind: {
+    card: 'Card payment',
+    gift: 'Gift',
+    test: 'Test',
+  },
+  accessGrantKindHint: {
+    card: 'The user transferred money to the card. It is recorded as paid at the in-app price (period and discounts included) and counts in the accounts. Coach sales carry the commission and tax but no provider fee.',
+    gift: 'Free access. Amount 0, not counted in the accounts, marked as a gift.',
+    test: 'For testing on production. Amount 0, counted neither in the accounts nor as a gift.',
+  },
   muscleGroup: {
     unknown: 'Unknown',
     chest: 'Chest',

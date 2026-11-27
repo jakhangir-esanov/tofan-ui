@@ -33,6 +33,7 @@ const subscriptionOrder: PaymentOrderResponse = {
   createdOnUtc: '2026-11-06T04:56:59.917Z',
   paidOnUtc: '2026-11-06T05:00:00Z',
   refundedOnUtc: null,
+  grantedBy: null,
   tier: TierDto.Vip,
   userFullName: 'Otabek Olimjonov',
   userName: 'otabek',
@@ -65,6 +66,7 @@ describe('toPaymentOrder', () => {
       createdAt: new Date('2026-11-06T04:56:59.917Z'),
       paidAt: new Date('2026-11-06T05:00:00Z'),
       refundedAt: null,
+      grantedBy: null,
     });
   });
 

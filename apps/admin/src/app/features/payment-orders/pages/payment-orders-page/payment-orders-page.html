@@ -8,8 +8,11 @@
     <p-button
       [label]="'paymentOrders.create.open' | t"
       icon="pi pi-plus"
+      severity="secondary"
+      [outlined]="true"
       (onClick)="openCreate()"
     />
+    <p-button [label]="'paymentOrders.grant.open' | t" icon="pi pi-key" (onClick)="openGrant()" />
   </app-catalog-header>
 
   <app-payment-order-filters [trainers]="store.trainers()" (filterChange)="applyFilter($event)" />
@@ -76,10 +79,37 @@
             <div class="text-muted-color mt-1 text-xs whitespace-nowrap">{{ hint }}</div>
           }
         </td>
+        <td class="text-right">
+          @if (order.canRefund) {
+            <p-button
+              icon="pi pi-undo"
+              severity="danger"
+              [text]="true"
+              [rounded]="true"
+              [loading]="store.refundingId() === order.id"
+              [ariaLabel]="'paymentOrders.refund.action' | t"
+              [title]="'paymentOrders.refund.action' | t"
+              (onClick)="refund(order.order)"
+            />
+          }
+        </td>
       </tr>
     </ng-template>
   </app-data-table>
 </div>
+
+<app-access-grant-dialog
+  [(visible)]="grantVisible"
+  [trainers]="store.trainers()"
+  [trainersFailed]="store.trainersFailed()"
+  [tariffs]="store.tariffs()"
+  [tariffsFailed]="store.tariffsFailed()"
+  [soldiers]="soldierSearch.options()"
+  [soldiersFailed]="soldierSearch.failed()"
+  [saving]="store.granting()"
+  (grant)="grant($event)"
+  (soldierSearch)="soldierSearch.search($event)"
+/>
 
 <app-payment-order-create-dialog
   [(visible)]="createVisible"

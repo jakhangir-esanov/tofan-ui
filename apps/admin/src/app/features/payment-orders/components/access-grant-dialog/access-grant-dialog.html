@@ -1,0 +1,95 @@
+<app-form-dialog
+  [(visible)]="visible"
+  [header]="'paymentOrders.grant.header' | t"
+  [saveLabel]="'paymentOrders.grant.save' | t"
+  [saving]="saving()"
+  (save)="submit()"
+>
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-1">
+      <label for="grantKind" class="font-medium">{{ 'paymentOrders.grant.kind' | t }}</label>
+      <app-select-field
+        inputId="grantKind"
+        [formField]="form.kind"
+        [options]="kindOptions()"
+        [placeholder]="'paymentOrders.grant.kindPlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.kind()" />
+      @if (kindHint(); as hint) {
+        <p-message severity="info" icon="pi pi-info-circle">{{ hint | t }}</p-message>
+      }
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="grantUser" class="font-medium">{{ 'paymentOrders.grant.user' | t }}</label>
+      <app-soldier-field
+        inputId="grantUser"
+        [formField]="form.userId"
+        [options]="soldiers()"
+        [placeholder]="'paymentOrders.grant.soldierPlaceholder' | t"
+        [emptyMessage]="soldiersEmpty() | t"
+        (searchChange)="soldierSearch.emit($event)"
+      />
+      <app-field-error [field]="form.userId()" />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      <label for="grantPurpose" class="font-medium">{{ 'paymentOrders.grant.purpose' | t }}</label>
+      <app-select-field
+        inputId="grantPurpose"
+        [formField]="form.purpose"
+        [options]="purposeOptions()"
+        [fluid]="true"
+      />
+    </div>
+
+    <div class="flex flex-col gap-1">
+      @if (isCoach()) {
+        <label for="grantReference" class="font-medium">{{
+          'paymentOrders.grant.trainer' | t
+        }}</label>
+      } @else {
+        <label for="grantReference" class="font-medium">{{
+          'paymentOrders.grant.tariff' | t
+        }}</label>
+      }
+      <app-select-field
+        inputId="grantReference"
+        [formField]="form.referenceId"
+        [options]="referenceOptions()"
+        [placeholder]="'paymentOrders.grant.referencePlaceholder' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.referenceId()" />
+      @if (referencesFailed()) {
+        <small class="text-red-500" role="alert">{{ 'paymentOrders.grant.listFailed' | t }}</small>
+      }
+    </div>
+
+    @if (isCoach()) {
+      <div class="flex flex-col gap-1">
+        <label for="grantTier" class="font-medium">{{ 'paymentOrders.grant.tier' | t }}</label>
+        <app-select-field
+          inputId="grantTier"
+          [formField]="form.tier"
+          [options]="tierOptions()"
+          [fluid]="true"
+        />
+      </div>
+    }
+
+    <div class="flex flex-col gap-1">
+      <label for="grantMonths" class="font-medium">{{ 'paymentOrders.grant.months' | t }}</label>
+      <app-number-field
+        inputId="grantMonths"
+        [formField]="form.months"
+        [showButtons]="true"
+        [suffix]="'paymentOrders.grant.monthsSuffix' | t"
+        [fluid]="true"
+      />
+      <app-field-error [field]="form.months()" />
+      <small class="text-muted-color">{{ 'paymentOrders.grant.monthsHint' | t }}</small>
+    </div>
+  </div>
+</app-form-dialog>

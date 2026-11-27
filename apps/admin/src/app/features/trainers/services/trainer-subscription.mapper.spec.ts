@@ -95,8 +95,15 @@ describe('toChangeTierRequest', () => {
 });
 
 describe('toGrantRequest', () => {
-  it('should send the user id and the months when the request is built', () => {
-    expect(toGrantRequest({ userId: 'u1', months: 3 })).toEqual({ userId: 'u1', months: 3 });
+  it('should send the grant to the payment order ledger when the request is built', () => {
+    expect(toGrantRequest('t1', { userId: 'u1', months: 3, tier: 'vip', kind: 'card' })).toEqual({
+      userId: 'u1',
+      purpose: 1,
+      referenceId: 't1',
+      tier: 2,
+      months: 3,
+      kind: 1,
+    });
   });
 });
 

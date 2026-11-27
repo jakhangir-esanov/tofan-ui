@@ -6,6 +6,7 @@ import { PaymentOrder } from './models/payment-order';
 import { PaymentOrderDraft } from './models/payment-order-draft';
 import { TrainerOption } from './models/trainer-option';
 import { PaymentOrdersService } from './services/payment-orders.service';
+import { TariffOptionsService } from './services/tariff-options.service';
 import { TrainerOptionsService } from './services/trainer-options.service';
 import { PaymentOrdersStore } from './payment-orders.store';
 
@@ -45,10 +46,16 @@ const order: PaymentOrder = {
   createdAt: new Date('2026-11-05T10:30:00Z'),
   paidAt: null,
   refundedAt: null,
+  grantedBy: null,
 };
 
 describe('PaymentOrdersStore', () => {
-  let service: { list: ReturnType<typeof vi.fn>; create: ReturnType<typeof vi.fn> };
+  let service: {
+    list: ReturnType<typeof vi.fn>;
+    create: ReturnType<typeof vi.fn>;
+    grant: ReturnType<typeof vi.fn>;
+    refund: ReturnType<typeof vi.fn>;
+  };
   let trainerOptions: { list: ReturnType<typeof vi.fn> };
   let notifications: { success: ReturnType<typeof vi.fn>; error: ReturnType<typeof vi.fn> };
 
@@ -58,6 +65,7 @@ describe('PaymentOrdersStore', () => {
         PaymentOrdersStore,
         { provide: PaymentOrdersService, useValue: service },
         { provide: TrainerOptionsService, useValue: trainerOptions },
+        { provide: TariffOptionsService, useValue: { list: vi.fn().mockResolvedValue([]) } },
         { provide: NotificationService, useValue: notifications },
       ],
     });
@@ -68,6 +76,8 @@ describe('PaymentOrdersStore', () => {
     service = {
       list: vi.fn().mockResolvedValue({ items: [order], totalCount: 1 }),
       create: vi.fn().mockResolvedValue('order-new'),
+      grant: vi.fn().mockResolvedValue('order-granted'),
+      refund: vi.fn().mockResolvedValue(undefined),
     };
     trainerOptions = { list: vi.fn().mockResolvedValue([trainer]) };
     notifications = { success: vi.fn(), error: vi.fn() };
@@ -222,5 +232,71 @@ describe('PaymentOrdersStore', () => {
     expect(created).toBe(false);
     expect(service.create).not.toHaveBeenCalled();
     expect(notifications.error).toHaveBeenCalledWith(expect.any(ValidationError));
+  });
+
+  it('should grant the access, announce the order and reload when the draft is valid', async () => {
+    const store = createStore();
+    await store.load({ first: 0, rows: 25 });
+    const draft = {
+      userId: ' 3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b ',
+      purpose: 'tariff' as const,
+      referenceId: '0b7c2d4e-1f3a-4b5c-8d9e-0a1b2c3d4e5f',
+      tier: 'standard' as const,
+      months: 1,
+      kind: 'card' as const,
+    };
+
+    await expect(store.grant(draft)).resolves.toBe(true);
+
+    expect(service.grant).toHaveBeenCalledWith({
+      ...draft,
+      userId: '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b',
+    });
+    expect(notifications.success).toHaveBeenCalledWith('paymentOrders.grant.granted', {
+      id: 'order-granted',
+    });
+    expect(service.list).toHaveBeenCalledTimes(2);
+    expect(store.granting()).toBe(false);
+  });
+
+  it('should not call the backend when the grant months are out of range', async () => {
+    const store = createStore();
+
+    await expect(
+      store.grant({
+        userId: '3f2b8c1e-9a4d-4e6f-8b7a-1c2d3e4f5a6b',
+        purpose: 'trainerSubscription',
+        referenceId: '0b7c2d4e-1f3a-4b5c-8d9e-0a1b2c3d4e5f',
+        tier: 'vip',
+        months: 37,
+        kind: 'gift',
+      }),
+    ).resolves.toBe(false);
+
+    expect(service.grant).not.toHaveBeenCalled();
+    expect(notifications.error).toHaveBeenCalled();
+  });
+
+  it('should refund the card payment, announce it and reload the page', async () => {
+    const store = createStore();
+    await store.load({ first: 0, rows: 25 });
+
+    await store.refund(order);
+
+    expect(service.refund).toHaveBeenCalledWith('o1');
+    expect(notifications.success).toHaveBeenCalledWith('paymentOrders.refund.refunded');
+    expect(service.list).toHaveBeenCalledTimes(2);
+    expect(store.refundingId()).toBeNull();
+  });
+
+  it('should show the backend error when the refund is refused', async () => {
+    const refusal = new Error('refused');
+    service.refund.mockRejectedValue(refusal);
+    const store = createStore();
+
+    await store.refund(order);
+
+    expect(notifications.error).toHaveBeenCalledWith(refusal);
+    expect(store.refundingId()).toBeNull();
   });
 });

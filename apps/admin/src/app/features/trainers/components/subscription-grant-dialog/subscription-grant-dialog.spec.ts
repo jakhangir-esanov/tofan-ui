@@ -11,11 +11,11 @@ describe('SubscriptionGrantDialog', () => {
     await fixture.whenStable();
   }
 
-  it('should say that the grant opens Standard and VIP is given from the table when the dialog opens', async () => {
+  it('should ask for the kind of access and the tier when the dialog opens', async () => {
     await open();
 
-    const hint = TestBed.inject(Translator).translate('trainers.grant.tierHint');
-    expect(hint).toContain('VIP');
-    expect(document.body.textContent).toContain(hint);
+    const translator = TestBed.inject(Translator);
+    expect(document.body.textContent).toContain(translator.translate('trainers.grant.kind'));
+    expect(document.body.textContent).toContain(translator.translate('trainers.grant.tier'));
   });
 });

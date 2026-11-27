@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
+import { ConfirmDialogService } from '@core/feedback/confirmation.service';
 import { NotificationService } from '@core/feedback/notification.service';
 import { SoldierLookupService } from '@shared/components/soldier-field/soldier-lookup.service';
 import { PaymentOrder } from '../../models/payment-order';
 import { PaymentOrdersService } from '../../services/payment-orders.service';
+import { TariffOptionsService } from '../../services/tariff-options.service';
 import { TrainerOptionsService } from '../../services/trainer-options.service';
 import { PaymentOrdersPage } from './payment-orders-page';
 
@@ -31,6 +33,7 @@ const paidSubscription: PaymentOrder = {
   createdAt: new Date('2026-11-06T04:56:00Z'),
   paidAt: new Date('2026-11-06T05:00:00Z'),
   refundedAt: null,
+  grantedBy: null,
 };
 
 const pendingTariff: PaymentOrder = {
@@ -58,8 +61,32 @@ const pendingTariff: PaymentOrder = {
   paidAt: null,
 };
 
+const cardPayment: PaymentOrder = {
+  ...paidSubscription,
+  id: 'o3',
+  providerFeePercent: 0,
+  providerFeeAmount: 0,
+  amount: 280000,
+  paidWith: 'card',
+  grantedBy: 'a1',
+};
+
+const gift: PaymentOrder = {
+  ...paidSubscription,
+  id: 'o4',
+  commissionAmount: 0,
+  taxAmount: 0,
+  providerFeeAmount: 0,
+  amount: 0,
+  status: 'gifted',
+  paidWith: null,
+  paidAt: null,
+  grantedBy: 'a1',
+};
+
 describe('PaymentOrdersPage', () => {
-  let service: { list: ReturnType<typeof vi.fn> };
+  let service: { list: ReturnType<typeof vi.fn>; refund: ReturnType<typeof vi.fn> };
+  let confirmations: { confirm: ReturnType<typeof vi.fn> };
   let trainerOptions: { list: ReturnType<typeof vi.fn> };
 
   async function render(): Promise<ComponentFixture<PaymentOrdersPage>> {
@@ -92,7 +119,9 @@ describe('PaymentOrdersPage', () => {
   beforeEach(() => {
     service = {
       list: vi.fn().mockResolvedValue({ items: [paidSubscription, pendingTariff], totalCount: 2 }),
+      refund: vi.fn().mockResolvedValue(undefined),
     };
+    confirmations = { confirm: vi.fn().mockResolvedValue(true) };
     trainerOptions = {
       list: vi
         .fn()
@@ -105,8 +134,10 @@ describe('PaymentOrdersPage', () => {
         provideRouter([]),
         { provide: PaymentOrdersService, useValue: service },
         { provide: TrainerOptionsService, useValue: trainerOptions },
+        { provide: TariffOptionsService, useValue: { list: vi.fn().mockResolvedValue([]) } },
         { provide: SoldierLookupService, useValue: { search: vi.fn().mockResolvedValue([]) } },
         { provide: NotificationService, useValue: { success: vi.fn(), error: vi.fn() } },
+        { provide: ConfirmDialogService, useValue: confirmations },
       ],
     });
   });
@@ -131,6 +162,7 @@ describe('PaymentOrdersPage', () => {
       "7 000 so'm 2,5%",
       "287 000 so'm",
       expect.stringMatching(/^To'langan To'langan: .+, Click$/),
+      '',
     ]);
   });
 
@@ -193,5 +225,29 @@ describe('PaymentOrdersPage', () => {
 
     expect(trainerOptions.list).toHaveBeenCalledTimes(1);
     expect(document.body.textContent).toContain("To'lov buyurtmasini ochish");
+  });
+
+  it('should offer a refund only for a card payment and refund it when the admin confirms', async () => {
+    service.list.mockResolvedValue({ items: [paidSubscription, cardPayment], totalCount: 2 });
+    const fixture = await render();
+    const root = fixture.nativeElement as HTMLElement;
+    const rows = Array.from(root.querySelectorAll('tbody tr'));
+
+    expect(rows[0].querySelector('button[aria-label]')).toBeNull();
+    const refund = rows[1].querySelector<HTMLButtonElement>('td:last-child button');
+    expect(refund).not.toBeNull();
+    refund?.click();
+    await fixture.whenStable();
+
+    expect(confirmations.confirm).toHaveBeenCalled();
+    expect(service.refund).toHaveBeenCalledWith('o3');
+  });
+
+  it('should mark a gift as a gift with no amount when the order was given free', async () => {
+    service.list.mockResolvedValue({ items: [gift], totalCount: 1 });
+    const [row] = cells(await render());
+
+    expect(row[7]).toBe("0 so'm");
+    expect(row[8]).toMatch(/^Sovg'a Berilgan: /);
   });
 });
